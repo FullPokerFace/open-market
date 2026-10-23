@@ -1,0 +1,332 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earnings Report Features</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f1ee; --tag: #e9e8e4; --tile: #ffffff;
+    --ink: #101014; --strong: #000000;
+    --body: rgba(16,16,20,.72); --muted: rgba(16,16,20,.6);
+    --line: rgba(16,16,20,.16); --line-strong: rgba(16,16,20,.4);
+    --blue: #1a5bc4; --beat: #1d7a4c; --mixed: #8f5a00; --miss: #b83a24; --purple: #6a3fd0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0b0c; --tag: #18181b; --tile: #141417;
+      --ink: #f2f1ee; --strong: #ffffff;
+      --body: rgba(242,241,238,.75); --muted: rgba(242,241,238,.6);
+      --line: rgba(242,241,238,.16); --line-strong: rgba(242,241,238,.4);
+      --blue: #6aa0ff; --beat: #2fd39c; --mixed: #ffb347; --miss: #ff7a63; --purple: #b18cff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  main { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  .hud {
+    font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 24px; border-bottom: 1px solid var(--line); }
+  .bar b { color: var(--ink); font-weight: 500; }
+  header.title { padding: 36px 24px 28px; border-bottom: 1px solid var(--line); }
+  h1 {
+    margin: 0 0 16px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  h1 span { color: var(--blue); }
+  .lead { max-width: 760px; margin: 0; color: var(--body); font-size: 17px; }
+  .lead strong { color: var(--ink); }
+  section { border-bottom: 1px solid var(--line); }
+  code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; background: var(--tag); border: 1px solid var(--line); padding: 0 4px; }
+  .scroll { overflow-x: auto; border-top: 1px solid var(--line); }
+  table { width: 100%; min-width: 860px; border-collapse: collapse; table-layout: fixed; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+  th:last-child, td:last-child { border-right: 0; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  thead th { background: var(--tag); }
+  tbody th { font-weight: 600; color: var(--strong); }
+  td { color: var(--body); }
+  .sub { display: flex; align-items: baseline; gap: 10px; padding: 24px 24px 12px; border-top: 1px solid var(--line); }
+  .section-title + .sub { border-top: 0; }
+  .sub h3 { margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: -.03em; color: var(--strong); }
+  .tag {
+    display: inline-block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--line); background: var(--tag); padding: 1px 6px; white-space: nowrap;
+  }
+  /* Color code: green = done, red = high, amber = medium, purple = before launch, grey = low */
+  .c-done { --c: var(--beat); } .c-high { --c: var(--miss); } .c-med { --c: var(--mixed); }
+  .c-launch { --c: var(--purple); } .c-low { --c: var(--muted); }
+  .tag.c-high, .tag.c-med, .tag.c-launch { background: var(--c); border-color: var(--c); color: var(--bg); font-weight: 700; }
+  .tag.c-low { color: var(--muted); }
+  .sw { display: inline-block; width: 8px; height: 8px; background: var(--c); flex: none; }
+
+  .section-title { padding: 28px 24px 4px; }
+  .section-title h2 {
+    margin: 0 0 6px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(30px, 4.5vw, 40px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  .section-title h2 span { color: var(--c); }
+  .section-title p { margin: 0; color: var(--body); }
+  .sub h3::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 10px; background: var(--c); vertical-align: 2px; }
+  .sub .hud { color: var(--c); font-weight: 700; }
+
+  .progress-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px; padding: 24px 24px 12px; }
+  .progress-head b {
+    font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 56px; line-height: 1; letter-spacing: -.04em; color: var(--beat);
+  }
+  .progress-head span { color: var(--body); }
+  .progress { display: flex; gap: 2px; height: 16px; margin: 0 24px 24px; }
+  .progress span { background: var(--c); }
+  .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .stat { padding: 16px 24px 18px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: 0; }
+  .stat b {
+    display: block; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 40px; line-height: 1.05;
+    letter-spacing: -.04em; color: var(--c);
+  }
+  .stat .hud { display: flex; align-items: center; gap: 6px; }
+  .glance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .glance > div { padding: 18px 24px 22px; border-right: 1px solid var(--line); }
+  .glance > div:last-child { border-right: 0; }
+  .glance h4 { margin: 0 0 10px; }
+  .glance ul, .glance ol { margin: 0; padding: 0; list-style: none; }
+  .glance li { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line); color: var(--body); }
+  .glance li:last-child { border-bottom: 0; }
+  .glance li b { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; color: var(--c); }
+  .glance .dots { display: flex; gap: 4px; }
+  .glance ol li { justify-content: flex-start; }
+  .glance ol .n { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 700; color: var(--bg); background: var(--miss); padding: 1px 6px; }
+  @media (max-width: 760px) {
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stat { border-bottom: 1px solid var(--line); }
+    .glance { grid-template-columns: 1fr; }
+    .glance > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+  .note { font-size: 12px; color: var(--muted); margin: 0; padding: 12px 24px 18px; }
+  footer { padding: 14px 24px 18px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar hud"><span>Docs / <b>Features</b></span><span>Updated Oct 23, 2026</span></div>
+
+  <header class="title">
+    <h1>Earnings Report <span>features</span>.</h1>
+    <p class="lead"><strong>The calendar runs on live Finnhub data with exchange filtering, a details panel and a "+N" companies modal.</strong> Next up: a market-cap filter, then wider search and a saved watchlist.</p>
+  </header>
+
+  <section>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>38 features tracked</span></div>
+    <div class="progress-head"><b>63%</b><span>24 of 38 features done · 14 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 24, high priority 3, medium 4, before launch 2, low 5">
+      <span class="c-done" style="flex: 24"></span><span class="c-high" style="flex: 3"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 2"></span><span class="c-low" style="flex: 5"></span>
+    </div>
+    <div class="stats">
+      <div class="stat c-done"><b>24</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-high"><b>3</b><span class="hud"><i class="sw"></i>High priority</span></div>
+      <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
+      <div class="stat c-launch"><b>2</b><span class="hud"><i class="sw"></i>Before launch</span></div>
+      <div class="stat c-low"><b>5</b><span class="hud"><i class="sw"></i>Low</span></div>
+    </div>
+    <div class="glance">
+      <div class="c-done">
+        <h4 class="hud">Done by area</h4>
+        <ul>
+          <li>Foundation <b>5</b></li>
+          <li>Live data <b>6</b></li>
+          <li>Calendar <b>9</b></li>
+          <li>Details panel <b>4</b></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="hud">To do by area</h4>
+        <ul>
+          <li>Filters <span class="dots"><i class="sw c-high"></i><i class="sw c-med"></i></span></li>
+          <li>Search &amp; watchlist <span class="dots"><i class="sw c-high"></i><i class="sw c-high"></i></span></li>
+          <li>Calendar &amp; layout <span class="dots"><i class="sw c-med"></i><i class="sw c-med"></i></span></li>
+          <li>Details panel <span class="dots"><i class="sw c-med"></i><i class="sw c-low"></i></span></li>
+          <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
+          <li>Polish &amp; docs <span class="dots"><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i></span></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="hud">Next up</h4>
+        <ol>
+          <li><span class="n">1</span> Market-cap filter</li>
+          <li><span class="n">2</span> Search all companies</li>
+          <li><span class="n">3</span> Editable, saved watchlist</li>
+        </ol>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-done">
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>24 features</span></div>
+    <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
+    <div class="sub"><h3>Foundation</h3><span class="hud">5</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Project setup</th><td>Next.js 16 (App Router, JavaScript), Tailwind CSS v4, shadcn/ui (Base UI), ESLint.</td><td><code>package.json</code></td></tr>
+          <tr><th scope="row">Design tokens</th><td>DESIGN.md colors for light and dark, square corners, blue focus ring, mono labels.</td><td><code>src/app/globals.css</code></td></tr>
+          <tr><th scope="row">Fonts</th><td>Inter for text, Geist Mono for labels and tickers, Bricolage Grotesque for headings, with its display letter shapes at large sizes.</td><td><code>src/app/layout.js</code></td></tr>
+          <tr><th scope="row">Light / dark theme</th><td>Toggle in the header; follows the system setting on first visit, then remembers the choice.</td><td><code>site-header.jsx</code></td></tr>
+          <tr><th scope="row">Footer</th><td>"Proudly made in New York, USA by Island Web Apps", linked to iwan-web.com, with the visitor's current date. Sits at the bottom of short pages without adding a scrollbar.</td><td><code>site-footer.jsx</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Live data</h3><span class="hud">6</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Finnhub earnings calendar</th><td>Every earnings report in the month: date, ticker, timing, fiscal quarter, EPS and revenue estimate and actual. Fetched week by week, with busy weeks split to get past the 1,500-row cap.</td><td><code>src/lib/finnhub.js</code></td></tr>
+          <tr><th scope="row">Beat / Mixed / Miss</th><td>Beat = EPS and revenue both met estimates; Miss = neither did; Mixed = one did. "Reported" when there was no estimate to compare.</td><td><code>src/lib/earnings.js</code></td></tr>
+          <tr><th scope="row">Company names</th><td>From SEC's free ticker list, tidied from legal names ("NETFLIX INC" → "Netflix"). Also gives each company's SEC ID for filing links.</td><td><code>src/lib/sec.js</code></td></tr>
+          <tr><th scope="row">Caching</th><td>Earnings cached for hours, names and exchange lists for days. Well under the free plan's 60 calls/min.</td><td><code>"use cache"</code> in <code>src/lib</code></td></tr>
+          <tr><th scope="row">Error handling</th><td>Shows "unavailable" instead of crashing if Finnhub fails; falls back to bare tickers or no exchange filter if names or exchange data fail.</td><td><code>src/app/page.js</code></td></tr>
+          <tr><th scope="row">API key</th><td><code>FINNHUB_API_KEY</code> in git-ignored <code>.env.local</code>, sent in a request header, never to the browser.</td><td><code>.env.local</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Calendar</h3><span class="hud">9</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Month grid</th><td>Monday–Friday weeks, today highlighted, past days shaded. 1440px frame with large cells.</td><td><code>month-grid.jsx</code></td></tr>
+          <tr><th scope="row">Ticker tiles</th><td>Up to 16 per day, largest companies first (by revenue estimate). Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
+          <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing. Loads on open from the cached month data; picking one opens its details.</td><td><code>more-companies-dialog.jsx</code></td></tr>
+          <tr><th scope="row">Month navigation</th><td>Previous / next arrows and Today, saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
+          <tr><th scope="row">Exchange filter</th><td>NYSE (default) · Nasdaq · NYSE American · All, with per-month counts. Saved in the URL; ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code></td></tr>
+          <tr><th scope="row">OTC and funds excluded</th><td>OTC stocks, closed-end funds and tickers with no known exchange are left out (October: 1,627 → 1,350).</td><td><code>getListedSymbols()</code></td></tr>
+          <tr><th scope="row">Search</th><td>Fades tiles that don't match a ticker prefix or company name, so the grid never reflows.</td><td><code>site-header.jsx</code></td></tr>
+          <tr><th scope="row">Watchlist toggle</th><td>Fades tiles not on the watchlist (a fixed list of 7 tickers for now).</td><td><code>earnings-calendar.jsx</code></td></tr>
+          <tr><th scope="row">Legend</th><td>Beat · Mixed · Miss · No mark (upcoming), with the data source.</td><td><code>status-legend.jsx</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Details panel</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Company results</th><td>Slide-over with name, industry, date and timing, status, EPS and revenue vs estimates with surprise %.</td><td><code>earnings-details-sheet.jsx</code></td></tr>
+          <tr><th scope="row">EPS surprise chart</th><td>Last 4 quarters of EPS surprise (the free plan's limit), up/down bars with beat count.</td><td><code>eps-surprise-chart.jsx</code></td></tr>
+          <tr><th scope="row">SEC filing links</th><td>"Earnings release" opens the company's 8-K filings; "SEC filings" opens all of its filings.</td><td><code>earnings-details-sheet.jsx</code></td></tr>
+          <tr><th scope="row">Details API</th><td>Company profile and EPS history, loaded when a company is first opened and cached.</td><td><code>/api/earnings/[symbol]</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <section class="c-med">
+    <div class="bar hud"><span>02 / <b>To do</b></span><span>14 items · priority is a suggestion</span></div>
+    <div class="section-title"><h2>What's <span>next</span>.</h2><p>Grouped by area. Priority: <span class="tag c-high">High</span> <span class="tag c-med">Medium</span> <span class="tag c-launch">Before launch</span> <span class="tag c-low">Low</span></p></div>
+    <div class="sub"><h3>Filters</h3><span class="hud">2</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Market-cap filter</th><td>Size: Large · Mid · Small · All (cutoffs $10B / $2B). Real market cap from Finnhub company profiles, fetched by a script at ~55 calls/min (~1 hour first run, weekly refresh) and saved to a file. Revenue estimate as a fallback for companies not yet looked up. Kept in the URL, with per-month counts.</td><td><span class="tag c-high">High</span></td></tr>
+          <tr><th scope="row">Region filter (US / Foreign)</th><td>Free option: split US-listed companies by home country using profile lookups, alongside the market-cap script. Real Europe / Worldwide calendars need Finnhub premium (price not checked) or another provider.</td><td><span class="tag c-med">Medium</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Search &amp; watchlist</h3><span class="hud">2</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Search all companies</th><td>Search and watchlist currently only see visible tiles, not companies inside "+N". Search the whole month's list.</td><td><span class="tag c-high">High</span></td></tr>
+          <tr><th scope="row">Editable, saved watchlist</th><td>Add or remove tickers; save in the browser (DESIGN.md: <code>localStorage</code> for the MVP).</td><td><span class="tag c-high">High</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Calendar &amp; layout</h3><span class="hud">2</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Phone layout</th><td>Below 640px, a day-by-day list instead of the grid; details panel full-screen (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>
+          <tr><th scope="row">Week and List views</th><td>Buttons exist but are disabled. Week = one row of taller cells showing all tiles (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Details panel</h3><span class="hud">2</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Shareable company link</th><td>Put the open company in the URL (<code>?t=NFLX</code>) so a details panel can be shared (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>
+          <tr><th scope="row">8-quarter EPS history</th><td>Chart shows 4 quarters on the free plan; 8 needs a paid plan.</td><td><span class="tag c-low">Low</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Before launch</h3><span class="hud">2</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Check Finnhub license</th><td>Free plan is for personal use; confirm the terms or upgrade before making the site public.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+          <tr><th scope="row">Lasting cache for hosting</th><td>The cache lives in server memory. On serverless hosting such as Vercel it may not survive between requests, so more Finnhub calls. Use a shared cache or an always-on server.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Polish &amp; docs</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Better company names</th><td>Tidied SEC names miss some acronyms ("Aar", "Idt", "Fedex"). Use Finnhub profile names once the market-cap script has them.</td><td><span class="tag c-low">Low</span></td></tr>
+          <tr><th scope="row">Company logos on tiles</th><td>Swap ticker text for the logo in the same tile (DESIGN.md "later"). Finnhub profiles include a logo URL.</td><td><span class="tag c-low">Low</span></td></tr>
+          <tr><th scope="row">Insights page</th><td>"Insights" in the header links nowhere yet; content not defined.</td><td><span class="tag c-low">Low</span></td></tr>
+          <tr><th scope="row">Update DESIGN.md</th><td>Still says a 1200px frame and 8 tiles per cell; the app now uses 1440px and 16.</td><td><span class="tag c-low">Low</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </section>
+
+  <footer class="hud">Earnings Report · project notes</footer>
+</main>
+</body>
+</html>

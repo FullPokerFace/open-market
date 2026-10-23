@@ -1,0 +1,194 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earnings Data Providers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f1ee; --tag: #e9e8e4; --tile: #ffffff;
+    --ink: #101014; --strong: #000000;
+    --body: rgba(16,16,20,.72); --muted: rgba(16,16,20,.6);
+    --line: rgba(16,16,20,.16); --line-strong: rgba(16,16,20,.4);
+    --blue: #1a5bc4; --beat: #1d7a4c; --mixed: #8f5a00; --miss: #b83a24;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0b0c; --tag: #18181b; --tile: #141417;
+      --ink: #f2f1ee; --strong: #ffffff;
+      --body: rgba(242,241,238,.75); --muted: rgba(242,241,238,.6);
+      --line: rgba(242,241,238,.16); --line-strong: rgba(242,241,238,.4);
+      --blue: #6aa0ff; --beat: #2fd39c; --mixed: #ffb347; --miss: #ff7a63;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  main { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  .hud {
+    font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 24px; border-bottom: 1px solid var(--line); }
+  .bar b { color: var(--ink); font-weight: 500; }
+  header.title { padding: 36px 24px 28px; border-bottom: 1px solid var(--line); }
+  h1 {
+    margin: 0 0 16px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  h1 span { color: var(--blue); }
+  .lead { max-width: 760px; margin: 0; color: var(--body); font-size: 17px; }
+  .lead strong { color: var(--ink); }
+  section { border-bottom: 1px solid var(--line); }
+  .content { padding: 20px 24px 28px; }
+  h2 {
+    margin: 0 0 12px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: 26px; line-height: 1.1; letter-spacing: -.03em; color: var(--strong);
+  }
+  p, li { color: var(--body); }
+  li { margin-bottom: 6px; }
+  li strong, p strong { color: var(--ink); }
+  code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 13px; background: var(--tag); border: 1px solid var(--line); padding: 0 4px; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; min-width: 900px; border-collapse: collapse; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+  th:last-child, td:last-child { border-right: 0; }
+  thead th { background: var(--tag); }
+  tbody th { font-weight: 600; color: var(--strong); white-space: nowrap; }
+  tbody th small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+  tr.pick { background: var(--tile); }
+  .tag {
+    display: inline-block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--line); background: var(--tag); padding: 1px 6px; white-space: nowrap;
+  }
+  .yes { color: var(--beat); } .part { color: var(--mixed); } .no { color: var(--miss); }
+  .note { font-size: 12px; color: var(--muted); margin: 12px 0 0; }
+  ol, ul { padding-left: 20px; margin: 0; }
+  footer { padding: 14px 24px 18px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar hud"><span>Docs / <b>Earnings data providers</b></span><span>As of Oct 23, 2026</span></div>
+
+  <header class="title">
+    <h1>Where to get <span>earnings</span> data.</h1>
+    <p class="lead"><strong>Recommendation: start with Finnhub's free plan.</strong> One call returns every company reporting in a date range, with EPS and revenue estimate and actual, which is enough for Beat / Mixed / Miss. Move to Financial Modeling Prep Starter (~$19–29/mo) if the free plan's limits or license don't fit.</p>
+  </header>
+
+  <section>
+    <div class="bar hud"><span>01 / <b>Comparison</b></span><span>Free plan first</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr>
+            <th scope="col">Provider</th>
+            <th scope="col">Free plan</th>
+            <th scope="col">Dates + tickers</th>
+            <th scope="col">Estimates &amp; actuals</th>
+            <th scope="col">Beat / miss possible</th>
+            <th scope="col">Paid from</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="pick">
+            <th scope="row">Finnhub<small>Recommended</small></th>
+            <td>60 calls/min; earnings calendar ~1 month; 4 quarters of EPS surprises</td>
+            <td><span class="tag yes">Yes</span> one call for a date range</td>
+            <td>EPS + revenue, estimate + actual*</td>
+            <td><span class="tag yes">Free</span></td>
+            <td>Paid plans (price not checked)</td>
+          </tr>
+          <tr>
+            <th scope="row">Financial Modeling Prep</th>
+            <td>250 calls/day, no card needed</td>
+            <td><span class="tag part">Paid</span> calendars appear to be paid-only</td>
+            <td>EPS + revenue, estimate + actual</td>
+            <td><span class="tag part">Paid</span></td>
+            <td>~$19–29/mo (Starter)</td>
+          </tr>
+          <tr>
+            <th scope="row">Alpha Vantage</th>
+            <td>25 calls/day</td>
+            <td><span class="tag yes">Yes</span> bulk download of upcoming dates</td>
+            <td>EPS estimate + actual + surprise %, one ticker per call*</td>
+            <td><span class="tag part">EPS only</span></td>
+            <td>$49.99/mo (75 calls/min)</td>
+          </tr>
+          <tr>
+            <th scope="row">API Ninjas</th>
+            <td>Last 12 months; 50 results per call; non-commercial</td>
+            <td><span class="tag part">Paid</span> upcoming dates are paid-only</td>
+            <td>Free: actual EPS + revenue only. Paid: estimates and surprise %</td>
+            <td><span class="tag part">Paid</span> (flags on Business tier)</td>
+            <td>Paid plans</td>
+          </tr>
+          <tr>
+            <th scope="row">EODHD</th>
+            <td>20 calls/day; no calendar</td>
+            <td><span class="tag no">Paid</span> Fundamentals plan</td>
+            <td>EPS actual, estimate, surprise</td>
+            <td><span class="tag part">Paid</span></td>
+            <td>$59.99/mo ($49.99/mo yearly)</td>
+          </tr>
+          <tr>
+            <th scope="row">SEC EDGAR<small>Official, free</small></th>
+            <td>Free</td>
+            <td><span class="tag part">Names only</span> ticker → company name</td>
+            <td>Actual results from filings; no estimates</td>
+            <td><span class="tag no">No</span></td>
+            <td>Free</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note" style="padding: 0 24px 20px">* From memory, not confirmed on the provider's own pages: Finnhub's exact field names, and Alpha Vantage's earnings endpoint details. Confirm with a test call before building on them.</p>
+  </section>
+
+  <section>
+    <div class="bar hud"><span>02 / <b>Why Finnhub</b></span><span>Plan for this app</span></div>
+    <div class="content">
+      <ul>
+        <li><strong>One request covers the month.</strong> <code>/calendar/earnings?from=2026-10-01&amp;to=2026-10-31</code> returns date, ticker, before-open / after-close timing, and EPS + revenue estimate and actual.</li>
+        <li><strong>It fits the free plan.</strong> Fetch on the server and cache for a few hours: a handful of calls a day, far under 60/min.</li>
+        <li><strong>Company names are missing.</strong> Fill them from SEC's free <code>company_tickers.json</code>, one file mapping every US ticker to its name.</li>
+        <li><strong>The chart gets 4 bars, not 8.</strong> The free plan returns 4 quarters of EPS surprises; 8 needs a paid plan.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section>
+    <div class="bar hud"><span>03 / <b>Before going live</b></span><span>Checks</span></div>
+    <div class="content">
+      <ol>
+        <li><strong>License.</strong> Free plans are usually for personal or non-commercial use. Showing their data on a public website often needs a paid plan, so check the terms of whichever service you pick.</li>
+        <li><strong>Adjusted vs GAAP.</strong> Most services compare <em>adjusted</em> EPS against consensus, as DESIGN.md asks. Don't mix in GAAP actuals from SEC filings.</li>
+        <li><strong>Unofficial feeds.</strong> Nasdaq's website feed, and scraper services that resell it, are free but undocumented, can break without warning, and aren't licensed for reuse. Prototype only.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="bar hud"><span>04 / <b>Sources</b></span><span>Opened or searched Oct 23, 2026</span></div>
+    <div class="content">
+      <ul>
+        <li><a href="https://www.alphavantage.co/support/">Alpha Vantage support (free limits)</a> · <a href="https://www.alphavantage.co/premium/">Alpha Vantage premium pricing</a></li>
+        <li><a href="https://eodhd.com/pricing">EODHD pricing</a> · <a href="https://eodhd.com/financial-apis/calendar-upcoming-earnings-ipos-and-splits">EODHD calendar API</a></li>
+        <li><a href="https://api-ninjas.com/api/earningscalendar">API Ninjas Earnings Calendar API</a></li>
+        <li><a href="https://site.financialmodelingprep.com/developer/docs/stable/earnings-calendar">FMP Earnings Calendar API docs</a> · <a href="https://site.financialmodelingprep.com/insights/platform/how-to-choose-the-right-financial-modeling-prep-plan-for-your-workflow">FMP plan guide</a> · <a href="https://site.financialmodelingprep.com/it/education/other/do-you-need-a-credit-card-to-use-financial-modeling-prep">FMP limits explainer</a></li>
+        <li><a href="https://nexusfi.com/d/data-providers/finnhub/">NexusFi: Finnhub profile</a> · <a href="https://nexusfi.com/d/data-providers/financial-modeling-prep/">NexusFi: FMP profile</a> · <a href="https://www.jentic.com/apis/finnhub">Jentic: Finnhub API</a> · <a href="https://github.com/Finnhub-Stock-API/finnhub-js/issues/2">finnhub-js issue #2</a></li>
+        <li><a href="https://apify.com/gochujang/stock-earnings-tracker">Apify Nasdaq-based earnings tracker</a> · <a href="https://apify.com/michael_b/stock-earnings-calendar">Apify earnings calendar</a></li>
+      </ul>
+      <p class="note">Finnhub's and FMP's own pricing pages couldn't be read directly (one returned no details, one blocked access); their figures come from third-party summaries and search results. Prices change, so recheck before paying.</p>
+    </div>
+  </section>
+
+  <footer class="hud">Earnings Report · research notes</footer>
+</main>
+</body>
+</html>
