@@ -151,8 +151,8 @@ Icons: lucide-react, 14px, stroke 2. No emoji.
 
 - Default view: current month, today highlighted; week starts Monday, weekends hidden.
 - Prev/Today/Next navigate months (Week view = same cell design, one row, taller cells, show all tiles).
-- Search: filters by ticker prefix or company name. **Dims** non-matches instead of removing them, so the grid never reflows.
-- Watchlist toggle: dims non-watchlist tiles the same way. Watchlist stored in `localStorage` for the MVP.
+- Search: filters by ticker prefix or company name. **Dims** non-matches instead of removing them, so the grid never reflows. A `+N` tile with matches inside gets a blue border and a count badge; with none, it dims. A drop-down under the search box lists every match in the month on any exchange (rows like the `+N` modal, with the date after the ticker).
+- Watchlist toggle: dims non-watchlist tiles the same way. Add / remove with the "Add to watchlist" button in the DetailsSheet. Stored in `localStorage` for the MVP.
 - Click tile → DetailsSheet. URL reflects selection (`?t=NFLX`) so it's shareable; `Esc` closes.
 - Status logic: Beat = EPS ≥ est and revenue ≥ est; Miss = both below; Mixed = one each; Upcoming = not yet reported. Only compute surprise when estimate and actual share an accounting basis (adjusted vs. GAAP).
 - Theme: light default, toggle in top bar, `class="dark"` on `<html>`, persisted in `localStorage`, respects `prefers-color-scheme` on first visit.

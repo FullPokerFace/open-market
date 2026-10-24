@@ -120,18 +120,18 @@
 
   <header class="title">
     <h1>Earnings Report <span>features</span>.</h1>
-    <p class="lead"><strong>The calendar runs on live Finnhub data with exchange filtering, a details panel and a "+N" companies modal.</strong> Next up: a market-cap filter, then wider search and a saved watchlist.</p>
+    <p class="lead"><strong>The calendar runs on live Finnhub data with exchange filtering, a details panel, a "+N" companies modal, month-wide search and a saved watchlist.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
   </header>
 
   <section>
     <div class="bar hud"><span>00 / <b>Summary</b></span><span>38 features tracked</span></div>
-    <div class="progress-head"><b>63%</b><span>24 of 38 features done · 14 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 24, high priority 3, medium 4, before launch 2, low 5">
-      <span class="c-done" style="flex: 24"></span><span class="c-high" style="flex: 3"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 2"></span><span class="c-low" style="flex: 5"></span>
+    <div class="progress-head"><b>68%</b><span>26 of 38 features done · 12 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 26, high priority 1, medium 4, before launch 2, low 5">
+      <span class="c-done" style="flex: 26"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 2"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>24</b><span class="hud"><i class="sw"></i>Done</span></div>
-      <div class="stat c-high"><b>3</b><span class="hud"><i class="sw"></i>High priority</span></div>
+      <div class="stat c-done"><b>26</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>2</b><span class="hud"><i class="sw"></i>Before launch</span></div>
       <div class="stat c-low"><b>5</b><span class="hud"><i class="sw"></i>Low</span></div>
@@ -142,7 +142,8 @@
         <ul>
           <li>Foundation <b>5</b></li>
           <li>Live data <b>6</b></li>
-          <li>Calendar <b>9</b></li>
+          <li>Calendar <b>7</b></li>
+          <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
         </ul>
       </div>
@@ -150,7 +151,6 @@
         <h4 class="hud">To do by area</h4>
         <ul>
           <li>Filters <span class="dots"><i class="sw c-high"></i><i class="sw c-med"></i></span></li>
-          <li>Search &amp; watchlist <span class="dots"><i class="sw c-high"></i><i class="sw c-high"></i></span></li>
           <li>Calendar &amp; layout <span class="dots"><i class="sw c-med"></i><i class="sw c-med"></i></span></li>
           <li>Details panel <span class="dots"><i class="sw c-med"></i><i class="sw c-low"></i></span></li>
           <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
@@ -161,15 +161,15 @@
         <h4 class="hud">Next up</h4>
         <ol>
           <li><span class="n">1</span> Market-cap filter</li>
-          <li><span class="n">2</span> Search all companies</li>
-          <li><span class="n">3</span> Editable, saved watchlist</li>
+          <li><span class="n">2</span> Shareable company link</li>
+          <li><span class="n">3</span> Phone layout</li>
         </ol>
       </div>
     </div>
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>24 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>26 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">5</span></div>
     <div class="scroll">
@@ -204,7 +204,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Calendar</h3><span class="hud">9</span></div>
+    <div class="sub"><h3>Calendar</h3><span class="hud">7</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -213,13 +213,26 @@
         <tbody>
           <tr><th scope="row">Month grid</th><td>Monday–Friday weeks, today highlighted, past days shaded. 1440px frame with large cells.</td><td><code>month-grid.jsx</code></td></tr>
           <tr><th scope="row">Ticker tiles</th><td>Up to 16 per day, largest companies first (by revenue estimate). Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
-          <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing. Loads on open from the cached month data; picking one opens its details.</td><td><code>more-companies-dialog.jsx</code></td></tr>
+          <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing. Loads on open from the cached month data; picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
           <tr><th scope="row">Month navigation</th><td>Previous / next arrows and Today, saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
           <tr><th scope="row">Exchange filter</th><td>NYSE (default) · Nasdaq · NYSE American · All, with per-month counts. Saved in the URL; ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code></td></tr>
           <tr><th scope="row">OTC and funds excluded</th><td>OTC stocks, closed-end funds and tickers with no known exchange are left out (October: 1,627 → 1,350).</td><td><code>getListedSymbols()</code></td></tr>
-          <tr><th scope="row">Search</th><td>Fades tiles that don't match a ticker prefix or company name, so the grid never reflows.</td><td><code>site-header.jsx</code></td></tr>
-          <tr><th scope="row">Watchlist toggle</th><td>Fades tiles not on the watchlist (a fixed list of 7 tickers for now).</td><td><code>earnings-calendar.jsx</code></td></tr>
           <tr><th scope="row">Legend</th><td>Beat · Mixed · Miss · No mark (upcoming), with the data source.</td><td><code>status-legend.jsx</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Search &amp; watchlist</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Calendar search</th><td>Fades tiles that don't match a ticker prefix or company name, so the grid never reflows. Also sees companies inside "+N": the "+N" tile gets a blue outline and match count, or fades when nothing inside matches. The bar above the grid shows "N matches this month".</td><td><code>month-grid.jsx</code></td></tr>
+          <tr><th scope="row">Search results</th><td>Drop-down under the search box listing every listed company reporting that month on any exchange, not just the selected one: ticker, date, name, result or timing, by date (up to 100). Enter opens the first; Escape or a click outside closes it. Waits 150ms after typing.</td><td><code>search-results.jsx</code>, <code>/api/search</code></td></tr>
+          <tr><th scope="row">Watchlist toggle</th><td>Header button and All / Watchlist switch fade tiles not on the watchlist; search results are narrowed to it too. Says so when the watchlist is empty.</td><td><code>earnings-calendar.jsx</code></td></tr>
+          <tr><th scope="row">Saved watchlist</th><td>"Add to watchlist" / "On your watchlist" button in the details panel. Saved in <code>localStorage</code>, synced across open tabs; starts with 7 tickers on a first visit.</td><td><code>src/lib/watchlist.js</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -242,7 +255,7 @@
   </section>
 
   <section class="c-med">
-    <div class="bar hud"><span>02 / <b>To do</b></span><span>14 items · priority is a suggestion</span></div>
+    <div class="bar hud"><span>02 / <b>To do</b></span><span>12 items · priority is a suggestion</span></div>
     <div class="section-title"><h2>What's <span>next</span>.</h2><p>Grouped by area. Priority: <span class="tag c-high">High</span> <span class="tag c-med">Medium</span> <span class="tag c-launch">Before launch</span> <span class="tag c-low">Low</span></p></div>
     <div class="sub"><h3>Filters</h3><span class="hud">2</span></div>
     <div class="scroll">
@@ -253,19 +266,6 @@
         <tbody>
           <tr><th scope="row">Market-cap filter</th><td>Size: Large · Mid · Small · All (cutoffs $10B / $2B). Real market cap from Finnhub company profiles, fetched by a script at ~55 calls/min (~1 hour first run, weekly refresh) and saved to a file. Revenue estimate as a fallback for companies not yet looked up. Kept in the URL, with per-month counts.</td><td><span class="tag c-high">High</span></td></tr>
           <tr><th scope="row">Region filter (US / Foreign)</th><td>Free option: split US-listed companies by home country using profile lookups, alongside the market-cap script. Real Europe / Worldwide calendars need Finnhub premium (price not checked) or another provider.</td><td><span class="tag c-med">Medium</span></td></tr>
-        </tbody>
-      </table>
-    </div>
-
-    <div class="sub"><h3>Search &amp; watchlist</h3><span class="hud">2</span></div>
-    <div class="scroll">
-      <table>
-        <thead class="hud">
-          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">Search all companies</th><td>Search and watchlist currently only see visible tiles, not companies inside "+N". Search the whole month's list.</td><td><span class="tag c-high">High</span></td></tr>
-          <tr><th scope="row">Editable, saved watchlist</th><td>Add or remove tickers; save in the browser (DESIGN.md: <code>localStorage</code> for the MVP).</td><td><span class="tag c-high">High</span></td></tr>
         </tbody>
       </table>
     </div>
