@@ -1,4 +1,5 @@
 import { emailConfigured, sendEmail } from "@/lib/email";
+import { buildSuggestionEmail } from "@/lib/suggestion-email";
 
 // Runs on Node.js (the default; `runtime` can't be set with cacheComponents), which nodemailer needs
 export const maxDuration = 30;
@@ -44,13 +45,8 @@ export async function POST(request) {
   if (!emailConfigured()) return reply({ error: "Suggestions are temporarily unavailable." }, 503);
   if (overLimit(visitor(request))) return reply({ error: "Thanks! That's a lot of ideas. Try again in an hour." }, 429);
 
-  // First line, flattened, as the subject preview
-  const preview = message.replace(/\s+/g, " ").slice(0, 60);
   try {
-    const result = await sendEmail({
-      subject: `Feature suggestion: ${preview}${message.length > 60 ? "…" : ""}`,
-      text: `New feature suggestion from the Earnings Report site:\n\n${message}\n\nSent ${new Date().toISOString()}`,
-    });
+    const result = await sendEmail(buildSuggestionEmail({ message, site: new URL(request.url).origin }));
     if (!result.accepted?.length || result.rejected?.length) throw new Error("Not accepted");
     return reply({ sent: true });
   } catch (error) {

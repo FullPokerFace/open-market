@@ -8,7 +8,7 @@ export function emailConfigured() {
 }
 
 // Sends to the owner's own inbox unless `to` is given
-export async function sendEmail({ to, subject, text, replyTo }) {
+export async function sendEmail({ to, subject, text, html, replyTo }) {
   const user = process.env.GMAIL_SENDER_ADDRESS?.trim();
   const pass = process.env.GMAIL_APP_PASSWORD?.replace(/\s/g, "");
   if (!user || !pass) throw new Error("Email is not configured. Set GMAIL_SENDER_ADDRESS and GMAIL_APP_PASSWORD.");
@@ -35,6 +35,7 @@ export async function sendEmail({ to, subject, text, replyTo }) {
       replyTo,
       subject,
       text,
+      html,
     });
     // SMTP acceptance is not confirmation of inbox delivery
     return { messageId: result.messageId, accepted: result.accepted, rejected: result.rejected };
