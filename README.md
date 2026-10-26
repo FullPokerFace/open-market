@@ -15,10 +15,12 @@ Open Market is built by the people who use it. Suggest a feature (in the app or 
 
 ## Getting started
 
-Needs Node.js and a free [Finnhub](https://finnhub.io) API key. Create `.env.local`:
+Needs Node.js, a free [Finnhub](https://finnhub.io) API key and a MongoDB Atlas user. Copy `example.env` to `.env.local` and fill it in; the main values are:
 
 ```bash
 FINNHUB_API_KEY=your_key
+MONGO_DB_USER=your_mongo_user
+MONGO_DB_PASSWORD=your_mongo_password
 # Optional: the "Suggest a feature" board (moderation and card titles by OpenAI)
 OPEN_AI_KEY=your_openai_key
 # Optional: emails each suggestion to you through Gmail SMTP
