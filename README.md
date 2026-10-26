@@ -1,21 +1,56 @@
 # Open Market
 
-A free, open-source earnings calendar, made for its users to create and maintain features together as a community.
+**Every free market tool in one place, built by the people who use it.**
 
-- Every company reporting earnings, by day, week or month, marked by when it reports and whether it beat, missed or was mixed
-- Your own ticker lists, a watchlist and search
-- Market sentiment (CNN Fear & Greed) and the next Fed, CPI, jobs and GDP releases
-- Company details: EPS and revenue against estimates, surprise history, SEC filings
+Checking the market today means a dozen tabs: one site for earnings dates, another for the Fear & Greed Index, another for Fed odds, another for SEC filings, each with its own ads, sign-ups and paywalls. Open Market puts them on one page, free and open source, with no account needed.
 
-See what's live and what's next on the in-app Roadmap page (`/roadmap`), or in `docs/features.html`.
+It starts with an earnings calendar and market context. What comes next is up to its users: anyone can suggest a tool, vote on what gets built, or build it themselves.
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="docs/images/calendar-dark.png">
+  <img alt="Open Market's main page: the market sentiment meter and upcoming Fed, GDP, jobs and CPI releases above an October earnings calendar, with each company's ticker marked by when it reports and whether it beat or missed" src="docs/images/calendar-light.png">
+</picture>
+
+## What's in it today
+
+**Earnings calendar**
+- Every company reporting, by day, week or month, with the whole month fitting on one screen
+- Each company marked by when it reports (before the open, during the day, after the close) and whether it beat, missed or was mixed against estimates
+- Filter by Most popular (the Fortune 100), NYSE or Nasdaq, or make your own ticker lists
+- Search any company reporting this month or the next two, and a watchlist kept in your browser
+
+**Market context**
+- The CNN Fear & Greed Index and its change since the last close
+- The next Fed decision with Kalshi's odds of a cut, hold or hike, plus CPI, jobs and GDP dates and expectations
+
+**Company details**
+- EPS and revenue against estimates, with the surprise in percent
+- An EPS surprise chart for the last four quarters
+- One click to the company's earnings release and SEC filings
+
+**Community roadmap**
+- Suggest a feature from the menu: each idea becomes a short card on a public board, and repeats are merged into the idea they match
+- Everyone votes ideas up or down, and the most wanted rise to the top of the in-app Roadmap page (`/roadmap`)
+
+Works in light and dark, and on phones. See everything that's live and planned in `docs/features.html`.
+
+## The idea
+
+Good market tools exist, but they're scattered, and the free ones are usually a funnel into a paid plan. Open Market aims to be the one free place for them:
+
+- **One place.** Earnings, sentiment, macro releases and company data side by side, with more tools added over time.
+- **Free.** Built on free data sources, with no account, paywall or ads.
+- **Community-run.** There's no company deciding what comes next. Users suggest and vote on features, build them, and help keep them working.
 
 ## Contributing
 
-Open Market is built by the people who use it. Suggest a feature (in the app or as an issue), pick something off the roadmap, or fix a bug, then open a pull request at [github.com/FullPokerFace/open-market](https://github.com/FullPokerFace/open-market).
+1. **Suggest:** post an idea with *Suggest a feature* in the app (or open an issue), and vote on other people's.
+2. **Build:** pick something from the roadmap or your own idea, fork the repo and open a pull request at [github.com/FullPokerFace/open-market](https://github.com/FullPokerFace/open-market).
+3. **Maintain:** review changes, fix what breaks and keep data sources working.
 
 ## Getting started
 
-Needs Node.js, a free [Finnhub](https://finnhub.io) API key and a MongoDB Atlas user. Copy `example.env` to `.env.local` and fill it in; the main values are:
+Needs Node.js, a free [Finnhub](https://finnhub.io) API key and a [MongoDB Atlas](https://www.mongodb.com/atlas) user. Copy `example.env` to `.env.local` and fill it in:
 
 ```bash
 FINNHUB_API_KEY=your_key
@@ -35,12 +70,12 @@ npm install
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). Every request sent to Finnhub is logged in the server console.
+Open [http://localhost:3000](http://localhost:3000). Data from every source is saved in MongoDB as it comes in, so pages load fast and keep working when a source has a hiccup; each request to a source is logged in the server console.
 
-Built with Next.js 16 (App Router), Tailwind CSS v4 and shadcn/ui (Base UI). Design notes are in `docs/DESIGN.md`.
+Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, shadcn/ui (Base UI) and MongoDB. Design notes are in `docs/DESIGN.md`.
 
 ## Credits
 
-Data from [Finnhub](https://finnhub.io), [SEC EDGAR](https://www.sec.gov/edgar), [Kalshi](https://kalshi.com) and [CNN Fear & Greed](https://www.cnn.com/markets/fear-and-greed). Design inspired by [ArtCraft](https://getartcraft.com).
+Data from [Finnhub](https://finnhub.io), [SEC EDGAR](https://www.sec.gov/edgar), [Kalshi](https://kalshi.com) and [CNN Fear & Greed](https://www.cnn.com/markets/fear-and-greed). Suggestion cards written with [OpenAI](https://openai.com). Design inspired by [ArtCraft](https://getartcraft.com).
 
 Open Market is for information only and isn't investment advice.
