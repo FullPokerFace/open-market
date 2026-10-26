@@ -1,21 +1,27 @@
 "use client";
 
+import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 import { MoonIcon, SearchIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { SearchResults } from "./search-results";
-import { SuggestFeatureDialog } from "./suggest-feature-dialog";
+import { SuggestFeatureButton } from "./suggest-feature-dialog";
 
 const navItem = "px-2.5 py-1 text-foreground no-underline";
+const PAGES = [
+  { href: "/", label: "Calendar" },
+  { href: "/roadmap", label: "Roadmap" },
+];
 
+// Search only shows on pages that pass its props (the calendar)
 export function SiteHeader({ query, onQueryChange, results, searchState, onSelectResult }) {
+  const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
   const [resultsOpen, setResultsOpen] = useState(false);
-  const [suggestOpen, setSuggestOpen] = useState(false);
   const searchRef = useRef(null);
-  const showResults = resultsOpen && query.trim() !== "";
+  const showResults = resultsOpen && Boolean(query?.trim());
 
   // Close on a click anywhere outside the search box and its results
   useEffect(() => {
@@ -45,48 +51,55 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
       </Link>
 
       <nav aria-label="Primary" className="flex flex-wrap items-center gap-1 px-3">
-        <Link href="/" aria-current="page" className={cn(navItem, "bg-foreground text-background")}>
-          Calendar
-        </Link>
-        <button type="button" onClick={() => setSuggestOpen(true)} className={cn(navItem, "cursor-pointer uppercase")}>
-          Suggest a feature
-        </button>
+        {PAGES.map(({ href, label }) => {
+          const current = pathname === href;
+          return (
+            <Fragment key={href}>
+              <Link
+                href={href}
+                aria-current={current ? "page" : undefined}
+                className={cn(navItem, current && "bg-foreground text-background")}
+              >
+                {label}
+              </Link>
+              <MenuDivider />
+            </Fragment>
+          );
+        })}
+        <SuggestFeatureButton className={cn(navItem, "cursor-pointer uppercase")} />
       </nav>
 
       <div className="ml-auto flex items-stretch">
-        <div
-          ref={searchRef}
-          className="relative flex"
-          onKeyDown={(e) => e.key === "Escape" && setResultsOpen(false)}
-          // Tabbing out of the box and its results closes them
-          onBlur={(e) => e.relatedTarget && !e.currentTarget.contains(e.relatedTarget) && setResultsOpen(false)}
-        >
-          <label className="flex items-center gap-2 border-l px-3.5">
-            <SearchIcon className="size-3.5 text-muted-foreground" strokeWidth={2.2} aria-hidden="true" />
-            <span className="sr-only">Search ticker or company</span>
-            <input
-              type="search"
-              value={query}
-              onChange={(e) => {
-                onQueryChange(e.target.value);
-                setResultsOpen(true);
-              }}
-              onFocus={() => setResultsOpen(true)}
-              onKeyDown={onSearchKeyDown}
-              aria-controls={showResults ? "search-results" : undefined}
-              placeholder="SEARCH TICKER"
-              className="w-37.5 border-0 bg-transparent text-foreground uppercase outline-none placeholder:text-muted-foreground"
-            />
-          </label>
-          {showResults && (
-            <SearchResults
-              query={query.trim()}
-              results={results}
-              state={searchState}
-              onSelect={selectResult}
-            />
-          )}
-        </div>
+        {onQueryChange && (
+          <div
+            ref={searchRef}
+            className="relative flex"
+            onKeyDown={(e) => e.key === "Escape" && setResultsOpen(false)}
+            // Tabbing out of the box and its results closes them
+            onBlur={(e) => e.relatedTarget && !e.currentTarget.contains(e.relatedTarget) && setResultsOpen(false)}
+          >
+            <label className="flex items-center gap-2 border-l px-3.5">
+              <SearchIcon className="size-3.5 text-muted-foreground" strokeWidth={2.2} aria-hidden="true" />
+              <span className="sr-only">Search ticker or company</span>
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => {
+                  onQueryChange(e.target.value);
+                  setResultsOpen(true);
+                }}
+                onFocus={() => setResultsOpen(true)}
+                onKeyDown={onSearchKeyDown}
+                aria-controls={showResults ? "search-results" : undefined}
+                placeholder="SEARCH TICKER"
+                className="w-37.5 border-0 bg-transparent text-foreground uppercase outline-none placeholder:text-muted-foreground"
+              />
+            </label>
+            {showResults && (
+              <SearchResults query={query.trim()} results={results} state={searchState} onSelect={selectResult} />
+            )}
+          </div>
+        )}
         <button
           type="button"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -97,8 +110,14 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
           <SunIcon className="hidden size-3.5 dark:block" aria-hidden="true" />
         </button>
       </div>
-
-      <SuggestFeatureDialog open={suggestOpen} onOpenChange={setSuggestOpen} />
     </header>
+  );
+}
+
+function MenuDivider() {
+  return (
+    <span aria-hidden="true" className="px-1 text-muted-foreground/50">
+      |
+    </span>
   );
 }

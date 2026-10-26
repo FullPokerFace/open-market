@@ -124,13 +124,13 @@
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>51 features tracked</span></div>
-    <div class="progress-head"><b>75%</b><span>38 of 51 features done · 13 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 38, high priority 1, medium 4, before launch 3, low 5">
-      <span class="c-done" style="flex: 38"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>52 features tracked</span></div>
+    <div class="progress-head"><b>75%</b><span>39 of 52 features done · 13 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 39, high priority 1, medium 4, before launch 3, low 5">
+      <span class="c-done" style="flex: 39"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>38</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>39</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -145,7 +145,7 @@
           <li>Calendar <b>13</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
-          <li>Header &amp; feedback <b>3</b></li>
+          <li>Header &amp; feedback <b>4</b></li>
         </ul>
       </div>
       <div>
@@ -170,7 +170,7 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>38 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>39 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">7</span></div>
     <div class="scroll">
@@ -262,15 +262,16 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Header &amp; feedback</h3><span class="hud">3</span></div>
+    <div class="sub"><h3>Header &amp; feedback</h3><span class="hud">4</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
           <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Header menu</th><td>Two items: Calendar (unchanged) and Suggest a feature. The Watchlist button and the unused Insights link were removed.</td><td><code>site-header.jsx</code></td></tr>
+          <tr><th scope="row">Header menu</th><td>Calendar | Roadmap | Suggest a feature, with a faint "|" between items; the current page is highlighted. The search box only shows on the calendar. The Watchlist button and the unused Insights link were removed.</td><td><code>site-header.jsx</code></td></tr>
           <tr><th scope="row">Suggest a feature dialog</th><td>Opens from the menu: "Suggest a <span style="color: var(--blue)">feature</span>." title, a text box (example: "Add a P/L calendar") with a character count, and a Send button. Send stays off until there are 3+ characters; shows "Sending…", then "Sent. Thanks for the idea!", or the error under the box. An unsent draft is kept if the dialog is closed. Built from the shared UI parts: Button, Dialog, and the new Label and Textarea.</td><td><code>suggest-feature-dialog.jsx</code>, <code>src/components/ui/label.jsx</code>, <code>textarea.jsx</code></td></tr>
+          <tr><th scope="row">Roadmap page</th><td>Public page at <code>/roadmap</code> built from this doc, written for visitors: percent live with a progress bar, "What's live" by area, "What's next" as Next up / Planned / Later, and a "Have an idea?" button that opens Suggest a feature. Internal work (caching, hosting, licensing, docs) stays out. Update <code>src/lib/roadmap.js</code> when this doc changes.</td><td><code>src/app/roadmap/page.js</code>, <code>src/lib/roadmap.js</code></td></tr>
           <tr><th scope="row">Suggestion email</th><td>The server emails each suggestion to <code>GMAIL_SENDER_ADDRESS</code> through Gmail SMTP with <code>GMAIL_APP_PASSWORD</code> (nodemailer, same setup as FedWatch), subject "Feature suggestion: …". Rejects other sites' requests, messages under 3 or over 2,000 characters, and more than 5 a visitor an hour (kept in memory, resets on restart). Says "temporarily unavailable" if the env vars are missing. Tested: a real suggestion arrived.</td><td><code>/api/suggestions</code>, <code>src/lib/email.js</code></td></tr>
         </tbody>
       </table>

@@ -10,7 +10,20 @@ import { Textarea } from "@/components/ui/textarea";
 const MAX_LENGTH = 2000;
 const actionButton = "h-10 px-4.5 font-mono text-[11px] font-bold tracking-[0.12em] uppercase";
 
-// Header menu dialog: the suggestion is emailed to the site owner through /api/suggestions
+// Any button that opens the dialog: the header menu item, the roadmap's call to action
+export function SuggestFeatureButton({ className, children = "Suggest a feature" }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <button type="button" onClick={() => setOpen(true)} className={className}>
+        {children}
+      </button>
+      <SuggestFeatureDialog open={open} onOpenChange={setOpen} />
+    </>
+  );
+}
+
+// The suggestion is emailed to the site owner through /api/suggestions
 export function SuggestFeatureDialog({ open, onOpenChange }) {
   const [message, setMessage] = useState("");
   // idle | sending | sent | error
