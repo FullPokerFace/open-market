@@ -226,3 +226,18 @@
     @apply font-sans;
   }
 }
+
+/* Key release card on its release day: a blue ring that pulses out and fades, on repeat */
+@theme {
+  --animate-release-pulse: release-pulse 1.8s ease-out infinite;
+
+  @keyframes release-pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--blue) 55%, transparent);
+    }
+    70%,
+    100% {
+      box-shadow: 0 0 0 8px color-mix(in srgb, var(--blue) 0%, transparent);
+    }
+  }
+}

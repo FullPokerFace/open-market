@@ -133,15 +133,26 @@ function KeyReleases({ events, today }) {
 
 function ReleaseCard({ event, today }) {
   const soon = daysBetween(today, event.date) <= 1;
+  // Out today: blue frame with a continuous pulse (still frame only when reduced motion is on)
+  const live = event.date === today;
 
   return (
-    <li className={cn("flex min-w-0 flex-col gap-1 border bg-tile px-3 py-2 shadow-tile", soon && "border-foreground")}>
+    <li
+      className={cn(
+        "flex min-w-0 flex-col gap-1 border bg-tile px-3 py-2 shadow-tile",
+        soon && "border-foreground",
+        live && "border-blue motion-safe:animate-release-pulse"
+      )}
+    >
       <div className="eyebrow flex flex-col justify-between gap-2 text-[10px] text-muted-foreground">
         <span>
           {event.dateLabel}
           {event.timeLabel}
         </span>
-        <span className={cn(soon && "font-bold text-blue")}>{untilLabel(today, event.date)}</span>
+        <span className={cn("inline-flex items-center gap-1.5", soon && "font-bold text-blue")}>
+          {live && <LiveDot />}
+          {untilLabel(today, event.date)}
+        </span>
       </div>
       <div className="truncate text-[14px] font-semibold text-strong">
         {event.title}
@@ -149,6 +160,15 @@ function ReleaseCard({ event, today }) {
       </div>
       {event.outcomes ? <Outcomes outcomes={event.outcomes} /> : <Expectations items={event.expectations} />}
     </li>
+  );
+}
+
+function LiveDot() {
+  return (
+    <span className="relative flex size-1.5" aria-hidden="true">
+      <span className="absolute inline-flex size-full rounded-full bg-blue opacity-75 motion-safe:animate-ping" />
+      <span className="relative inline-flex size-1.5 rounded-full bg-blue" />
+    </span>
   );
 }
 
