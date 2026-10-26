@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { matchesQuery } from "@/lib/earnings";
 import { useWatchlist } from "@/lib/watchlist";
-import { CalendarToolbar } from "./calendar-toolbar";
+import { CalendarTitle, CalendarToolbar } from "./calendar-toolbar";
 import { EarningsDetailsSheet } from "./earnings-details-sheet";
 import { ExchangeFilter } from "./exchange-filter";
 import { MonthGrid } from "./month-grid";
@@ -154,10 +154,12 @@ export function EarningsCalendar({ view, sentiment, events }) {
       />
 
       <main className="mx-auto box-border flex w-full max-w-360 flex-1 flex-col border-x">
+
         <MarketSentiment sentiment={sentiment} events={events} today={view.today} />
-        <ExchangeFilter filters={view.filters} />
-        <CalendarToolbar view={view} scope={scope} onScopeChange={setScope} onToday={jumpToToday} />
-        <StatusLegend />
+        <CalendarTitle view={view} />
+        <ExchangeFilter filters={view.filters}>
+          <CalendarToolbar view={view} scope={scope} onScopeChange={setScope} onToday={jumpToToday} />
+        </ExchangeFilter>
 
         <MonthGrid
           days={view.days}
@@ -166,6 +168,8 @@ export function EarningsCalendar({ view, sentiment, events }) {
           onSelect={selectEarnings}
           onShowMore={showMore}
         />
+        <StatusLegend />
+
       </main>
 
       <MoreCompaniesDialog

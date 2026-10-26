@@ -1,5 +1,6 @@
 import { daysBetween } from "@/lib/earnings";
 import { cn } from "@/lib/utils";
+import { Title } from "@/components/ui/title";
 
 // CNN's bands, left to right; `width` is the band's share of 0–100
 const ZONES = [
@@ -45,9 +46,11 @@ export function MarketSentiment({ sentiment, events, today }) {
 function FearGreed({ sentiment }) {
   return (
     <div className="box-border flex w-full flex-col gap-3 border-b px-6 py-8 sm:w-80 sm:border-r sm:border-b-0">
-      <div className="eyebrow flex justify-between text-muted-foreground">
-        <span className="text-foreground">Market sentiment</span>
-        <span>CNN Fear &amp; Greed</span>
+      <div className="flex items-baseline justify-between gap-3">
+        <Title level={2} size="md" highlight="sentiment" className="m-0">
+          Market sentiment
+        </Title>
+        <span className="eyebrow text-muted-foreground">CNN</span>
       </div>
 
       {sentiment ? (
@@ -108,9 +111,11 @@ function Meter({ score }) {
 function KeyReleases({ events, today }) {
   return (
     <div className="flex min-w-0 flex-1 flex-col gap-3 px-6 py-8">
-      <div className="eyebrow flex justify-between text-muted-foreground">
-        <span className="text-foreground">Key releases</span>
-        <span>Expectations · Kalshi</span>
+      <div className="flex items-baseline justify-between gap-3">
+        <Title level={2} size="md" highlight="releases" className="m-0">
+          Key releases
+        </Title>
+        <span className="eyebrow text-muted-foreground">Expectations · Kalshi</span>
       </div>
 
       {events?.length ? (

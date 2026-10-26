@@ -6,7 +6,7 @@ const ITEMS = [
 
 export function StatusLegend() {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 px-6 pt-4 font-mono text-[10px] font-medium tracking-[0.1em] uppercase">
+    <div className="flex flex-wrap items-center justify-between gap-3 px-6 pb-4 font-mono text-[10px] font-medium tracking-[0.1em] uppercase">
       <div className="flex flex-wrap items-center gap-1.5">
         LEGEND:
         {ITEMS.map(({ label, text, swatch }) => (
