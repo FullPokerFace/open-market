@@ -29,6 +29,8 @@ function countMatches(days, isMatch) {
 
 export function EarningsCalendar({ view, sentiment, events }) {
   const [query, setQuery] = useState("");
+  // The header's search results are open: only then does the query dim the companies that don't match
+  const [searchOpen, setSearchOpen] = useState(false);
   const [scope, setScope] = useState("all");
   const watchlist = useWatchlist();
   const tickerLists = useTickerLists();
@@ -50,8 +52,10 @@ export function EarningsCalendar({ view, sentiment, events }) {
   const dayRequests = useRef({});
 
   const q = query.trim().toUpperCase();
-  const filtering = Boolean(q) || scope === "watchlist";
-  const isMatch = (e) => matchesQuery(e, q) && (scope === "all" || watchlist.has(e.ticker));
+  // Closing search (a click outside, Escape, picking a result) shows every company again; the text is kept
+  const highlight = searchOpen ? q : "";
+  const filtering = Boolean(highlight) || scope === "watchlist";
+  const isMatch = (e) => matchesQuery(e, highlight) && (scope === "all" || watchlist.has(e.ticker));
 
   // Search results come from the server and cover every exchange, not just the selected one
   const search = useCompanySearch(q, view.key);
@@ -150,6 +154,8 @@ export function EarningsCalendar({ view, sentiment, events }) {
       <SiteHeader
         query={query}
         onQueryChange={setQuery}
+        searchOpen={searchOpen}
+        onSearchOpenChange={setSearchOpen}
         results={searchResults}
         searchState={searchState}
         onSelectResult={selectEarnings}

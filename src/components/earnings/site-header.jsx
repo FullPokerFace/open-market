@@ -21,29 +21,29 @@ const PAGES = [
   { href: "/about", label: "About" },
 ];
 
-// Search only shows on pages that pass its props (the calendar).
+// Search only shows on pages that pass its props (the calendar). Whether its results are open is the
+// page's state (`searchOpen`), so the calendar can stop dimming non-matches once search is closed.
 // Below lg the nav (and GitHub link) moves into a burger menu; search and the theme toggle stay in the bar.
-export function SiteHeader({ query, onQueryChange, results, searchState, onSelectResult }) {
+export function SiteHeader({ query, onQueryChange, searchOpen, onSearchOpenChange, results, searchState, onSelectResult }) {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
-  const [resultsOpen, setResultsOpen] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [suggestOpen, setSuggestOpen] = useState(false);
   const searchRef = useRef(null);
-  const showResults = resultsOpen && Boolean(query?.trim());
+  const showResults = Boolean(searchOpen && query?.trim());
 
   // Close on a click anywhere outside the search box and its results
   useEffect(() => {
     if (!showResults) return;
     const onPointerDown = (event) => {
-      if (!searchRef.current?.contains(event.target)) setResultsOpen(false);
+      if (!searchRef.current?.contains(event.target)) onSearchOpenChange(false);
     };
     document.addEventListener("pointerdown", onPointerDown);
     return () => document.removeEventListener("pointerdown", onPointerDown);
-  }, [showResults]);
+  }, [showResults, onSearchOpenChange]);
 
   const selectResult = (earnings) => {
-    setResultsOpen(false);
+    onSearchOpenChange(false);
     onSelectResult(earnings);
   };
 
@@ -98,9 +98,9 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
           <div
             ref={searchRef}
             className="flex min-w-0 flex-1 lg:relative lg:flex-none"
-            onKeyDown={(e) => e.key === "Escape" && setResultsOpen(false)}
+            onKeyDown={(e) => e.key === "Escape" && onSearchOpenChange(false)}
             // Tabbing out of the box and its results closes them
-            onBlur={(e) => e.relatedTarget && !e.currentTarget.contains(e.relatedTarget) && setResultsOpen(false)}
+            onBlur={(e) => e.relatedTarget && !e.currentTarget.contains(e.relatedTarget) && onSearchOpenChange(false)}
           >
             <label className="flex min-w-0 flex-1 items-center gap-2 border-l px-3.5">
               <SearchIcon className="size-3.5 shrink-0 text-muted-foreground" strokeWidth={2.2} aria-hidden="true" />
@@ -110,9 +110,9 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
                 value={query}
                 onChange={(e) => {
                   onQueryChange(e.target.value);
-                  setResultsOpen(true);
+                  onSearchOpenChange(true);
                 }}
-                onFocus={() => setResultsOpen(true)}
+                onFocus={() => onSearchOpenChange(true)}
                 onKeyDown={onSearchKeyDown}
                 aria-controls={showResults ? "search-results" : undefined}
                 placeholder="SEARCH TICKER"
