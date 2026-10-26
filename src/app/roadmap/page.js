@@ -4,12 +4,13 @@ import { SiteHeader } from "@/components/earnings/site-header";
 import { SuggestFeatureButton } from "@/components/earnings/suggest-feature-dialog";
 import { SuggestionBoard } from "@/components/earnings/suggestion-board";
 import { SHIPPED, STAGES, UPCOMING } from "@/lib/roadmap";
-import { SITE_NAME } from "@/lib/site";
+import { pageMetadata, SITE_NAME } from "@/lib/site";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "Roadmap",
-  description: `What's live in ${SITE_NAME} today and what's coming next.`,
-};
+  description: `What's live in ${SITE_NAME} today, what's coming next, and the features visitors are voting for.`,
+  path: "/roadmap",
+});
 
 const shippedCount = SHIPPED.reduce((sum, group) => sum + group.items.length, 0);
 const total = shippedCount + UPCOMING.length;

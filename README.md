@@ -74,6 +74,24 @@ Open [http://localhost:3000](http://localhost:3000). Data from every source is s
 
 Built with Next.js 16 (App Router), React 19, Tailwind CSS v4, shadcn/ui (Base UI) and MongoDB. Design notes are in `docs/DESIGN.md`.
 
+## Testing
+
+End-to-end tests use [Playwright](https://playwright.dev). Install it once:
+
+```bash
+npx playwright install chromium
+```
+
+```bash
+npm run test:e2e           # against localhost:3000 (starts `npm run dev` if it isn't running)
+npm run test:e2e:ui        # same, in Playwright's UI: watch each step on screen
+npm run test:e2e:live      # against the live site, E2E_LIVE_URL in .env.local
+npm run test:e2e:live:ui   # live site, in the UI
+npx playwright show-report # HTML report of the last run
+```
+
+Tests live in `e2e/`. They never write real data: suggestion posts and votes are answered by mocks in the browser, so a run doesn't call OpenAI, change the database or send email, and is safe against production.
+
 ## Credits
 
 Data from [Finnhub](https://finnhub.io), [SEC EDGAR](https://www.sec.gov/edgar), [Kalshi](https://kalshi.com) and [CNN Fear & Greed](https://www.cnn.com/markets/fear-and-greed). Suggestion cards written with [OpenAI](https://openai.com). Design inspired by [ArtCraft](https://getartcraft.com).

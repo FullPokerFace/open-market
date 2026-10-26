@@ -1,7 +1,7 @@
 import { Analytics } from "@vercel/analytics/next";
 import { Bricolage_Grotesque, Geist_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
-import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
+import { rootMetadata } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({
@@ -20,12 +20,8 @@ const bricolage = Bricolage_Grotesque({
   subsets: ["latin"],
 });
 
-// Pages set a short title ("Roadmap"); the template adds the app's name
-export const metadata = {
-  title: { default: `${SITE_NAME} · Earnings calendar`, template: `%s · ${SITE_NAME}` },
-  description: SITE_DESCRIPTION,
-  applicationName: SITE_NAME,
-};
+// Pages set a short title ("Roadmap") through pageMetadata; the template adds the app's name
+export const metadata = rootMetadata;
 
 export default function RootLayout({ children }) {
   return (

@@ -4,12 +4,13 @@ import { GroupTitle, Item, SectionBar } from "@/components/earnings/page-parts";
 import { SiteFooter } from "@/components/earnings/site-footer";
 import { SiteHeader } from "@/components/earnings/site-header";
 import { SuggestFeatureButton } from "@/components/earnings/suggest-feature-dialog";
-import { GITHUB_URL, SITE_NAME } from "@/lib/site";
+import { GITHUB_URL, pageMetadata, SITE_NAME } from "@/lib/site";
 
-export const metadata = {
+export const metadata = pageMetadata({
   title: "About",
   description: `${SITE_NAME} is a free, open-source earnings calendar whose features are created and maintained by its community.`,
-};
+  path: "/about",
+});
 
 const DESIGN_INSPIRATION_URL = "https://getartcraft.com";
 

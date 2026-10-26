@@ -47,3 +47,25 @@ test("theme toggle switches light and dark", async ({ page }) => {
   if (wasDark) await expect(html).not.toHaveClass(/\bdark\b/);
   else await expect(html).toHaveClass(/\bdark\b/);
 });
+
+// Link previews (Open Graph): each page has its own title and a 1200 × 630 image that loads
+for (const [path, title] of [
+  ["/", "Open Market · Earnings calendar"],
+  ["/roadmap", "Roadmap · Open Market"],
+  ["/about", "About · Open Market"],
+]) {
+  test(`link preview for ${path}`, async ({ page, request }) => {
+    await page.goto(path);
+    const meta = (property) => page.locator(`meta[property="${property}"]`);
+    await expect(meta("og:title")).toHaveAttribute("content", title);
+    await expect(meta("og:description")).toHaveAttribute("content", /\S/);
+    await expect(meta("og:image:width")).toHaveAttribute("content", "1200");
+    await expect(page.locator('meta[name="twitter:card"]')).toHaveAttribute("content", "summary_large_image");
+
+    // In dev the image address is localhost, in production the real domain: fetch its path from this site
+    const image = new URL(await meta("og:image").getAttribute("content"));
+    const res = await request.get(image.pathname + image.search);
+    expect(res.ok()).toBeTruthy();
+    expect(res.headers()["content-type"]).toBe("image/png");
+  });
+}
