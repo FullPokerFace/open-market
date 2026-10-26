@@ -92,6 +92,41 @@ export function shiftMonth({ year, month }, delta) {
   return { year: Math.floor(index / 12), month: (index % 12) + 1 };
 }
 
+// Calendar layouts: one day, one Monday–Friday week, or the whole month (default, kept out of the URL)
+export const VIEW_MODES = ["day", "week", "month"];
+
+export function parseViewMode(value) {
+  return VIEW_MODES.includes(value) ? value : "month";
+}
+
+// "YYYY-MM-DD" that is a real date, else null
+export function parseDateKey(value) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(value ?? "")) return null;
+  return toIso(parseIso(value)) === value ? value : null;
+}
+
+// Weekends move on to the following Monday: the next day with earnings
+export function weekdayOf(iso) {
+  const dow = parseIso(iso).getUTCDay();
+  return dow === 6 ? addDays(iso, 2) : dow === 0 ? addDays(iso, 1) : iso;
+}
+
+export function monthOf(iso) {
+  return { year: Number(iso.slice(0, 4)), month: Number(iso.slice(5, 7)) };
+}
+
+// Monday of a weekday's week
+function mondayOf(iso) {
+  return addDays(iso, 1 - parseIso(iso).getUTCDay());
+}
+
+// Next (+1) or previous (-1) weekday
+function shiftWeekday(iso, delta) {
+  let next = addDays(iso, delta);
+  while ([0, 6].includes(parseIso(next).getUTCDay())) next = addDays(next, delta);
+  return next;
+}
+
 // Monday–Friday range that covers every weekday of the month
 export function monthGridRange({ year, month }) {
   const first = toIso(new Date(Date.UTC(year, month - 1, 1)));
@@ -182,11 +217,11 @@ function toEarnings(row, directory) {
   };
 }
 
-// Exchange filter options with this month's company count for each
-function buildFilters({ rows, listings, target, exchange }) {
-  const month = monthKey(target);
-  // Same companies the grid shows: this month, weekdays only
-  const shown = rows.filter((row) => row.date.startsWith(month) && ![0, 6].includes(parseIso(row.date).getUTCDay()));
+// Exchange filter options with the company count in [from, to] for each.
+// `params` keeps the view and date in each link.
+function buildFilters({ rows, listings, from, to, exchange, params }) {
+  // Same companies the grid shows: this period, weekdays only
+  const shown = rows.filter((row) => row.date >= from && row.date <= to && ![0, 6].includes(parseIso(row.date).getUTCDay()));
   const symbols = new Map(shown.map((row) => [row.symbol, listings[row.symbol]]));
   const countFor = (option) => [...symbols].filter(([symbol, mic]) => inOption(option, symbol, mic)).length;
 
@@ -195,7 +230,7 @@ function buildFilters({ rows, listings, target, exchange }) {
     label: option.label,
     count: countFor(option),
     active: option === exchange,
-    href: calendarHref({ month, exchange: exchangeParam(option) }),
+    href: calendarHref({ ...params, exchange: exchangeParam(option) }),
   }));
 }
 
@@ -276,32 +311,102 @@ export function buildHiddenEarnings({ rows, directory, listings, exchange, date 
   return companies.slice(visibleCount(companies.length)).map((row) => toEarnings(row, directory));
 }
 
-export function buildMonthView({ rows: allRows, directory, listings, exchange, target, today }) {
-  const { start, end } = monthGridRange(target);
+// What one view covers, and how to move from it. `focus` is the weekday a week or day view
+// is built around; a month view has none.
+function viewPeriod({ mode, target, focus, today, href }) {
+  const thisWeekday = weekdayOf(today);
+
+  if (mode === "week") {
+    const monday = mondayOf(focus);
+    const friday = addDays(monday, 4);
+    const ends = monday.slice(5, 7) === friday.slice(5, 7) ? String(Number(friday.slice(8))) : shortLabel(friday);
+    return {
+      start: monday,
+      end: friday,
+      params: { view: "week", date: focus },
+      title: `Week of ${shortLabel(monday)}`,
+      label: `${shortLabel(monday)} – ${ends}`,
+      unit: "week",
+      periodNote: "this week",
+      isCurrent: monday === mondayOf(thisWeekday),
+      currentName: "this week",
+      todayHref: href({ view: "week" }),
+      prevHref: href({ view: "week", date: addDays(focus, -7) }),
+      nextHref: href({ view: "week", date: addDays(focus, 7) }),
+    };
+  }
+
+  if (mode === "day") {
+    const weekday = WEEKDAYS[parseIso(focus).getUTCDay()];
+    return {
+      start: focus,
+      end: focus,
+      params: { view: "day", date: focus },
+      title: `${weekday}, ${shortLabel(focus)}`,
+      label: `${weekday.slice(0, 3)} ${shortLabel(focus)}`,
+      unit: "day",
+      periodNote: `on ${shortLabel(focus)}`,
+      isCurrent: focus === thisWeekday,
+      currentName: "today",
+      todayHref: href({ view: "day" }),
+      prevHref: href({ view: "day", date: shiftWeekday(focus, -1) }),
+      nextHref: href({ view: "day", date: shiftWeekday(focus, 1) }),
+    };
+  }
+
+  const month = MONTHS[target.month - 1];
+  return {
+    ...monthGridRange(target),
+    params: { month: monthKey(target) },
+    title: month,
+    label: `${month} ${target.year}`,
+    unit: "month",
+    periodNote: "this month",
+    isCurrent: monthKey(target) === today.slice(0, 7),
+    currentName: MONTHS[parseIso(today).getUTCMonth()],
+    todayHref: href({}),
+    prevHref: href({ month: monthKey(shiftMonth(target, -1)) }),
+    nextHref: href({ month: monthKey(shiftMonth(target, 1)) }),
+  };
+}
+
+// `mode` is "month", "week" or "day". `target` is the month whose data `rows` holds; week and
+// day views pass `focus`, a weekday inside that month's grid, and show every company that day
+// (no "+N" cap: their cells are big enough to scroll).
+export function buildCalendarView({ rows: allRows, directory, listings, exchange, mode = "month", target, focus = null, today }) {
+  const href = (params) => calendarHref({ ...params, exchange: exchangeParam(exchange) });
+  const period = viewPeriod({ mode, target, focus, today, href });
+  const monthFirst = toIso(new Date(Date.UTC(target.year, target.month - 1, 1)));
+  const monthLast = toIso(new Date(Date.UTC(target.year, target.month, 0)));
+  // Days that count: the month itself in month view (not the grid's edge days), every day otherwise
+  const [from, to] = mode === "month" ? [monthFirst, monthLast] : [period.start, period.end];
+
   const { listed, shown } = filterRows({ rows: allRows, listings, exchange });
-  const filters = listings ? buildFilters({ rows: listed, listings, target, exchange }) : [];
+  const filters = listings ? buildFilters({ rows: listed, listings, from, to, exchange, params: period.params }) : [];
   const byDate = groupByDate(shown);
 
   const days = [];
   // Unique companies: a few report on two dates in one month
-  const monthCompanies = new Set();
-  for (let iso = start; iso <= end; iso = addDays(iso, 1)) {
+  const periodCompanies = new Set();
+  for (let iso = period.start; iso <= period.end; iso = addDays(iso, 1)) {
     const dow = parseIso(iso).getUTCDay();
     if (dow === 0 || dow === 6) continue;
 
     const companies = byDate.get(iso) ?? [];
-    const inMonth = Number(iso.slice(5, 7)) === target.month;
-    if (inMonth) companies.forEach((row) => monthCompanies.add(row.symbol));
-    const shownCount = visibleCount(companies.length);
+    const inPeriod = iso >= from && iso <= to;
+    if (inPeriod) companies.forEach((row) => periodCompanies.add(row.symbol));
+    const shownCount = mode === "month" ? visibleCount(companies.length) : companies.length;
     const visible = companies.slice(0, shownCount);
 
     days.push({
       key: iso,
       label: `${shortLabel(iso).slice(0, 3).toUpperCase()} ${iso.slice(8)}`,
       longLabel: shortLabel(iso),
+      // 0 = Monday … 4 = Friday
+      weekday: dow - 1,
       isToday: iso === today,
       isPast: iso < today,
-      inMonth,
+      inPeriod,
       count: companies.length,
       hidden: companies.length - visible.length,
       earnings: visible.map((row) => toEarnings(row, directory)),
@@ -313,25 +418,34 @@ export function buildMonthView({ rows: allRows, directory, listings, exchange, t
     });
   }
 
+  // The weekday the other views open on: the one shown, else today in the current month, else the month's first
+  const anchor = focus ?? (period.isCurrent ? weekdayOf(today) : weekdayOf(monthFirst));
   const todayDate = parseIso(today);
   return {
     key: monthKey(target),
-    monthName: MONTHS[target.month - 1],
-    label: `${MONTHS[target.month - 1]} ${target.year}`,
+    mode,
+    title: period.title,
+    label: period.label,
+    unit: period.unit,
+    periodNote: period.periodNote,
     days,
-    total: monthCompanies.size,
-    weeks: days.length / 5,
+    total: periodCompanies.size,
     today,
     todayLabel: `${WEEKDAYS[todayDate.getUTCDay()]} ${MONTHS[todayDate.getUTCMonth()]} ${todayDate.getUTCDate()}`,
-    isCurrentMonth: monthKey(target) === today.slice(0, 7),
-    currentMonthName: MONTHS[todayDate.getUTCMonth()],
+    isCurrent: period.isCurrent,
+    currentName: period.currentName,
     filters,
     // No note when unfiltered: "All" or exchange data unavailable
     exchangeNote: listings ? exchange.note : null,
     exchangeParam: exchangeParam(exchange),
-    todayHref: calendarHref({ exchange: exchangeParam(exchange) }),
-    prevHref: calendarHref({ month: monthKey(shiftMonth(target, -1)), exchange: exchangeParam(exchange) }),
-    nextHref: calendarHref({ month: monthKey(shiftMonth(target, 1)), exchange: exchangeParam(exchange) }),
+    todayHref: period.todayHref,
+    prevHref: period.prevHref,
+    nextHref: period.nextHref,
+    viewHrefs: {
+      day: href({ view: "day", date: anchor }),
+      week: href({ view: "week", date: anchor }),
+      month: href({ month: monthKey(mode === "month" ? target : monthOf(anchor)) }),
+    },
   };
 }
 

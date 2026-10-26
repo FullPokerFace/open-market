@@ -4,7 +4,7 @@ import { useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const WEEKDAYS = ["MON", "TUE", "WED", "THU", "FRI"];
-const WEEKDAY_BADGES = ["bg-badge-1", "bg-badge-2", "bg-badge-3", "bg-badge-4", "bg-badge-5"];
+export const WEEKDAY_BADGES = ["bg-badge-1", "bg-badge-2", "bg-badge-3", "bg-badge-4", "bg-badge-5"];
 
 // "Reported" = results out but no estimate to grade them against
 const STATUS_DOT = { Beat: "bg-beat", Mixed: "bg-mixed", Miss: "bg-miss", Reported: "bg-muted-foreground" };
@@ -15,7 +15,7 @@ function tickerSize(ticker) {
   return "text-xs";
 }
 
-function TickerTile({ earnings, dimmed, dotBorder, onSelect }) {
+export function TickerTile({ earnings, dimmed, dotBorder, onSelect }) {
   const { ticker, name, reported, status, timingLabel } = earnings;
   const label = `${ticker} · ${name} · ${reported ? status : timingLabel ? `Reports ${timingLabel}` : "Upcoming"}`;
 
@@ -71,13 +71,20 @@ function MoreTile({ day, matches, onShowMore }) {
   );
 }
 
+// Day background and the matching border for status dots, so a dot reads as cut out of the tile
+export function dayColors(day) {
+  if (day.isToday) return { background: "bg-bg-today", dotBorder: "border-bg-today" };
+  if (day.isPast) return { background: "bg-bg-past", dotBorder: "border-bg-past" };
+  return { background: "bg-background", dotBorder: "border-background" };
+}
+
+// `capacity` null = show every tile and let the cell scroll (week view)
 function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, onShowMore }) {
-  const background = day.isToday ? "bg-bg-today" : day.isPast ? "bg-bg-past" : "bg-background";
-  const dotBorder = day.isToday ? "border-bg-today" : day.isPast ? "border-bg-past" : "border-background";
+  const { background, dotBorder } = dayColors(day);
 
   // Tiles that fit this cell; past that, the last slot becomes "+N". The server already
   // holds back companies beyond 16 (`hiddenIndex`); `overflow` is what this screen can't fit.
-  const shownCount = day.count > capacity ? capacity - 1 : day.count;
+  const shownCount = capacity != null && day.count > capacity ? capacity - 1 : day.count;
   const tiles = day.earnings.slice(0, shownCount);
   const overflow = day.earnings.slice(shownCount);
   const hidden = day.count - tiles.length;
@@ -99,7 +106,7 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
         {day.isToday ? (
           <span className="bg-foreground px-2 py-0.5 text-background">{day.label} · TODAY</span>
         ) : (
-          <span className={day.inMonth ? "text-foreground" : "text-muted-foreground"}>{day.label}</span>
+          <span className={day.inPeriod ? "text-foreground" : "text-muted-foreground"}>{day.label}</span>
         )}
         {!day.isToday && day.count > 0 && (
           <span className="text-muted-foreground">{String(day.count).padStart(2, "0")}</span>
@@ -109,7 +116,14 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
       {day.count === 0 && <span className="chip self-start text-muted-foreground">No earnings</span>}
 
       {/* Fills the rest of the cell; MonthGrid measures it to decide how many tiles fit */}
-      <div data-tiles className="grid min-h-0 flex-1 grid-cols-[repeat(auto-fill,48px)] content-start gap-2">
+      <div
+        data-tiles
+        className={cn(
+          "grid min-h-0 flex-1 grid-cols-[repeat(auto-fill,48px)] content-start gap-2",
+          // Room for the status dots that poke out of the top row
+          capacity == null && "-mx-1 overflow-y-auto px-1 pt-1"
+        )}
+      >
         {tiles.map((e) => (
           <TickerTile key={e.ticker} earnings={e} dimmed={!isMatch(e)} dotBorder={dotBorder} onSelect={onSelect} />
         ))}
@@ -155,9 +169,12 @@ function useTileCapacity(gridRef) {
   return capacity;
 }
 
-export function MonthGrid({ days, filtering, isMatch, onSelect, onShowMore }) {
+// Month view, or one week when `days` holds five. `fit` = squeeze each day into its cell
+// with a "+N" tile; off, cells show every company and scroll.
+export function MonthGrid({ days, fit = true, filtering, isMatch, onSelect, onShowMore }) {
   const gridRef = useRef(null);
-  const capacity = useTileCapacity(gridRef);
+  const measured = useTileCapacity(gridRef);
+  const capacity = fit ? measured : null;
   const weeks = days.length / 5;
 
   return (

@@ -2,7 +2,18 @@ import { Suspense } from "react";
 import { after, connection } from "next/server";
 import { EarningsCalendar } from "@/components/earnings/earnings-calendar";
 import { SiteFooter } from "@/components/earnings/site-footer";
-import { buildMonthView, monthGridRange, parseExchange, parseMonthKey, shiftMonth, todayInNewYork } from "@/lib/earnings";
+import {
+  buildCalendarView,
+  monthGridRange,
+  monthOf,
+  parseDateKey,
+  parseExchange,
+  parseMonthKey,
+  parseViewMode,
+  shiftMonth,
+  todayInNewYork,
+  weekdayOf,
+} from "@/lib/earnings";
 import { getEarningsCalendar, getListedSymbols } from "@/lib/finnhub";
 import { getCompanyDirectory } from "@/lib/sec";
 import { getMacroEvents } from "@/lib/kalshi";
@@ -20,12 +31,15 @@ export default function Home({ searchParams }) {
 }
 
 async function Calendar({ searchParams }) {
-  const { month, exchange } = await searchParams;
+  const { month, exchange, view: viewParam, date } = await searchParams;
   await connection();
 
   const today = todayInNewYork();
   const current = { year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) };
-  const target = parseMonthKey(month) ?? current;
+  const mode = parseViewMode(viewParam);
+  // Week and day views are built around one weekday and load the month it falls in
+  const focus = mode === "month" ? null : weekdayOf(parseDateKey(date) ?? today);
+  const target = focus ? monthOf(focus) : (parseMonthKey(month) ?? current);
   const { start, end } = monthGridRange(target);
   // Once the page is sent, make sure this month and the next two are in the cache
   after(() => warmCalendar(current));
@@ -54,7 +68,7 @@ async function Calendar({ searchParams }) {
         return null;
       }),
     ]);
-    view = buildMonthView({ rows, directory, listings, exchange: parseExchange(exchange), target, today });
+    view = buildCalendarView({ rows, directory, listings, exchange: parseExchange(exchange), mode, target, focus, today });
   } catch (error) {
     console.error(error);
   }

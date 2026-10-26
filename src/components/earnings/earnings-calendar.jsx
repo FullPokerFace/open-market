@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { matchesQuery } from "@/lib/earnings";
 import { useWatchlist } from "@/lib/watchlist";
 import { CalendarTitle, CalendarToolbar } from "./calendar-toolbar";
+import { DayView } from "./day-view";
 import { EarningsDetailsSheet } from "./earnings-details-sheet";
 import { ExchangeFilter } from "./exchange-filter";
 import { MonthGrid } from "./month-grid";
@@ -12,11 +13,11 @@ import { MoreCompaniesDialog } from "./more-companies-dialog";
 import { SiteHeader } from "./site-header";
 import { StatusLegend } from "./status-legend";
 
-// Unique companies on this month's calendar (visible tiles and "+N") that pass the filter
+// Unique companies in the month / week / day shown (visible tiles and "+N") that pass the filter
 function countMatches(days, isMatch) {
   const tickers = new Set();
   for (const day of days) {
-    if (!day.inMonth) continue;
+    if (!day.inPeriod) continue;
     for (const e of [...day.earnings, ...day.hiddenIndex]) if (isMatch(e)) tickers.add(e.ticker);
   }
   return tickers.size;
@@ -75,7 +76,7 @@ export function EarningsCalendar({ view, sentiment, events }) {
   if (scope === "watchlist" && !watchlist.tickers.length) {
     gridNote = "Watchlist is empty · star a company to add it";
   } else if (filtering) {
-    gridNote = `${matchCount} ${matchCount === 1 ? "match" : "matches"} this month`;
+    gridNote = `${matchCount} ${matchCount === 1 ? "match" : "matches"} ${view.periodNote}`;
   }
 
   const selectEarnings = (earnings) => {
@@ -159,13 +160,18 @@ export function EarningsCalendar({ view, sentiment, events }) {
           <CalendarToolbar view={view} scope={scope} onScopeChange={setScope} onToday={jumpToToday} />
         </ExchangeFilter>
 
-        <MonthGrid
-          days={view.days}
-          filtering={filtering}
-          isMatch={isMatch}
-          onSelect={selectEarnings}
-          onShowMore={showMore}
-        />
+        {view.mode === "day" ? (
+          <DayView day={view.days[0]} isMatch={isMatch} onSelect={selectEarnings} />
+        ) : (
+          <MonthGrid
+            days={view.days}
+            fit={view.mode === "month"}
+            filtering={filtering}
+            isMatch={isMatch}
+            onSelect={selectEarnings}
+            onShowMore={showMore}
+          />
+        )}
         <StatusLegend />
 
       </main>
