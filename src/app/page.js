@@ -14,8 +14,8 @@ import {
   weekdayOf,
 } from "@/lib/earnings";
 import { requestFilter } from "@/lib/calendar-filter";
-import { getEarningsCalendar, getListedSymbols } from "@/lib/finnhub";
-import { getCompanyDirectory } from "@/lib/sec";
+import { getCompanyDirectory } from "@/lib/companies";
+import { getEarningsCalendar } from "@/lib/finnhub";
 import { getMacroEvents } from "@/lib/kalshi";
 import { getFearGreed } from "@/lib/sentiment";
 
@@ -42,7 +42,7 @@ async function Calendar({ searchParams }) {
   const focus = mode === "month" ? null : weekdayOf(parseDateKey(date) ?? today);
   const target = focus ? monthOf(focus) : (parseMonthKey(month) ?? current);
   const { start, end } = monthGridRange(target);
-  // Once the page is sent, make sure this month and the next two are in the cache
+  // Once the page is sent, make sure this month and the next two are saved in the database
   after(() => warmCalendar(current));
 
   // Sentiment and key releases are extras: the calendar shows without them
@@ -57,19 +57,13 @@ async function Calendar({ searchParams }) {
 
   let view = null;
   try {
-    const [rows, directory, listings] = await Promise.all([
-      getEarningsCalendar(start, end),
-      // Names and exchange filtering are nice to have: degrade instead of failing the page
-      getCompanyDirectory().catch((error) => {
-        console.error(error);
-        return {};
-      }),
-      getListedSymbols().catch((error) => {
-        console.error(error);
-        return null;
-      }),
-    ]);
-    view = buildCalendarView({ rows, directory, listings, exchange: filter, mode, target, focus, today });
+    const rows = await getEarningsCalendar(start, end);
+    // Names and exchange filtering are nice to have: degrade instead of failing the page
+    const directory = await getCompanyDirectory(rows.map((row) => row.symbol)).catch((error) => {
+      console.error(error);
+      return null;
+    });
+    view = buildCalendarView({ rows, directory, exchange: filter, mode, target, focus, today });
   } catch (error) {
     console.error(error);
   }
@@ -81,7 +75,7 @@ async function Calendar({ searchParams }) {
 // Months kept warm from this month on, so paging ahead never waits on Finnhub
 const WARM_MONTHS = 3;
 
-// Loads each month into the server cache; months already cached cost nothing.
+// Saves each month in the database; months saved within the hour cost one lookup.
 // A failure only means that month is fetched when someone opens it.
 function warmCalendar(fromMonth) {
   return Promise.all(

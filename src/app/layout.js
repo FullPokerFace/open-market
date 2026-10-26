@@ -1,3 +1,4 @@
+import { Analytics } from "@vercel/analytics/next";
 import { Bricolage_Grotesque, Geist_Mono, Inter } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/lib/site";
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   );

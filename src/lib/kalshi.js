@@ -1,6 +1,6 @@
 // Server-only: upcoming market-moving releases (FOMC, CPI, jobs, GDP) and what traders expect,
 // from Kalshi's public market data. Free, no key; each Kalshi event is one release date.
-import { cacheLife } from "next/cache";
+import { COLLECTIONS, LATEST, MINUTE, stored } from "@/lib/db";
 
 const BASE_URL = "https://api.elections.kalshi.com/trade-api/v2";
 
@@ -107,10 +107,11 @@ async function nextEvent(series) {
 }
 
 // [{ key, title, date, dateLabel, timeLabel, period, outcomes, expectations }], soonest first
-export async function getMacroEvents() {
-  "use cache";
-  cacheLife("minutes");
+export function getMacroEvents() {
+  return stored(COLLECTIONS.keyReleases, LATEST, 5 * MINUTE, fetchMacroEvents);
+}
 
+async function fetchMacroEvents() {
   const settled = await Promise.allSettled(SERIES.map(nextEvent));
   const found = [];
   for (const result of settled) {

@@ -197,13 +197,13 @@ function companySize(row) {
   return row.revenueEstimate ?? row.revenueActual ?? 0;
 }
 
+// `directory` ({ SYMBOL: { exchange, name, cik } }, from getCompanyDirectory) may be null when it couldn't load
 function lookupCompany(symbol, directory) {
-  // SEC writes share classes with a dash (BRK-A), Finnhub with a dot (BRK.A)
-  return directory[symbol.replace(".", "-")];
+  return directory?.[symbol];
 }
 
 function companyName(symbol, company) {
-  return company ? tidyCompanyName(company.title) : symbol;
+  return company?.name ? tidyCompanyName(company.name) : symbol;
 }
 
 function toEarnings(row, directory) {
@@ -232,10 +232,10 @@ function toEarnings(row, directory) {
 
 // Exchange filter options with the company count in [from, to] for each.
 // `params` keeps the view and date in each link.
-function buildFilters({ rows, listings, from, to, exchange, params }) {
+function buildFilters({ rows, directory, from, to, exchange, params }) {
   // Same companies the grid shows: this period, weekdays only
   const shown = rows.filter((row) => row.date >= from && row.date <= to && ![0, 6].includes(parseIso(row.date).getUTCDay()));
-  const symbols = new Map(shown.map((row) => [row.symbol, listings[row.symbol]]));
+  const symbols = new Map(shown.map((row) => [row.symbol, directory[row.symbol].exchange]));
   const countFor = (option) => [...symbols].filter(([symbol, mic]) => inOption(option, symbol, mic)).length;
 
   return EXCHANGES.map((option) => ({
@@ -254,13 +254,13 @@ function visibleCount(total) {
   return total > TILES_PER_DAY ? TILES_PER_DAY - 1 : total;
 }
 
-// `listings` ({ SYMBOL: MIC }) drops OTC stocks and funds; null skips that filter.
+// `directory` only has exchange-listed companies, so it drops OTC stocks and funds; null skips that filter.
 // Returns rows on any listed exchange, and rows on the chosen exchange.
-function filterRows({ rows, listings, exchange }) {
+function filterRows({ rows, directory, exchange }) {
   const valid = rows.filter((row) => row.symbol && row.date);
-  if (!listings) return { listed: valid, shown: valid };
-  const listed = valid.filter((row) => listings[row.symbol]);
-  const shown = listed.filter((row) => inOption(exchange, row.symbol, listings[row.symbol]));
+  if (!directory) return { listed: valid, shown: valid };
+  const listed = valid.filter((row) => directory[row.symbol]);
+  const shown = listed.filter((row) => inOption(exchange, row.symbol, directory[row.symbol].exchange));
   return { listed, shown };
 }
 
@@ -298,8 +298,8 @@ function searchRank(ticker, name, query) {
 
 // Every listed company reporting in `months` that matches, whatever the exchange filter:
 // exact ticker first, then ticker prefix, then name matches, each by report date
-export function buildSearchResults({ rows, directory, listings, months, query }) {
-  const { listed } = filterRows({ rows, listings, exchange: ALL_EXCHANGES });
+export function buildSearchResults({ rows, directory, months, query }) {
+  const { listed } = filterRows({ rows, directory, exchange: ALL_EXCHANGES });
   const keys = new Set(months.map(monthKey));
   // Month ranges overlap at their edges; groupByDate drops the repeats
   const inMonths = listed.filter((row) => keys.has(row.date.slice(0, 7)) && ![0, 6].includes(parseIso(row.date).getUTCDay()));
@@ -318,8 +318,8 @@ export function buildSearchResults({ rows, directory, listings, months, query })
 }
 
 // The companies behind a day's "+N" tile
-export function buildHiddenEarnings({ rows, directory, listings, exchange, date }) {
-  const { shown } = filterRows({ rows, listings, exchange });
+export function buildHiddenEarnings({ rows, directory, exchange, date }) {
+  const { shown } = filterRows({ rows, directory, exchange });
   const companies = groupByDate(shown.filter((row) => row.date === date)).get(date) ?? [];
   return companies.slice(visibleCount(companies.length)).map((row) => toEarnings(row, directory));
 }
@@ -386,7 +386,7 @@ function viewPeriod({ mode, target, focus, today, href }) {
 // `mode` is "month", "week" or "day". `target` is the month whose data `rows` holds; week and
 // day views pass `focus`, a weekday inside that month's grid, and show every company that day
 // (no "+N" cap: their cells are big enough to scroll).
-export function buildCalendarView({ rows: allRows, directory, listings, exchange, mode = "month", target, focus = null, today }) {
+export function buildCalendarView({ rows: allRows, directory, exchange, mode = "month", target, focus = null, today }) {
   const href = (params) => calendarHref({ ...params, ...filterParams(exchange) });
   const period = viewPeriod({ mode, target, focus, today, href });
   const monthFirst = toIso(new Date(Date.UTC(target.year, target.month - 1, 1)));
@@ -394,8 +394,8 @@ export function buildCalendarView({ rows: allRows, directory, listings, exchange
   // Days that count: the month itself in month view (not the grid's edge days), every day otherwise
   const [from, to] = mode === "month" ? [monthFirst, monthLast] : [period.start, period.end];
 
-  const { listed, shown } = filterRows({ rows: allRows, listings, exchange });
-  const filters = listings ? buildFilters({ rows: listed, listings, from, to, exchange, params: period.params }) : [];
+  const { listed, shown } = filterRows({ rows: allRows, directory, exchange });
+  const filters = directory ? buildFilters({ rows: listed, directory, from, to, exchange, params: period.params }) : [];
   const byDate = groupByDate(shown);
 
   const days = [];
@@ -449,7 +449,7 @@ export function buildCalendarView({ rows: allRows, directory, listings, exchange
     currentName: period.currentName,
     filters,
     // No note when unfiltered: "All" or exchange data unavailable
-    exchangeNote: listings ? exchange.note : null,
+    exchangeNote: directory ? exchange.note : null,
     // For the "+N" requests, and for links that switch to one of the visitor's lists (which go without them)
     filterParams: filterParams(exchange),
     periodParams: period.params,

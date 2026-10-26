@@ -2,7 +2,7 @@ import { CompanyRow } from "./company-row";
 
 const message = "eyebrow m-0 px-6 py-8 text-muted-foreground";
 
-// Drop-down under the header search: companies reporting in the cached months (this month and the next two)
+// Drop-down under the header search: companies reporting in the saved months (this month and the next two)
 // on any exchange. Exact ticker first, then ticker prefix, then name matches, each by report date.
 // While a new search runs (`state` "loading") the previous results stay up.
 export function SearchResults({ query, results, state, onSelect }) {

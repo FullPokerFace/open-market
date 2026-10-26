@@ -1,8 +1,8 @@
 import { buildSearchResults, monthGridRange, monthKey, parseMonthKey, shiftMonth, todayInNewYork } from "@/lib/earnings";
-import { getEarningsCalendar, getListedSymbols } from "@/lib/finnhub";
-import { getCompanyDirectory } from "@/lib/sec";
+import { getCompanyDirectory } from "@/lib/companies";
+import { getEarningsCalendar } from "@/lib/finnhub";
 
-// Months searched from this one on: the same months the page keeps warm in the cache
+// Months searched from this one on: the same months the page keeps saved in the database
 const SEARCH_MONTHS = 3;
 
 // Company search across every exchange: /api/search?month=2026-10&q=net
@@ -21,14 +21,11 @@ export async function GET(request) {
     const months = Array.from({ length: SEARCH_MONTHS }, (_, i) => shiftMonth(current, i));
     if (!months.some((m) => monthKey(m) === monthKey(target))) months.push(target);
 
-    // Same ranges as the page, so each month comes from its cache entry
-    const [calendars, directory, listings] = await Promise.all([
-      Promise.all(months.map((m) => monthGridRange(m)).map(({ start, end }) => getEarningsCalendar(start, end))),
-      getCompanyDirectory().catch(() => ({})),
-      getListedSymbols().catch(() => null),
-    ]);
+    // Same ranges as the page, so each month comes from its saved weeks
+    const calendars = await Promise.all(months.map((m) => monthGridRange(m)).map(({ start, end }) => getEarningsCalendar(start, end)));
     const rows = calendars.flat();
-    return Response.json({ results: buildSearchResults({ rows, directory, listings, months, query }) });
+    const directory = await getCompanyDirectory(rows.map((row) => row.symbol)).catch(() => null);
+    return Response.json({ results: buildSearchResults({ rows, directory, months, query }) });
   } catch (error) {
     console.error(error);
     return Response.json({ error: "Could not search companies" }, { status: 502 });
