@@ -33,10 +33,14 @@ function untilLabel(today, date) {
   return `In ${days} days`;
 }
 
-// Market sentiment (CNN Fear & Greed meter) beside the next market-moving releases
+// Market sentiment (CNN Fear & Greed meter) beside the next market-moving releases.
+// Below md it drops under the calendar (the parent is a flex column) so the calendar comes first.
 export function MarketSentiment({ sentiment, events, today }) {
   return (
-    <section aria-label="Market sentiment and key releases" className="flex flex-wrap border-b">
+    <section
+      aria-label="Market sentiment and key releases"
+      className="order-last flex flex-wrap border-t md:order-none md:border-t-0 md:border-b"
+    >
       <FearGreed sentiment={sentiment} />
       <KeyReleases events={events} today={today} />
     </section>

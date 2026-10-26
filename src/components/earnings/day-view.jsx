@@ -13,8 +13,8 @@ function DayColumn({ section, dotBorder, progress, live, minutes, isMatch, onSel
   const count = section.earnings.length;
 
   return (
-    <section aria-labelledby={headingId} className="flex min-w-0 flex-col border-r last:border-r-0">
-      {/* The three bars side by side read as one trading day, filled up to now */}
+    <section aria-labelledby={headingId} className="flex min-w-0 flex-col border-b last:border-b-0 md:border-r md:border-b-0 md:last:border-r-0">
+      {/* The three bars side by side (stacked on mobile) read as one trading day, filled up to now */}
       <div className={cn("relative h-1.5", section.track)} aria-hidden="true">
         <div className={cn("h-full", section.bar)} style={{ width: `${progress * 100}%` }} />
         {live && (
@@ -43,9 +43,9 @@ function DayColumn({ section, dotBorder, progress, live, minutes, isMatch, onSel
         </div>
       </header>
 
-      {/* Positioned so a long list scrolls here instead of stretching the page */}
+      {/* From md, positioned so a long list scrolls here instead of stretching the page; stacked on mobile it just grows */}
       <div className={cn("relative min-h-23 flex-1", count > 0 && section.tint)}>
-        <div className="absolute inset-0 overflow-y-auto px-5 pt-3.5 pb-3">
+        <div className="px-5 pt-3.5 pb-3 md:absolute md:inset-0 md:overflow-y-auto">
           {count === 0 ? (
             <span className="chip text-muted-foreground">None scheduled</span>
           ) : (
@@ -61,7 +61,7 @@ function DayColumn({ section, dotBorder, progress, live, minutes, isMatch, onSel
   );
 }
 
-// One day across the whole width, split by when each company reports
+// One day across the whole width, split by when each company reports; below md the sections stack top to bottom
 export function DayView({ day, isMatch, onSelect }) {
   const { background, dotBorder } = dayColors(day);
   const minutes = useNewYorkMinutes();
@@ -80,7 +80,7 @@ export function DayView({ day, isMatch, onSelect }) {
         </span>
       </div>
 
-      <div className="grid flex-1 grid-cols-3">
+      <div className="grid flex-1 grid-cols-1 md:grid-cols-3">
         {splitByTiming(day.earnings).map((section) => (
           <DayColumn
             key={section.key}

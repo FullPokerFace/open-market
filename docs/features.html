@@ -120,17 +120,17 @@
 
   <header class="title">
     <h1>Earnings Report <span>features</span>.</h1>
-    <p class="lead"><strong>The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, and a "Suggest a feature" form that emails ideas to the developer.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
+    <p class="lead"><strong>The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, and a "Suggest a feature" form that emails ideas to the developer.</strong> The header, filters, market panel and day view now work on phones. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>56 features tracked</span></div>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>60 features tracked</span></div>
     <div class="progress-head"><b>79%</b><span>44 of 56 features done · 12 to go</span></div>
     <div class="progress" role="img" aria-label="Done 44, high priority 1, medium 3, before launch 3, low 5">
       <span class="c-done" style="flex: 44"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 3"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>44</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>48</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>3</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -146,6 +146,7 @@
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
           <li>Header &amp; feedback <b>4</b></li>
+          <li>Phone layout <b>4</b></li>
         </ul>
       </div>
       <div>
@@ -163,14 +164,14 @@
         <ol>
           <li><span class="n">1</span> Market-cap filter</li>
           <li><span class="n">2</span> Shareable company link</li>
-          <li><span class="n">3</span> Phone layout</li>
+          <li><span class="n">3</span> Phone layout: week &amp; month</li>
         </ol>
       </div>
     </div>
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>44 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>48 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">8</span></div>
     <div class="scroll">
@@ -282,6 +283,21 @@
       </table>
     </div>
 
+    <div class="sub"><h3>Phone layout</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Burger menu</th><td>Below 768px (<code>md</code>) the header is one row: logo, search (fills the space left), light / dark toggle, burger. The burger opens a right-hand sheet styled like the feedback dialog (MENU label, square close box) with Calendar, Roadmap and Suggest a feature; picking one closes it. The Suggest a feature dialog now lives in the header so it survives the menu closing. On phones the search results span the header's full width instead of hanging off the search box. Desktop unchanged.</td><td><code>site-header.jsx</code></td></tr>
+          <tr><th scope="row">Market panel below the calendar</th><td>Below 768px, Market sentiment and Key releases move under the calendar and legend (CSS <code>order</code>, top border instead of bottom), so the calendar comes first. Desktop keeps them on top.</td><td><code>market-sentiment.jsx</code></td></tr>
+          <tr><th scope="row">Exchange dropdown</th><td>Below 768px the exchange buttons become a native select after "SHOW" (same 40px bordered mono style, chevron), each option "NYSE · 42". Phones get their own picker; choosing one goes to the same URL as the button, without scrolling.</td><td><code>exchange-filter.jsx</code></td></tr>
+          <tr><th scope="row">Stacked day view</th><td>Below 768px the day view's Before open / During / After close sections stack top to bottom with rules between them. Each list grows to fit and the page scrolls (no scroll box inside the page); from 768px they're three columns that scroll on their own.</td><td><code>day-view.jsx</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
   </section>
 
   <section class="c-med">
@@ -307,7 +323,7 @@
           <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Phone layout</th><td>Below 640px, a day-by-day list instead of the grid; details panel full-screen (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>        </tbody>
+          <tr><th scope="row">Phone layout: week &amp; month</th><td>The header, exchange filter, market panel and day view are done (see Done › Phone layout). Left: below 768px, a day-by-day list instead of the week and month grids; check the details panel goes full-screen (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>        </tbody>
       </table>
     </div>
 

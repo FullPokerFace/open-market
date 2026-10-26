@@ -41,6 +41,7 @@ export const SHIPPED = [
     area: "Everything else",
     items: [
       ["Light and dark", "Follows your system setting, or pick one in the header."],
+      ["On your phone", "A menu button, a dropdown for the exchange filter, and the day view top to bottom. The calendar comes first, with the market panel under it."],
       ["Suggest a feature", "Send an idea straight to the developer from the menu."],
     ],
   },
@@ -50,7 +51,7 @@ export const SHIPPED = [
 export const UPCOMING = [
   { stage: "next", title: "Market-cap filter", text: "Show only large, mid or small companies." },
   { stage: "next", title: "Shareable company links", text: "Send someone a link that opens straight to a company's results." },
-  { stage: "next", title: "Phone layout", text: "A day-by-day list made for small screens." },
+  { stage: "next", title: "Week and month on phones", text: "A day-by-day list made for small screens." },
   { stage: "planned", title: "US and foreign companies", text: "Filter by where a company is based." },
   { stage: "later", title: "Two years of EPS history", text: "Eight quarters in the surprise chart instead of four." },
   { stage: "later", title: "Company logos", text: "Logos on the calendar tiles instead of tickers." },
