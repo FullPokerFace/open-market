@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Earnings Report Features</title>
+<title>Open Market Features</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -119,20 +119,20 @@
   <div class="bar hud"><span>Docs / <b>Features</b></span><span>Updated Oct 26, 2026</span></div>
 
   <header class="title">
-    <h1>Earnings Report <span>features</span>.</h1>
-    <p class="lead"><strong>The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, and a "Suggest a feature" form that emails ideas to the developer.</strong> The header, filters, market panel and day view now work on phones. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
+    <h1>Open Market <span>features</span>.</h1>
+    <p class="lead"><strong>Open Market is a free, open-source earnings calendar whose features are created and maintained by its community. The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, your own ticker lists (remembered between visits), and a "Suggest a feature" form that emails ideas to the developer.</strong> The header, filters, market panel and day view now work on phones. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>60 features tracked</span></div>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>67 features tracked</span></div>
     <div class="progress-head"><b>79%</b><span>44 of 56 features done · 12 to go</span></div>
     <div class="progress" role="img" aria-label="Done 44, high priority 1, medium 3, before launch 3, low 5">
       <span class="c-done" style="flex: 44"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 3"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>48</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>54</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
-      <div class="stat c-med"><b>3</b><span class="hud"><i class="sw"></i>Medium</span></div>
+      <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
       <div class="stat c-low"><b>5</b><span class="hud"><i class="sw"></i>Low</span></div>
     </div>
@@ -141,18 +141,19 @@
         <h4 class="hud">Done by area</h4>
         <ul>
           <li>Foundation <b>8</b></li>
-          <li>Live data <b>7</b></li>
+          <li>Live data <b>8</b></li>
           <li>Calendar <b>17</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
-          <li>Header &amp; feedback <b>4</b></li>
+          <li>Header &amp; feedback <b>6</b></li>
+          <li>Ticker lists <b>3</b></li>
           <li>Phone layout <b>4</b></li>
         </ul>
       </div>
       <div>
         <h4 class="hud">To do by area</h4>
         <ul>
-          <li>Filters <span class="dots"><i class="sw c-high"></i><i class="sw c-med"></i></span></li>
+          <li>Filters <span class="dots"><i class="sw c-high"></i><i class="sw c-med"></i><i class="sw c-med"></i></span></li>
           <li>Calendar &amp; layout <span class="dots"><i class="sw c-med"></i></span></li>
           <li>Details panel <span class="dots"><i class="sw c-med"></i><i class="sw c-low"></i></span></li>
           <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
@@ -171,7 +172,7 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>48 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>54 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">8</span></div>
     <div class="scroll">
@@ -192,7 +193,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Live data</h3><span class="hud">7</span></div>
+    <div class="sub"><h3>Live data</h3><span class="hud">8</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -200,6 +201,7 @@
         </thead>
         <tbody>
           <tr><th scope="row">Finnhub earnings calendar</th><td>Every earnings report in the month: date, ticker, timing, fiscal quarter, EPS and revenue estimate and actual. Fetched week by week, with busy weeks split to get past the 1,500-row cap.</td><td><code>src/lib/finnhub.js</code></td></tr>
+          <tr><th scope="row">Finnhub request log</th><td>Every request that really reaches Finnhub prints one server-console line: <code>[finnhub] GET /calendar/earnings?from=…&amp;to=… → 200 in 52ms</code>. Cache hits don't print (in dev, Next replays a cached call's line with a "Cache" badge; that isn't a new request). The API key is sent in a header, so it stays out of the log. Cache warming of this month and the next two after each page view accounts for bursts on a cold cache.</td><td><code>src/lib/finnhub.js</code></td></tr>
           <tr><th scope="row">Beat / Mixed / Miss</th><td>Beat = EPS and revenue both met estimates; Miss = neither did; Mixed = one did. "Reported" when there was no estimate to compare.</td><td><code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Company names</th><td>From SEC's free ticker list, tidied from legal names ("NETFLIX INC" → "Netflix"). Also gives each company's SEC ID for filing links.</td><td><code>src/lib/sec.js</code></td></tr>
           <tr><th scope="row">Caching</th><td>Earnings cached on the server for hours, names and exchange lists for days, so repeat visits make no Finnhub calls. Well under the free plan's 60 calls/min. The cache lives in server memory: it empties on every deploy or restart (see Before launch).</td><td><code>"use cache"</code> in <code>src/lib</code></td></tr>
@@ -230,7 +232,7 @@
           <tr><th scope="row">Release-day pulse</th><td>On the day a key release comes out, its card gets a blue frame with a ring that pulses outward and fades, on repeat, plus a pinging blue dot next to "Today". With reduced motion turned on, the frame stays still.</td><td><code>market-sentiment.jsx</code>, <code>animate-release-pulse</code> in <code>globals.css</code></td></tr>
           <tr><th scope="row">Month navigation</th><td>Previous / next arrows load the month before or after; the middle button shows the month on screen (e.g. November 2026) and goes back to the current month (or scrolls to today when already on it). Saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
           <tr><th scope="row">Controls bar</th><td>Month navigation and the company filter share one bar under the "October earnings." title, which stays where it was.</td><td><code>exchange-filter.jsx</code>, <code>calendar-toolbar.jsx</code></td></tr>
-          <tr><th scope="row">Company filter</th><td>"Show": Most popular (default) · NYSE · Nasdaq · All, with per-month counts. NYSE American was removed as a button (its stocks still show under All). Saved in the URL; old <code>?exchange=amex</code> links open Most popular. Ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/earnings.js</code></td></tr>
+          <tr><th scope="row">Company filter</th><td>"Show" and one dropdown at every screen size (it replaced the row of buttons): Most popular (default) · NYSE · Nasdaq · All, each with its count, then "My lists". NYSE American was removed as a button (its stocks still show under All). Saved in the URL; old <code>?exchange=amex</code> links open Most popular. Ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Most popular list</th><td>The Fortune 100 (2026): US exchange-listed stocks among the 100 largest companies by revenue, 90 tickers, one per company (GOOGL, BRK.B). Kept by hand.</td><td><code>src/lib/popular.js</code></td></tr>
           <tr><th scope="row">OTC and funds excluded</th><td>OTC stocks, closed-end funds and tickers with no known exchange are left out (October: 1,627 → 1,350).</td><td><code>getListedSymbols()</code></td></tr>
           <tr><th scope="row">Legend</th><td>Beat · Mixed · Miss · No mark (upcoming) · Before open · During hours · After close (with their icons), and the data source.</td><td><code>status-legend.jsx</code></td></tr>
@@ -268,17 +270,33 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Header &amp; feedback</h3><span class="hud">4</span></div>
+    <div class="sub"><h3>Header &amp; feedback</h3><span class="hud">6</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
           <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Header menu</th><td>Calendar | Roadmap | Suggest a feature, with a faint "|" between items; the current page is highlighted. The search box only shows on the calendar. The Watchlist button and the unused Insights link were removed.</td><td><code>site-header.jsx</code></td></tr>
+          <tr><th scope="row">Header menu</th><td>Calendar | Roadmap | About | Suggest a feature, with a faint "|" between items; the current page is highlighted. The search box only shows on the calendar. The Watchlist button and the unused Insights link were removed.</td><td><code>site-header.jsx</code></td></tr>
           <tr><th scope="row">Suggest a feature dialog</th><td>Opens from the menu: "Suggest a <span style="color: var(--blue)">feature</span>." title, a text box (example: "Add a P/L calendar") with a character count, and a Send button. Send stays off until there are 3+ characters; shows "Sending…", then "Sent. Thanks for the idea!", or the error under the box. An unsent draft is kept if the dialog is closed. Built from the shared UI parts: Button, Dialog, and the new Label and Textarea.</td><td><code>suggest-feature-dialog.jsx</code>, <code>src/components/ui/label.jsx</code>, <code>textarea.jsx</code></td></tr>
           <tr><th scope="row">Roadmap page</th><td>Public page at <code>/roadmap</code> built from this doc, written for visitors: percent live with a progress bar, "What's live" by area, "What's next" as Next up / Planned / Later, and a "Have an idea?" button that opens Suggest a feature. Internal work (caching, hosting, licensing, docs) stays out. Update <code>src/lib/roadmap.js</code> when this doc changes.</td><td><code>src/app/roadmap/page.js</code>, <code>src/lib/roadmap.js</code></td></tr>
           <tr><th scope="row">Suggestion email</th><td>The server emails each suggestion to <code>GMAIL_SENDER_ADDRESS</code> through Gmail SMTP with <code>GMAIL_APP_PASSWORD</code> (nodemailer, same setup as FedWatch), subject "Feature suggestion: …". Rejects other sites' requests, messages under 3 or over 2,000 characters, and more than 5 a visitor an hour (kept in memory, resets on restart). Says "temporarily unavailable" if the env vars are missing. Tested: a real suggestion arrived.</td><td><code>/api/suggestions</code>, <code>src/lib/email.js</code></td></tr>
+          <tr><th scope="row">Open Market name</th><td>The app is called Open Market (it was "Earnings Report"): browser titles ("Open Market · Earnings calendar", "Roadmap · Open Market", "About · Open Market" through a title template), the header wordmark beside the logo (from 1024px), the Roadmap heading, the suggestion email and these docs. Open source at <a href="https://github.com/FullPokerFace/open-market">github.com/FullPokerFace/open-market</a>: a GitHub button in the header (from 1024px), a "GitHub ↗" item in the burger menu, and "Open source on GitHub" in the footer. The header now switches to the burger menu below 1024px (was 768px) to make room. The README was rewritten for contributors.</td><td><code>src/lib/site.js</code>, <code>src/app/layout.js</code>, <code>site-header.jsx</code>, <code>site-footer.jsx</code>, <code>README.md</code></td></tr>
+          <tr><th scope="row">About page</th><td>Public page at <code>/about</code>: what Open Market is, "Built by its users" (made for its users to create and maintain features as a community: suggest, build, maintain), links to GitHub and the roadmap, credits for the data (Finnhub, SEC EDGAR, Kalshi, CNN Fear &amp; Greed) and the design (inspired by <a href="https://getartcraft.com">getartcraft.com</a>), and a not-investment-advice note. Shares its section blocks with the Roadmap page.</td><td><code>src/app/about/page.js</code>, <code>page-parts.jsx</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Ticker lists</h3><span class="hud">3</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Create list dialog</th><td>"+ Create list" beside the company filter opens "New ticker <span style="color: var(--blue)">list</span>.": a name (20 characters max, with a counter), a search box (same search as the header: every exchange, this month and the next two), results with "Add" (Enter adds the top one; the box clears for the next search), and "In this list · N" with an ✕ per company. "Create list" stays off until there's a name and one company; an unsent draft is kept if the dialog is closed. The header's search logic moved into a shared hook for this.</td><td><code>create-list-dialog.jsx</code>, <code>use-company-search.js</code></td></tr>
+          <tr><th scope="row">List filter</th><td>Lists sit under "My lists" in the company filter dropdown. Picking one shows only its companies, on every exchange (others are hidden, not faded): the server filters the month like Most popular, so counts and "+N" stay right. Lists are saved in <code>localStorage</code> (synced across tabs); the one picked travels in the <code>earnings_list</code> cookie, not the URL, and the "+N" request reads it too. A cookie list with no saved list to match shows as "Ticker list".</td><td><code>src/lib/ticker-lists.js</code>, <code>src/lib/calendar-filter.js</code>, <code>parseFilter()</code> in <code>src/lib/earnings.js</code></td></tr>
+          <tr><th scope="row">Remembered list</th><td>The list picked last stays on: coming back to <code>/</code> (or any calendar URL without a market) opens on it, built by the server so the default never flashes first. Picking a market, Most popular included, clears it; a market in the URL always wins. The cookie lasts a year.</td><td><code>src/lib/calendar-filter.js</code>, <code>src/app/page.js</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -292,7 +310,7 @@
         <tbody>
           <tr><th scope="row">Burger menu</th><td>Below 768px (<code>md</code>) the header is one row: logo, search (fills the space left), light / dark toggle, burger. The burger opens a right-hand sheet styled like the feedback dialog (MENU label, square close box) with Calendar, Roadmap and Suggest a feature; picking one closes it. The Suggest a feature dialog now lives in the header so it survives the menu closing. On phones the search results span the header's full width instead of hanging off the search box. Desktop unchanged.</td><td><code>site-header.jsx</code></td></tr>
           <tr><th scope="row">Market panel below the calendar</th><td>Below 768px, Market sentiment and Key releases move under the calendar and legend (CSS <code>order</code>, top border instead of bottom), so the calendar comes first. Desktop keeps them on top.</td><td><code>market-sentiment.jsx</code></td></tr>
-          <tr><th scope="row">Exchange dropdown</th><td>Below 768px the exchange buttons become a native select after "SHOW" (same 40px bordered mono style, chevron), each option "NYSE · 42". Phones get their own picker; choosing one goes to the same URL as the button, without scrolling.</td><td><code>exchange-filter.jsx</code></td></tr>
+          <tr><th scope="row">Exchange dropdown</th><td>A native select after "SHOW" (same 40px bordered mono style, chevron), each option "NYSE · 42", so phones get their own picker; choosing one goes to its filtered calendar without scrolling. Started as the phone version; now used at every size (see Calendar › Company filter).</td><td><code>exchange-filter.jsx</code></td></tr>
           <tr><th scope="row">Stacked day view</th><td>Below 768px the day view's Before open / During / After close sections stack top to bottom with rules between them. Each list grows to fit and the page scrolls (no scroll box inside the page); from 768px they're three columns that scroll on their own.</td><td><code>day-view.jsx</code></td></tr>
         </tbody>
       </table>
@@ -301,9 +319,9 @@
   </section>
 
   <section class="c-med">
-    <div class="bar hud"><span>02 / <b>To do</b></span><span>12 items · priority is a suggestion</span></div>
+    <div class="bar hud"><span>02 / <b>To do</b></span><span>13 items · priority is a suggestion</span></div>
     <div class="section-title"><h2>What's <span>next</span>.</h2><p>Grouped by area. Priority: <span class="tag c-high">High</span> <span class="tag c-med">Medium</span> <span class="tag c-launch">Before launch</span> <span class="tag c-low">Low</span></p></div>
-    <div class="sub"><h3>Filters</h3><span class="hud">2</span></div>
+    <div class="sub"><h3>Filters</h3><span class="hud">3</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -312,6 +330,7 @@
         <tbody>
           <tr><th scope="row">Market-cap filter</th><td>Size: Large · Mid · Small · All (cutoffs $10B / $2B). Real market cap from Finnhub company profiles, fetched by a script at ~55 calls/min (~1 hour first run, weekly refresh) and saved to a file. Revenue estimate as a fallback for companies not yet looked up. Kept in the URL, with per-month counts.</td><td><span class="tag c-high">High</span></td></tr>
           <tr><th scope="row">Region filter (US / Foreign)</th><td>Free option: split US-listed companies by home country using profile lookups, alongside the market-cap script. Real Europe / Worldwide calendars need Finnhub premium (price not checked) or another provider.</td><td><span class="tag c-med">Medium</span></td></tr>
+          <tr><th scope="row">Edit and delete lists</th><td>Rename a ticker list, add or remove companies, and delete it. Today a list can only be created. Companies are found through search, so only ones reporting this month or the next two can be added; a ticker lookup that doesn't need a report date would lift that.</td><td><span class="tag c-med">Medium</span></td></tr>
         </tbody>
       </table>
     </div>
@@ -371,7 +390,7 @@
 
   </section>
 
-  <footer class="hud">Earnings Report · project notes</footer>
+  <footer class="hud">Open Market · project notes</footer>
 </main>
 </body>
 </html>

@@ -1,4 +1,6 @@
+import { GITHUB_URL } from "@/lib/site";
 import { FooterDate } from "./footer-date";
+import { GitHubIcon } from "./github-icon";
 
 export function SiteFooter() {
   return (
@@ -14,7 +16,18 @@ export function SiteFooter() {
           Island Web Apps
         </a>
       </span>
-      <FooterDate />
+      <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-1.5 text-foreground no-underline hover:underline"
+        >
+          <GitHubIcon className="size-3" />
+          Open source on GitHub
+        </a>
+        <FooterDate />
+      </span>
     </footer>
   );
 }

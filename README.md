@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Open Market
 
-## Getting Started
+A free, open-source earnings calendar, made for its users to create and maintain features together as a community.
 
-First, run the development server:
+- Every company reporting earnings, by day, week or month, marked by when it reports and whether it beat, missed or was mixed
+- Your own ticker lists, a watchlist and search
+- Market sentiment (CNN Fear & Greed) and the next Fed, CPI, jobs and GDP releases
+- Company details: EPS and revenue against estimates, surprise history, SEC filings
+
+See what's live and what's next on the in-app Roadmap page (`/roadmap`), or in `docs/features.html`.
+
+## Contributing
+
+Open Market is built by the people who use it. Suggest a feature (in the app or as an issue), pick something off the roadmap, or fix a bug, then open a pull request at [github.com/FullPokerFace/open-market](https://github.com/FullPokerFace/open-market).
+
+## Getting started
+
+Needs Node.js and a free [Finnhub](https://finnhub.io) API key. Create `.env.local`:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+FINNHUB_API_KEY=your_key
+# Optional: lets the "Suggest a feature" form send email through Gmail SMTP
+GMAIL_SENDER_ADDRESS=you@gmail.com
+GMAIL_APP_PASSWORD=your_app_password
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Then:
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+```bash
+npm install
+npm run dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000). Every request sent to Finnhub is logged in the server console.
 
-## Learn More
+Built with Next.js 16 (App Router), Tailwind CSS v4 and shadcn/ui (Base UI). Design notes are in `docs/DESIGN.md`.
 
-To learn more about Next.js, take a look at the following resources:
+## Credits
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Data from [Finnhub](https://finnhub.io), [SEC EDGAR](https://www.sec.gov/edgar), [Kalshi](https://kalshi.com) and [CNN Fear & Greed](https://www.cnn.com/markets/fear-and-greed). Design inspired by [ArtCraft](https://getartcraft.com).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Open Market is for information only and isn't investment advice.

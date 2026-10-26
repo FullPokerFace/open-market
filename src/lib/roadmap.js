@@ -10,6 +10,7 @@ export const SHIPPED = [
       ["Day, week or month", "See one day, one week with every company showing, or the whole month. Step back or ahead, or jump back to today."],
       ["Before open or after close", "Every company is marked by when it reports: before the open, during the day or after the close. The week and day views group them that way, with a marker for where the trading day is now."],
       ["Company filter", "Most popular (the Fortune 100), NYSE, Nasdaq or everything, with counts for the month."],
+      ["Your own lists", "Name a list, search and add the companies you follow, and see only them on the calendar. Your last list opens next time you visit."],
       ["Biggest names first", "Each day lists its largest companies first; the rest are one click away in \"+N\"."],
       ["Fits your screen", "The whole month fits in one window, with today framed and in view."],
     ],
@@ -43,6 +44,7 @@ export const SHIPPED = [
       ["Light and dark", "Follows your system setting, or pick one in the header."],
       ["On your phone", "A menu button, a dropdown for the exchange filter, and the day view top to bottom. The calendar comes first, with the market panel under it."],
       ["Suggest a feature", "Send an idea straight to the developer from the menu."],
+      ["Open source", "The code is on GitHub: anyone can build a feature or fix a bug and send it in."],
     ],
   },
 ];
@@ -53,6 +55,7 @@ export const UPCOMING = [
   { stage: "next", title: "Shareable company links", text: "Send someone a link that opens straight to a company's results." },
   { stage: "next", title: "Week and month on phones", text: "A day-by-day list made for small screens." },
   { stage: "planned", title: "US and foreign companies", text: "Filter by where a company is based." },
+  { stage: "planned", title: "Edit your lists", text: "Rename a list, change its companies or delete it." },
   { stage: "later", title: "Two years of EPS history", text: "Eight quarters in the surprise chart instead of four." },
   { stage: "later", title: "Company logos", text: "Logos on the calendar tiles instead of tickers." },
   { stage: "later", title: "Insights", text: "A page for a closer look at earnings season. Details to come." },

@@ -1,6 +1,7 @@
 // Feature suggestion email, styled like docs/features.html (light theme only: mail clients
 // ignore CSS variables and most dark-mode rules, so every style is inline with fixed colors).
 import "server-only";
+import { SITE_NAME } from "./site";
 
 const C = {
   bg: "#f2f1ee",
@@ -50,7 +51,7 @@ export function buildSuggestionEmail({ message, sentAt = new Date(), site }) {
   const sent = formatSent(sentAt);
 
   const text = [
-    "New feature suggestion from the Earnings Report site:",
+    `New feature suggestion from the ${SITE_NAME} site:`,
     "",
     message,
     "",
@@ -90,7 +91,7 @@ export function buildSuggestionEmail({ message, sentAt = new Date(), site }) {
 
   <tr><td style="padding:32px 24px 24px;border-bottom:1px solid ${C.line};">
     <h1 style="margin:0 0 12px;font-family:${FONT_DISPLAY};font-weight:700;font-size:40px;line-height:1.02;letter-spacing:-.04em;color:${C.strong};">New <span style="color:${C.blue};">suggestion</span>.</h1>
-    <p style="margin:0;font-family:${FONT_TEXT};font-size:16px;line-height:1.5;color:${C.body};">Someone sent an idea from the <strong style="color:${C.ink};">Suggest a feature</strong> form on Earnings Report.</p>
+    <p style="margin:0;font-family:${FONT_TEXT};font-size:16px;line-height:1.5;color:${C.body};">Someone sent an idea from the <strong style="color:${C.ink};">Suggest a feature</strong> form on ${SITE_NAME}.</p>
   </td></tr>
 
   <tr><td style="padding:10px 24px;border-bottom:1px solid ${C.line};${hud}">01 / <b style="color:${C.ink};font-weight:500;">Their suggestion</b></td></tr>
@@ -107,7 +108,7 @@ export function buildSuggestionEmail({ message, sentAt = new Date(), site }) {
     </table>
   </td></tr>
 
-  <tr><td style="padding:14px 24px 18px;border-top:1px solid ${C.line};${hud}">Earnings Report · feature suggestions</td></tr>
+  <tr><td style="padding:14px 24px 18px;border-top:1px solid ${C.line};${hud}">${SITE_NAME} · feature suggestions</td></tr>
 
 </table>
 </td></tr>

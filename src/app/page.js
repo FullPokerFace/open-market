@@ -7,13 +7,13 @@ import {
   monthGridRange,
   monthOf,
   parseDateKey,
-  parseExchange,
   parseMonthKey,
   parseViewMode,
   shiftMonth,
   todayInNewYork,
   weekdayOf,
 } from "@/lib/earnings";
+import { requestFilter } from "@/lib/calendar-filter";
 import { getEarningsCalendar, getListedSymbols } from "@/lib/finnhub";
 import { getCompanyDirectory } from "@/lib/sec";
 import { getMacroEvents } from "@/lib/kalshi";
@@ -33,6 +33,7 @@ export default function Home({ searchParams }) {
 async function Calendar({ searchParams }) {
   const { month, exchange, view: viewParam, date } = await searchParams;
   await connection();
+  const filter = await requestFilter(exchange);
 
   const today = todayInNewYork();
   const current = { year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) };
@@ -68,7 +69,7 @@ async function Calendar({ searchParams }) {
         return null;
       }),
     ]);
-    view = buildCalendarView({ rows, directory, listings, exchange: parseExchange(exchange), mode, target, focus, today });
+    view = buildCalendarView({ rows, directory, listings, exchange: filter, mode, target, focus, today });
   } catch (error) {
     console.error(error);
   }

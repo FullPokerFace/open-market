@@ -26,16 +26,29 @@ function inOption(option, symbol, mic) {
   return !option.mic || mic === option.mic;
 }
 
-export function parseExchange(value) {
-  return EXCHANGES.find((e) => e.key === value) ?? DEFAULT_EXCHANGE;
+// Cookie holding the tickers of the list the visitor last picked, so a plain "/" opens on it.
+// Set in the browser (ticker-lists.js), read on the server (calendar-filter.js).
+export const LIST_COOKIE = "earnings_list";
+
+// Most tickers a list can carry
+const MAX_LIST_TICKERS = 200;
+const TICKER = /^[A-Z0-9.-]{1,10}$/;
+
+// The calendar's filter: one of the visitor's lists (`tickers` "AAPL,NVDA", on every exchange)
+// when given, else an exchange option
+export function parseFilter({ exchange, tickers }) {
+  const list = [...new Set((tickers ?? "").toUpperCase().split(","))].filter((t) => TICKER.test(t)).slice(0, MAX_LIST_TICKERS);
+  if (list.length) return { key: "tickers", label: "My list", symbols: new Set(list), tickers: list, note: "in your list" };
+  return EXCHANGES.find((e) => e.key === exchange) ?? DEFAULT_EXCHANGE;
 }
 
-// The default exchange stays out of the URL
-function exchangeParam(exchange) {
-  return exchange === DEFAULT_EXCHANGE ? null : exchange.key;
+// URL params for a filter. The default exchange stays out of the URL, and so does a list:
+// it travels in a cookie (calendar-filter.js)
+function filterParams(filter) {
+  return { exchange: filter === DEFAULT_EXCHANGE || filter.tickers ? null : filter.key };
 }
 
-function calendarHref(params) {
+export function calendarHref(params) {
   const query = new URLSearchParams(Object.entries(params).filter(([, value]) => value)).toString();
   return query ? `/?${query}` : "/";
 }
@@ -230,7 +243,7 @@ function buildFilters({ rows, listings, from, to, exchange, params }) {
     label: option.label,
     count: countFor(option),
     active: option === exchange,
-    href: calendarHref({ ...params, exchange: exchangeParam(option) }),
+    href: calendarHref({ ...params, ...filterParams(option) }),
   }));
 }
 
@@ -374,7 +387,7 @@ function viewPeriod({ mode, target, focus, today, href }) {
 // day views pass `focus`, a weekday inside that month's grid, and show every company that day
 // (no "+N" cap: their cells are big enough to scroll).
 export function buildCalendarView({ rows: allRows, directory, listings, exchange, mode = "month", target, focus = null, today }) {
-  const href = (params) => calendarHref({ ...params, exchange: exchangeParam(exchange) });
+  const href = (params) => calendarHref({ ...params, ...filterParams(exchange) });
   const period = viewPeriod({ mode, target, focus, today, href });
   const monthFirst = toIso(new Date(Date.UTC(target.year, target.month - 1, 1)));
   const monthLast = toIso(new Date(Date.UTC(target.year, target.month, 0)));
@@ -437,7 +450,11 @@ export function buildCalendarView({ rows: allRows, directory, listings, exchange
     filters,
     // No note when unfiltered: "All" or exchange data unavailable
     exchangeNote: listings ? exchange.note : null,
-    exchangeParam: exchangeParam(exchange),
+    // For the "+N" requests, and for links that switch to one of the visitor's lists (which go without them)
+    filterParams: filterParams(exchange),
+    periodParams: period.params,
+    // The list shown, or null when filtering by exchange
+    listTickers: exchange.tickers ?? null,
     todayHref: period.todayHref,
     prevHref: period.prevHref,
     nextHref: period.nextHref,

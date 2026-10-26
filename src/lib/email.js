@@ -2,6 +2,7 @@
 // Call only from the Node.js runtime and await it before responding.
 import "server-only";
 import nodemailer from "nodemailer";
+import { SITE_NAME } from "./site";
 
 export function emailConfigured() {
   return Boolean(process.env.GMAIL_SENDER_ADDRESS?.trim() && process.env.GMAIL_APP_PASSWORD?.trim());
@@ -30,7 +31,7 @@ export async function sendEmail({ to, subject, text, html, replyTo }) {
 
   try {
     const result = await transport.sendMail({
-      from: { name: "Earnings Report", address: user },
+      from: { name: SITE_NAME, address: user },
       to: to ?? user,
       replyTo,
       subject,

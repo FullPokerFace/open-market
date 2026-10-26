@@ -1,12 +1,13 @@
+import { GroupTitle, Item, SectionBar } from "@/components/earnings/page-parts";
 import { SiteFooter } from "@/components/earnings/site-footer";
 import { SiteHeader } from "@/components/earnings/site-header";
 import { SuggestFeatureButton } from "@/components/earnings/suggest-feature-dialog";
 import { SHIPPED, STAGES, UPCOMING } from "@/lib/roadmap";
-import { cn } from "@/lib/utils";
+import { SITE_NAME } from "@/lib/site";
 
 export const metadata = {
-  title: "Roadmap · Earnings Report",
-  description: "What's live in Earnings Report today and what's coming next.",
+  title: "Roadmap",
+  description: `What's live in ${SITE_NAME} today and what's coming next.`,
 };
 
 const shippedCount = SHIPPED.reduce((sum, group) => sum + group.items.length, 0);
@@ -20,13 +21,13 @@ export default function RoadmapPage() {
         <main className="mx-auto box-border w-full max-w-360 flex-1 border-x">
           <header className="border-b px-6 pt-9 pb-7">
             <h1 className="display-type m-0 mb-4 text-[clamp(36px,6vw,56px)]">
-              Earnings Report <span className="text-blue">roadmap</span>.
+              {SITE_NAME} <span className="text-blue">roadmap</span>.
             </h1>
             <p className="m-0 max-w-190 text-[17px] text-body">
               <strong className="font-semibold text-foreground">
                 What&apos;s live today, and what&apos;s being built next.
               </strong>{" "}
-              Plans change with what people ask for, so if something&apos;s missing, suggest it.
+              Plans change with what the community asks for, so if something&apos;s missing, suggest it or build it.
             </p>
           </header>
 
@@ -111,34 +112,5 @@ function Progress() {
         ))}
       </div>
     </div>
-  );
-}
-
-function SectionBar({ index, name, count }) {
-  return (
-    <div className="eyebrow flex flex-wrap justify-between gap-2 border-b px-6 py-2.5 text-muted-foreground">
-      <span>
-        {index} / <span className="text-foreground">{name}</span>
-      </span>
-      <span>{count}</span>
-    </div>
-  );
-}
-
-function GroupTitle({ tone, children }) {
-  return (
-    <h3 className="display-type m-0 flex items-center gap-2.5 px-6 pt-6 pb-3 text-[22px] tracking-[-0.03em]">
-      <span aria-hidden="true" className={cn("size-2.5 shrink-0", tone)} />
-      {children}
-    </h3>
-  );
-}
-
-function Item({ title, text }) {
-  return (
-    <li className="-mt-px -ml-px border-t border-l px-6 py-4">
-      <div className="text-[15px] font-semibold text-strong">{title}</div>
-      <p className="m-0 mt-1 text-[14px] text-body">{text}</p>
-    </li>
   );
 }

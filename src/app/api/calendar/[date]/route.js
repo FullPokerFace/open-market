@@ -1,10 +1,12 @@
-import { buildHiddenEarnings, monthGridRange, parseExchange, parseMonthKey } from "@/lib/earnings";
+import { requestFilter } from "@/lib/calendar-filter";
+import { buildHiddenEarnings, monthGridRange, parseMonthKey } from "@/lib/earnings";
 import { getEarningsCalendar, getListedSymbols } from "@/lib/finnhub";
 import { getCompanyDirectory } from "@/lib/sec";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 // Companies hidden behind a day's "+N" tile: /api/calendar/2026-10-28?month=2026-10&exchange=nasdaq
+// (no exchange: the visitor's saved list from its cookie, as on the page)
 export async function GET(request, ctx) {
   const { date } = await ctx.params;
   const params = new URL(request.url).searchParams;
@@ -20,12 +22,13 @@ export async function GET(request, ctx) {
   }
 
   try {
-    const [rows, directory, listings] = await Promise.all([
+    const [rows, directory, listings, filter] = await Promise.all([
       getEarningsCalendar(start, end),
       getCompanyDirectory().catch(() => ({})),
       getListedSymbols().catch(() => null),
+      requestFilter(params.get("exchange")),
     ]);
-    const earnings = buildHiddenEarnings({ rows, directory, listings, exchange: parseExchange(params.get("exchange")), date });
+    const earnings = buildHiddenEarnings({ rows, directory, listings, exchange: filter, date });
     return Response.json({ earnings });
   } catch (error) {
     console.error(error);

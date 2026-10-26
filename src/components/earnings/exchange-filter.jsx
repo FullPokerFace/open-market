@@ -1,38 +1,29 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ChevronDownIcon } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ChevronDownIcon, PlusIcon } from "lucide-react";
+
+const LIST_VALUE = "list:";
+const OTHER_LIST = "other-list";
 
 // `children` (the calendar toolbar) sits at the right end of the row, and still shows without filters.
-// Below md the exchange buttons collapse into a dropdown.
-export function ExchangeFilter({ filters, children }) {
+// One dropdown with the exchanges, then the visitor's own lists, and "+ Create list" beside it.
+// `showingList`: the calendar is filtered to a list's tickers (`activeListId` is null when no saved list matches).
+export function ExchangeFilter({ filters, lists, activeListId, showingList, onSelectList, onSelectExchange, onNewList, children }) {
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-2">
       {filters.length > 0 && (
         <nav aria-label="Filter companies" className="flex flex-wrap items-center gap-3">
           <span className="eyebrow text-muted-foreground">Show</span>
-          <ExchangeSelect filters={filters} />
-          <div className="hidden flex-wrap py-4 font-mono text-[11px] font-bold tracking-[0.12em] uppercase md:flex">
-            {filters.map((filter) => (
-              <Link
-                key={filter.key}
-                href={filter.href}
-                scroll={false}
-                aria-current={filter.active ? "page" : undefined}
-                className={cn(
-                  "-ml-px flex h-10 items-center gap-2 border border-line-strong px-4 no-underline first:ml-0",
-                  filter.active ? "bg-foreground text-background" : "text-foreground"
-                )}
-              >
-                {filter.label}
-                <span className={cn("font-medium", filter.active ? "opacity-70" : "text-muted-foreground")}>
-                  {filter.count}
-                </span>
-              </Link>
-            ))}
-          </div>
+          <ExchangeSelect
+            filters={filters}
+            lists={lists}
+            activeListId={activeListId}
+            showingList={showingList}
+            onSelectList={onSelectList}
+            onSelectExchange={onSelectExchange}
+          />
+          <NewListButton onClick={onNewList} />
         </nav>
       )}
       {children}
@@ -40,24 +31,61 @@ export function ExchangeFilter({ filters, children }) {
   );
 }
 
-// Native select so phones get their own picker; choosing an exchange navigates like the buttons do
-function ExchangeSelect({ filters }) {
+function NewListButton({ onClick }) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex h-10 cursor-pointer items-center gap-2 border border-line-strong px-4 font-mono text-[11px] font-bold tracking-[0.12em] text-foreground uppercase hover:bg-tag"
+    >
+      <PlusIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
+      Create list
+    </button>
+  );
+}
+
+// Native select so phones get their own picker; choosing an exchange navigates to its filtered calendar
+function ExchangeSelect({ filters, lists, activeListId, showingList, onSelectList, onSelectExchange }) {
   const router = useRouter();
   const active = filters.find((filter) => filter.active) ?? filters[0];
+  let value = active.key;
+  if (activeListId) value = `${LIST_VALUE}${activeListId}`;
+  // A list link whose saved list is gone (deleted, or opened in another browser)
+  else if (showingList) value = OTHER_LIST;
+
+  const onChange = (next) => {
+    if (next.startsWith(LIST_VALUE)) return onSelectList(next.slice(LIST_VALUE.length));
+    onSelectExchange();
+    router.push(filters.find((filter) => filter.key === next).href, { scroll: false });
+  };
 
   return (
-    <label className="relative flex md:hidden">
-      <span className="sr-only">Exchange</span>
+    <label className="relative flex">
+      <span className="sr-only">Exchange or list</span>
       <select
-        value={active.key}
-        onChange={(e) => router.push(filters.find((filter) => filter.key === e.target.value).href, { scroll: false })}
-        className="h-10 cursor-pointer appearance-none border border-line-strong bg-background pr-10 pl-4 font-mono text-[11px] font-bold tracking-[0.12em] text-foreground uppercase"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="h-10 max-w-56 cursor-pointer appearance-none truncate border border-line-strong bg-background pr-10 pl-4 font-mono text-[11px] font-bold tracking-[0.12em] text-foreground uppercase"
       >
         {filters.map((filter) => (
           <option key={filter.key} value={filter.key}>
             {filter.label} · {filter.count}
           </option>
         ))}
+        {value === OTHER_LIST && (
+          <option value={OTHER_LIST} disabled>
+            Ticker list
+          </option>
+        )}
+        {lists.length > 0 && (
+          <optgroup label="My lists">
+            {lists.map((list) => (
+              <option key={list.id} value={`${LIST_VALUE}${list.id}`}>
+                {list.name}
+              </option>
+            ))}
+          </optgroup>
+        )}
       </select>
       <ChevronDownIcon
         className="pointer-events-none absolute top-1/2 right-3.5 size-3.5 -translate-y-1/2 text-foreground"

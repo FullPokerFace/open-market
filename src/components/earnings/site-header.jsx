@@ -6,7 +6,9 @@ import { usePathname } from "next/navigation";
 import { MenuIcon, MoonIcon, SearchIcon, SunIcon, XIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { GITHUB_URL, SITE_NAME } from "@/lib/site";
 import { cn } from "@/lib/utils";
+import { GitHubIcon } from "./github-icon";
 import { SearchResults } from "./search-results";
 import { SuggestFeatureDialog } from "./suggest-feature-dialog";
 
@@ -16,10 +18,11 @@ const iconButton = "grid w-12 shrink-0 cursor-pointer place-items-center border-
 const PAGES = [
   { href: "/", label: "Calendar" },
   { href: "/roadmap", label: "Roadmap" },
+  { href: "/about", label: "About" },
 ];
 
 // Search only shows on pages that pass its props (the calendar).
-// Below md the nav moves into a burger menu; search and the theme toggle stay in the bar.
+// Below lg the nav (and GitHub link) moves into a burger menu; search and the theme toggle stay in the bar.
 export function SiteHeader({ query, onQueryChange, results, searchState, onSelectResult }) {
   const pathname = usePathname();
   const { resolvedTheme, setTheme } = useTheme();
@@ -57,13 +60,19 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
   return (
     // relative: on mobile the search results anchor to the full header width
     <header className="eyebrow relative flex min-h-11 items-stretch border-b">
-      <Link href="/" aria-label="Earnings home" className="grid w-13 shrink-0 place-items-center border-r text-foreground">
+      <Link
+        href="/"
+        aria-label={`${SITE_NAME} home`}
+        className="flex shrink-0 items-center gap-2.5 border-r px-4 text-foreground no-underline"
+      >
         <svg width="20" height="18" viewBox="0 0 20 18" aria-hidden="true">
           <path d="M1 17L10 1l9 16h-4.5L10 9l-4.5 8z" fill="currentColor" />
         </svg>
+        {/* The name only where the bar has room for it */}
+        <span className="hidden font-bold lg:inline">{SITE_NAME}</span>
       </Link>
 
-      <nav aria-label="Primary" className="hidden flex-wrap items-center gap-1 px-3 md:flex">
+      <nav aria-label="Primary" className="hidden flex-wrap items-center gap-1 px-3 lg:flex">
         {PAGES.map(({ href, label }) => {
           const current = pathname === href;
           return (
@@ -84,11 +93,11 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
         </button>
       </nav>
 
-      <div className="ml-auto flex min-w-0 flex-1 items-stretch justify-end md:flex-none">
+      <div className="ml-auto flex min-w-0 flex-1 items-stretch justify-end lg:flex-none">
         {onQueryChange && (
           <div
             ref={searchRef}
-            className="flex min-w-0 flex-1 md:relative md:flex-none"
+            className="flex min-w-0 flex-1 lg:relative lg:flex-none"
             onKeyDown={(e) => e.key === "Escape" && setResultsOpen(false)}
             // Tabbing out of the box and its results closes them
             onBlur={(e) => e.relatedTarget && !e.currentTarget.contains(e.relatedTarget) && setResultsOpen(false)}
@@ -107,7 +116,7 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
                 onKeyDown={onSearchKeyDown}
                 aria-controls={showResults ? "search-results" : undefined}
                 placeholder="SEARCH TICKER"
-                className="w-full min-w-0 border-0 bg-transparent text-foreground uppercase outline-none placeholder:text-muted-foreground md:w-37.5"
+                className="w-full min-w-0 border-0 bg-transparent text-foreground uppercase outline-none placeholder:text-muted-foreground lg:w-37.5"
               />
             </label>
             {showResults && (
@@ -115,6 +124,16 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
             )}
           </div>
         )}
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label={`${SITE_NAME} on GitHub`}
+          title="View source on GitHub"
+          className={cn(iconButton, "hidden lg:grid")}
+        >
+          <GitHubIcon className="size-4" />
+        </a>
         <button
           type="button"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -129,7 +148,7 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
           onClick={() => setMenuOpen(true)}
           aria-label="Open menu"
           aria-expanded={menuOpen}
-          className={cn(iconButton, "md:hidden")}
+          className={cn(iconButton, "lg:hidden")}
         >
           <MenuIcon className="size-4" aria-hidden="true" />
         </button>
@@ -161,6 +180,10 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
             <button type="button" onClick={openSuggest} className={cn(menuItem, "cursor-pointer uppercase")}>
               Suggest a feature
             </button>
+            <a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" className={cn(menuItem, "gap-2.5")}>
+              <GitHubIcon className="size-3.5" />
+              GitHub ↗
+            </a>
           </nav>
         </SheetContent>
       </Sheet>
