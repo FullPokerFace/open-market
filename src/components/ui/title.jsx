@@ -1,7 +1,8 @@
 import { cn } from "@/lib/utils";
 
 // Heading ported from ResumeFromSpace's Typography/Title, with colors mapped to this app's
-// tokens so they follow light / dark mode. `className` wins over the defaults (e.g. "mb-0").
+// tokens so they follow light / dark mode, set in the display face like the page heading.
+// `className` wins over the defaults (e.g. "mb-0").
 // `highlight` picks out part of a text title in blue: <Title highlight="sentiment">Market sentiment</Title>
 const SIZES = {
   xs: "text-xs",
@@ -66,7 +67,7 @@ export function Title({
   const Heading = `h${level}`;
   return (
     <Heading
-      className={cn(SIZES[size], COLORS[color], WEIGHTS[weight], ALIGNS[align], "mb-4", className)}
+      className={cn("display-type", SIZES[size], COLORS[color], WEIGHTS[weight], ALIGNS[align], "mb-4", className)}
       {...rest}
     >
       {withHighlight(children, highlight)}
