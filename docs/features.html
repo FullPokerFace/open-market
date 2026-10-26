@@ -120,17 +120,17 @@
 
   <header class="title">
     <h1>Earnings Report <span>features</span>.</h1>
-    <p class="lead"><strong>The calendar runs on live Finnhub data with exchange filtering, a details panel, a "+N" companies modal, month-wide search and a saved watchlist.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
+    <p class="lead"><strong>The calendar runs on live Finnhub data in a month grid that fits the screen, with a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, and a saved watchlist.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>39 features tracked</span></div>
-    <div class="progress-head"><b>67%</b><span>26 of 39 features done · 13 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 26, high priority 1, medium 4, before launch 3, low 5">
-      <span class="c-done" style="flex: 26"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>43 features tracked</span></div>
+    <div class="progress-head"><b>70%</b><span>30 of 43 features done · 13 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 30, high priority 1, medium 4, before launch 3, low 5">
+      <span class="c-done" style="flex: 30"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>26</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>30</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -141,8 +141,8 @@
         <h4 class="hud">Done by area</h4>
         <ul>
           <li>Foundation <b>5</b></li>
-          <li>Live data <b>6</b></li>
-          <li>Calendar <b>7</b></li>
+          <li>Live data <b>7</b></li>
+          <li>Calendar <b>10</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
         </ul>
@@ -169,7 +169,7 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>26 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>30 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">5</span></div>
     <div class="scroll">
@@ -187,7 +187,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Live data</h3><span class="hud">6</span></div>
+    <div class="sub"><h3>Live data</h3><span class="hud">7</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -197,25 +197,29 @@
           <tr><th scope="row">Finnhub earnings calendar</th><td>Every earnings report in the month: date, ticker, timing, fiscal quarter, EPS and revenue estimate and actual. Fetched week by week, with busy weeks split to get past the 1,500-row cap.</td><td><code>src/lib/finnhub.js</code></td></tr>
           <tr><th scope="row">Beat / Mixed / Miss</th><td>Beat = EPS and revenue both met estimates; Miss = neither did; Mixed = one did. "Reported" when there was no estimate to compare.</td><td><code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Company names</th><td>From SEC's free ticker list, tidied from legal names ("NETFLIX INC" → "Netflix"). Also gives each company's SEC ID for filing links.</td><td><code>src/lib/sec.js</code></td></tr>
-          <tr><th scope="row">Caching</th><td>Earnings cached for hours, names and exchange lists for days. After each page load, this month and the next two are loaded into the cache in the background, so paging ahead doesn't wait on Finnhub. Well under the free plan's 60 calls/min.</td><td><code>"use cache"</code> in <code>src/lib</code></td></tr>
+          <tr><th scope="row">Caching</th><td>Earnings cached on the server for hours, names and exchange lists for days, so repeat visits make no Finnhub calls. Well under the free plan's 60 calls/min. The cache lives in server memory: it empties on every deploy or restart (see Before launch).</td><td><code>"use cache"</code> in <code>src/lib</code></td></tr>
+          <tr><th scope="row">Cache warm-up</th><td>After each page is sent, this month and the next two are loaded into the cache in the background, so paging ahead and search never wait on Finnhub. Months already cached cost nothing; a failure only means that month loads when opened.</td><td><code>after()</code> in <code>src/app/page.js</code></td></tr>
           <tr><th scope="row">Error handling</th><td>Shows "unavailable" instead of crashing if Finnhub fails; falls back to bare tickers or no exchange filter if names or exchange data fail.</td><td><code>src/app/page.js</code></td></tr>
           <tr><th scope="row">API key</th><td><code>FINNHUB_API_KEY</code> in git-ignored <code>.env.local</code>, sent in a request header, never to the browser.</td><td><code>.env.local</code></td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="sub"><h3>Calendar</h3><span class="hud">7</span></div>
+    <div class="sub"><h3>Calendar</h3><span class="hud">10</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
           <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Month grid</th><td>Monday–Friday weeks, past days shaded. Fills the window height so the whole month, header, filters and footer fit on one screen (rows never go below one tile row; very short windows scroll). 24px side margins inside the 1440px frame. Today has a thick frame and the page scrolls to it on open.</td><td><code>month-grid.jsx</code></td></tr>
-          <tr><th scope="row">Ticker tiles</th><td>As many per day as fit the cell (up to 16), largest companies first (by revenue estimate); the rest go in "+N". Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
-          <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing. Loads on open from the cached month data; picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
-          <tr><th scope="row">Month navigation</th><td>Previous / next arrows and Today, saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
-          <tr><th scope="row">Company filter</th><td>Most popular (default) · NYSE · Nasdaq · All, with per-month counts. Most popular is 59 stocks retail investors hold, trade and follow most, merged from Robinhood, Vanda, Firstrade and Earnings Hub (top 50 by alerts) lists and refreshed by hand. Saved in the URL; ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/popular.js</code></td></tr>
+          <tr><th scope="row">Month grid</th><td>Monday–Friday weeks, past days shaded, inside the 1440px frame with 24px side margins and a left / right rule.</td><td><code>month-grid.jsx</code></td></tr>
+          <tr><th scope="row">Fits the screen</th><td>The page is one window tall: header, filters, the whole month, legend and footer are all visible, and the weeks share the height left over. Fits 1920×960 and 1440×800 browser windows; rows stop at 92px (one row of tiles), so shorter windows scroll a little. Tighter title, bars and cells to leave room.</td><td><code>month-grid.jsx</code>, <code>src/app/layout.js</code></td></tr>
+          <tr><th scope="row">Today</th><td>Today's cell has a 2px frame and a "TODAY" label, and the page scrolls to it when it opens.</td><td><code>month-grid.jsx</code>, <code>earnings-calendar.jsx</code></td></tr>
+          <tr><th scope="row">Ticker tiles</th><td>As many per day as fit the cell (up to 16), measured as the window resizes; largest companies first (by revenue estimate) and the rest go in "+N". Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
+          <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing: the tiles that didn't fit on this screen, then the ones the server held back (loaded on open from the cached month data). Picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
+          <tr><th scope="row">Month navigation</th><td>Previous / next arrows load the month before or after; the middle button shows the month on screen (e.g. November 2026) and goes back to the current month (or scrolls to today when already on it). Saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
+          <tr><th scope="row">Company filter</th><td>"Show": Most popular (default) · NYSE · Nasdaq · All, with per-month counts. NYSE American was removed as a button (its stocks still show under All). Saved in the URL; old <code>?exchange=amex</code> links open Most popular. Ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/earnings.js</code></td></tr>
+          <tr><th scope="row">Most popular list</th><td>The Fortune 100 (2026): US exchange-listed stocks among the 100 largest companies by revenue, 90 tickers, one per company (GOOGL, BRK.B). Kept by hand.</td><td><code>src/lib/popular.js</code></td></tr>
           <tr><th scope="row">OTC and funds excluded</th><td>OTC stocks, closed-end funds and tickers with no known exchange are left out (October: 1,627 → 1,350).</td><td><code>getListedSymbols()</code></td></tr>
           <tr><th scope="row">Legend</th><td>Beat · Mixed · Miss · No mark (upcoming), with the data source.</td><td><code>status-legend.jsx</code></td></tr>
         </tbody>

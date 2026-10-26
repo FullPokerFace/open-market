@@ -6,8 +6,9 @@ const ITEMS = [
 
 export function StatusLegend() {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-1.5 font-mono text-[10px] font-medium tracking-[0.1em] uppercase">
-      <div className="flex flex-wrap gap-1.5">
+    <div className="flex flex-wrap items-center justify-between gap-3 px-6 pt-4 font-mono text-[10px] font-medium tracking-[0.1em] uppercase">
+      <div className="flex flex-wrap items-center gap-1.5">
+        LEGEND:
         {ITEMS.map(({ label, text, swatch }) => (
           <span key={label} className={`chip ${text}`}>
             <span className={`size-1.75 ${swatch}`} aria-hidden="true" />

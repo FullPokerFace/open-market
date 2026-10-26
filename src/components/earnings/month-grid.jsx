@@ -162,7 +162,7 @@ export function MonthGrid({ days, filtering, isMatch, onSelect, onShowMore }) {
 
   return (
     // Takes the height left between the toolbar and the legend; each week gets an equal share
-    <div className="mx-6 flex-1 overflow-x-auto border-x border-t" style={{ minHeight: HEADER_ROW_PX + weeks * MIN_ROW_PX }}>
+    <div className="m-6 flex-1 overflow-x-auto border-x border-t" style={{ minHeight: HEADER_ROW_PX + weeks * MIN_ROW_PX }}>
       <div
         ref={gridRef}
         className="grid h-full min-w-275 grid-cols-5"

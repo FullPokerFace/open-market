@@ -324,6 +324,7 @@ export function buildMonthView({ rows: allRows, directory, listings, exchange, t
     today,
     todayLabel: `${WEEKDAYS[todayDate.getUTCDay()]} ${MONTHS[todayDate.getUTCMonth()]} ${todayDate.getUTCDate()}`,
     isCurrentMonth: monthKey(target) === today.slice(0, 7),
+    currentMonthName: MONTHS[todayDate.getUTCMonth()],
     filters,
     // No note when unfiltered: "All" or exchange data unavailable
     exchangeNote: listings ? exchange.note : null,

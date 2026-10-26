@@ -16,10 +16,11 @@ const VIEWS = [
   { value: "month", label: "Month view", Icon: LayoutGridIcon },
 ];
 
-const todayButton = "grid h-10 cursor-pointer place-items-center bg-foreground px-4.5 text-background uppercase";
+const currentButton = "grid h-10 cursor-pointer place-items-center bg-foreground px-4.5 text-background uppercase";
 
 export function CalendarToolbar({ view, scope, onScopeChange, onToday }) {
-  const todayLabel = `Jump to today, ${view.todayLabel}`;
+  // Shows the month on screen. On the current month it scrolls to today; on any other month it goes back to the current one
+  const currentLabel = view.isCurrentMonth ? `Jump to today, ${view.todayLabel}` : `Go to ${view.currentMonthName}`;
 
   return (
     <div className="flex flex-wrap items-end justify-between gap-6 px-6 py-3">
@@ -33,12 +34,12 @@ export function CalendarToolbar({ view, scope, onScopeChange, onToday }) {
             <ChevronLeftIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
           </Link>
           {view.isCurrentMonth ? (
-            <button type="button" onClick={onToday} aria-label={todayLabel} className={todayButton}>
-              Today
+            <button type="button" onClick={onToday} aria-label={currentLabel} className={currentButton}>
+              {view.label}
             </button>
           ) : (
-            <Link href={view.todayHref} aria-label={todayLabel} className={cn(todayButton, "no-underline")}>
-              Today
+            <Link href={view.todayHref} aria-label={currentLabel} className={cn(currentButton, "no-underline")}>
+              {view.label}
             </Link>
           )}
           <Link href={view.nextHref} aria-label="Next month" className={square}>

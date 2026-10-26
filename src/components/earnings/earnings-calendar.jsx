@@ -162,7 +162,8 @@ export function EarningsCalendar({ view }) {
         />
         <ExchangeFilter filters={view.filters} />
         <CalendarToolbar view={view} scope={scope} onScopeChange={setScope} onToday={jumpToToday} />
-        <SectionBar className="border-t" index="02" title={view.label} aside={gridNote} />
+        <StatusLegend />
+
         <MonthGrid
           days={view.days}
           filtering={filtering}
@@ -170,7 +171,6 @@ export function EarningsCalendar({ view }) {
           onSelect={selectEarnings}
           onShowMore={showMore}
         />
-        <StatusLegend />
       </main>
 
       <MoreCompaniesDialog
