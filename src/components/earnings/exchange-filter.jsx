@@ -5,9 +5,9 @@ export function ExchangeFilter({ filters }) {
   if (!filters.length) return null;
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-3">
-      <nav aria-label="Filter by exchange" className="flex flex-wrap items-center gap-3">
-        <span className="eyebrow text-muted-foreground">Exchange</span>
+    <div className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-2">
+      <nav aria-label="Filter companies" className="flex flex-wrap items-center gap-3">
+        <span className="eyebrow text-muted-foreground">Show</span>
         <div className="flex flex-wrap font-mono text-[11px] font-bold tracking-[0.12em] uppercase">
           {filters.map((filter) => (
             <Link

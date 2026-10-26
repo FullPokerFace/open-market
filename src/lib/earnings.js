@@ -1,20 +1,30 @@
 // Shapes Finnhub earnings-calendar rows into the month grid and details panel.
 // Pure helpers only: safe to import from server and client components.
 
+import { POPULAR_TICKERS } from "./popular";
+
 export const DEFAULT_WATCHLIST = ["NFLX", "TSLA", "NOW", "AAPL", "MSFT", "JPM", "IBM"];
 
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-// Filter options in display order; the first one is the default
+// Filter options in display order; the first one is the default.
+// An option picks companies by ticker list (`symbols`) or by exchange (`mic`); neither = all.
+// `note` finishes "N companies …" above the grid.
 export const EXCHANGES = [
-  { key: "nyse", label: "NYSE", mic: "XNYS" },
-  { key: "nasdaq", label: "Nasdaq", mic: "XNAS" },
-  { key: "amex", label: "NYSE American", mic: "XASE" },
-  { key: "all", label: "All", mic: null },
+  { key: "popular", label: "Most popular", symbols: POPULAR_TICKERS, note: "in Most popular" },
+  { key: "nyse", label: "NYSE", mic: "XNYS", note: "on NYSE" },
+  { key: "nasdaq", label: "Nasdaq", mic: "XNAS", note: "on Nasdaq" },
+  { key: "all", label: "All", mic: null, note: null },
 ];
 
 const DEFAULT_EXCHANGE = EXCHANGES[0];
+const ALL_EXCHANGES = EXCHANGES.find((e) => e.key === "all");
+
+function inOption(option, symbol, mic) {
+  if (option.symbols) return option.symbols.has(symbol);
+  return !option.mic || mic === option.mic;
+}
 
 export function parseExchange(value) {
   return EXCHANGES.find((e) => e.key === value) ?? DEFAULT_EXCHANGE;
@@ -77,7 +87,7 @@ export function parseMonthKey(value) {
   return month >= 1 && month <= 12 ? { year: Number(match[1]), month } : null;
 }
 
-function shiftMonth({ year, month }, delta) {
+export function shiftMonth({ year, month }, delta) {
   const index = year * 12 + (month - 1) + delta;
   return { year: Math.floor(index / 12), month: (index % 12) + 1 };
 }
@@ -178,12 +188,12 @@ function buildFilters({ rows, listings, target, exchange }) {
   // Same companies the grid shows: this month, weekdays only
   const shown = rows.filter((row) => row.date.startsWith(month) && ![0, 6].includes(parseIso(row.date).getUTCDay()));
   const symbols = new Map(shown.map((row) => [row.symbol, listings[row.symbol]]));
-  const countFor = (mic) => [...symbols.values()].filter((m) => !mic || m === mic).length;
+  const countFor = (option) => [...symbols].filter(([symbol, mic]) => inOption(option, symbol, mic)).length;
 
   return EXCHANGES.map((option) => ({
     key: option.key,
     label: option.label,
-    count: countFor(option.mic),
+    count: countFor(option),
     active: option === exchange,
     href: calendarHref({ month, exchange: exchangeParam(option) }),
   }));
@@ -202,7 +212,7 @@ function filterRows({ rows, listings, exchange }) {
   const valid = rows.filter((row) => row.symbol && row.date);
   if (!listings) return { listed: valid, shown: valid };
   const listed = valid.filter((row) => listings[row.symbol]);
-  const shown = exchange.mic ? listed.filter((row) => listings[row.symbol] === exchange.mic) : listed;
+  const shown = listed.filter((row) => inOption(exchange, row.symbol, listings[row.symbol]));
   return { listed, shown };
 }
 
@@ -231,17 +241,32 @@ export function matchesQuery(earnings, query) {
 
 const SEARCH_LIMIT = 100;
 
-// Every listed company reporting in the month that matches, whatever the exchange filter, by date
-export function buildSearchResults({ rows, directory, listings, target, query }) {
-  const { listed } = filterRows({ rows, listings, exchange: EXCHANGES.find((e) => !e.mic) });
-  const month = monthKey(target);
-  const inMonth = listed.filter((row) => row.date.startsWith(month) && ![0, 6].includes(parseIso(row.date).getUTCDay()));
+// 0 = exact ticker, 1 = ticker starts with the query, 2 = name contains it; null = no match
+function searchRank(ticker, name, query) {
+  if (ticker === query) return 0;
+  if (ticker.startsWith(query)) return 1;
+  return name.toUpperCase().includes(query) ? 2 : null;
+}
+
+// Every listed company reporting in `months` that matches, whatever the exchange filter:
+// exact ticker first, then ticker prefix, then name matches, each by report date
+export function buildSearchResults({ rows, directory, listings, months, query }) {
+  const { listed } = filterRows({ rows, listings, exchange: ALL_EXCHANGES });
+  const keys = new Set(months.map(monthKey));
+  // Month ranges overlap at their edges; groupByDate drops the repeats
+  const inMonths = listed.filter((row) => keys.has(row.date.slice(0, 7)) && ![0, 6].includes(parseIso(row.date).getUTCDay()));
   const q = query.trim().toUpperCase();
-  return [...groupByDate(inMonth)]
-    .sort(([a], [b]) => a.localeCompare(b))
-    .flatMap(([, companies]) => companies.map((row) => toEarnings(row, directory)))
-    .filter((e) => matchesQuery(e, q))
-    .slice(0, SEARCH_LIMIT);
+  const matches = [];
+  for (const [date, companies] of groupByDate(inMonths)) {
+    for (const row of companies) {
+      const rank = searchRank(row.symbol, companyName(row.symbol, lookupCompany(row.symbol, directory)), q);
+      if (rank != null) matches.push({ rank, date, row });
+    }
+  }
+  return matches
+    .sort((a, b) => a.rank - b.rank || a.date.localeCompare(b.date))
+    .slice(0, SEARCH_LIMIT)
+    .map(({ row }) => toEarnings(row, directory));
 }
 
 // The companies behind a day's "+N" tile
@@ -300,8 +325,8 @@ export function buildMonthView({ rows: allRows, directory, listings, exchange, t
     todayLabel: `${WEEKDAYS[todayDate.getUTCDay()]} ${MONTHS[todayDate.getUTCMonth()]} ${todayDate.getUTCDate()}`,
     isCurrentMonth: monthKey(target) === today.slice(0, 7),
     filters,
-    // No label when unfiltered: "All" or exchange data unavailable
-    exchangeLabel: listings && exchange.mic ? exchange.label : null,
+    // No note when unfiltered: "All" or exchange data unavailable
+    exchangeNote: listings ? exchange.note : null,
     exchangeParam: exchangeParam(exchange),
     todayHref: calendarHref({ exchange: exchangeParam(exchange) }),
     prevHref: calendarHref({ month: monthKey(shiftMonth(target, -1)), exchange: exchangeParam(exchange) }),

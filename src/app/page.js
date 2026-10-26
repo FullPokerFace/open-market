@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import { connection } from "next/server";
+import { after, connection } from "next/server";
 import { EarningsCalendar } from "@/components/earnings/earnings-calendar";
 import { SiteFooter } from "@/components/earnings/site-footer";
-import { buildMonthView, monthGridRange, parseExchange, parseMonthKey, todayInNewYork } from "@/lib/earnings";
+import { buildMonthView, monthGridRange, parseExchange, parseMonthKey, shiftMonth, todayInNewYork } from "@/lib/earnings";
 import { getEarningsCalendar, getListedSymbols } from "@/lib/finnhub";
 import { getCompanyDirectory } from "@/lib/sec";
 
@@ -22,8 +22,11 @@ async function Calendar({ searchParams }) {
   await connection();
 
   const today = todayInNewYork();
-  const target = parseMonthKey(month) ?? { year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) };
+  const current = { year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) };
+  const target = parseMonthKey(month) ?? current;
   const { start, end } = monthGridRange(target);
+  // Once the page is sent, make sure this month and the next two are in the cache
+  after(() => warmCalendar(current));
 
   let view = null;
   try {
@@ -46,6 +49,20 @@ async function Calendar({ searchParams }) {
 
   if (!view) return <CalendarMessage>Earnings data is unavailable right now. Try again in a minute.</CalendarMessage>;
   return <EarningsCalendar view={view} />;
+}
+
+// Months kept warm from this month on, so paging ahead never waits on Finnhub
+const WARM_MONTHS = 3;
+
+// Loads each month into the server cache; months already cached cost nothing.
+// A failure only means that month is fetched when someone opens it.
+function warmCalendar(fromMonth) {
+  return Promise.all(
+    Array.from({ length: WARM_MONTHS }, (_, i) => {
+      const { start, end } = monthGridRange(shiftMonth(fromMonth, i));
+      return getEarningsCalendar(start, end).catch((error) => console.error(error));
+    })
+  );
 }
 
 function CalendarMessage({ children }) {

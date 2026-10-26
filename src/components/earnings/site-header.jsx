@@ -9,7 +9,7 @@ import { SearchResults } from "./search-results";
 
 const navItem = "px-2.5 py-1 text-foreground no-underline";
 
-export function SiteHeader({ query, onQueryChange, results, searchState, monthLabel, onSelectResult, watchlistOnly, onToggleWatchlist }) {
+export function SiteHeader({ query, onQueryChange, results, searchState, onSelectResult, watchlistOnly, onToggleWatchlist }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [resultsOpen, setResultsOpen] = useState(false);
   const searchRef = useRef(null);
@@ -89,7 +89,6 @@ export function SiteHeader({ query, onQueryChange, results, searchState, monthLa
               query={query.trim()}
               results={results}
               state={searchState}
-              monthLabel={monthLabel}
               onSelect={selectResult}
             />
           )}

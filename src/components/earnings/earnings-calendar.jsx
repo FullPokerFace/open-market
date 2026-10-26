@@ -114,11 +114,18 @@ export function EarningsCalendar({ view }) {
     return request;
   };
 
+  // `day` carries `overflow`: tiles that didn't fit its cell on this screen
   const showMore = (day) => {
     setMoreDay(day);
     setMoreOpen(true);
-    loadDay(day.key);
+    if (day.hiddenIndex.length) loadDay(day.key);
   };
+  // The "+N" list: tiles that didn't fit, then the companies the server held back (fetched on open)
+  const serverMore = moreDay?.hiddenIndex.length ? moreLists[moreKey(moreDay.key)] : { state: "ready", earnings: [] };
+  const moreList =
+    moreDay && serverMore?.state === "ready"
+      ? { state: "ready", earnings: [...moreDay.overflow, ...serverMore.earnings] }
+      : serverMore;
 
   const selectFromMore = (earnings) => {
     setMoreOpen(false);
@@ -129,25 +136,29 @@ export function EarningsCalendar({ view }) {
     document.getElementById(`day-${view.today}`)?.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
   };
 
+  // Open on today's cell; no-op when the month shown doesn't include today
+  useEffect(() => {
+    document.getElementById(`day-${view.today}`)?.scrollIntoView({ behavior: "instant", block: "center", inline: "center" });
+  }, [view.today]);
+
   return (
-    <div className="relative flex-1">
+    <div className="relative flex flex-1 flex-col">
       <SiteHeader
         query={query}
         onQueryChange={setQuery}
         results={searchResults}
         searchState={searchState}
-        monthLabel={view.label}
         onSelectResult={selectEarnings}
         watchlistOnly={scope === "watchlist"}
         onToggleWatchlist={() => setScope(scope === "watchlist" ? "all" : "watchlist")}
       />
 
-      <main className="mx-auto box-border max-w-360 border-x">
+      <main className="mx-auto box-border flex w-full max-w-360 flex-1 flex-col border-x">
         <SectionBar
           className="border-b"
           index="01"
           title="Earnings calendar"
-          aside={`${view.total} companies${view.exchangeLabel ? ` on ${view.exchangeLabel}` : ""} · ${view.weeks} weeks`}
+          aside={`${view.total} companies${view.exchangeNote ? ` ${view.exchangeNote}` : ""} · ${view.weeks} weeks`}
         />
         <ExchangeFilter filters={view.filters} />
         <CalendarToolbar view={view} scope={scope} onScopeChange={setScope} onToday={jumpToToday} />
@@ -164,7 +175,7 @@ export function EarningsCalendar({ view }) {
 
       <MoreCompaniesDialog
         day={moreDay}
-        list={moreDay ? moreLists[moreKey(moreDay.key)] : null}
+        list={moreDay ? moreList : null}
         open={moreOpen}
         onOpenChange={setMoreOpen}
         filtering={filtering}

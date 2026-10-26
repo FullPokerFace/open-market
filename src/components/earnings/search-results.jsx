@@ -2,9 +2,10 @@ import { CompanyRow } from "./company-row";
 
 const message = "eyebrow m-0 px-6 py-8 text-muted-foreground";
 
-// Drop-down under the header search: every company this month that matches, on any exchange, by report date.
+// Drop-down under the header search: companies reporting in the cached months (this month and the next two)
+// on any exchange. Exact ticker first, then ticker prefix, then name matches, each by report date.
 // While a new search runs (`state` "loading") the previous results stay up.
-export function SearchResults({ query, results, state, monthLabel, onSelect }) {
+export function SearchResults({ query, results, state, onSelect }) {
   const count = state === "loading" ? "Searching…" : `${results.length} ${results.length === 1 ? "result" : "results"}`;
 
   let body;
@@ -19,7 +20,7 @@ export function SearchResults({ query, results, state, monthLabel, onSelect }) {
       </ul>
     );
   } else {
-    body = <p className={message}>{state === "loading" ? "Searching…" : `No companies match in ${monthLabel}.`}</p>;
+    body = <p className={message}>{state === "loading" ? "Searching…" : "No companies match."}</p>;
   }
 
   return (
@@ -32,7 +33,7 @@ export function SearchResults({ query, results, state, monthLabel, onSelect }) {
           Search / <span className="text-foreground">&ldquo;{query}&rdquo;</span>
         </span>
         <span className="shrink-0">
-          {count} · {monthLabel}
+          {count}
         </span>
       </div>
       {body}

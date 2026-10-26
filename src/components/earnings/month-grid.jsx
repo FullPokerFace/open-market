@@ -1,3 +1,6 @@
+"use client";
+
+import { useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 
 const WEEKDAYS = ["MON", "TUE", "WED", "THU", "FRI"];
@@ -68,14 +71,29 @@ function MoreTile({ day, matches, onShowMore }) {
   );
 }
 
-function DayCell({ day, isLastColumn, filtering, isMatch, onSelect, onShowMore }) {
+function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, onShowMore }) {
   const background = day.isToday ? "bg-bg-today" : day.isPast ? "bg-bg-past" : "bg-background";
   const dotBorder = day.isToday ? "border-bg-today" : day.isPast ? "border-bg-past" : "border-background";
+
+  // Tiles that fit this cell; past that, the last slot becomes "+N". The server already
+  // holds back companies beyond 16 (`hiddenIndex`); `overflow` is what this screen can't fit.
+  const shownCount = day.count > capacity ? capacity - 1 : day.count;
+  const tiles = day.earnings.slice(0, shownCount);
+  const overflow = day.earnings.slice(shownCount);
+  const hidden = day.count - tiles.length;
+  const hiddenMatches = filtering ? [...overflow, ...day.hiddenIndex].filter(isMatch).length : null;
 
   return (
     <div
       id={`day-${day.key}`}
-      className={cn("flex min-h-60 flex-col gap-4 border-b px-5 pt-4 pb-6", background, !isLastColumn && "border-r")}
+      className={cn(
+        // contain:size keeps tiles from stretching the row: rows split the height, tiles adapt
+        "flex min-h-0 flex-col gap-2 overflow-hidden border-b px-4 pt-2.5 pb-2 [contain:size]",
+        background,
+        !isLastColumn && "border-r",
+        // inset ring so the thicker frame doesn't shift the grid
+        day.isToday && "shadow-[inset_0_0_0_2px_var(--color-foreground)]"
+      )}
     >
       <div className="flex min-h-5 items-center justify-between font-mono text-[11px] font-medium tracking-[0.15em]">
         {day.isToday ? (
@@ -90,28 +108,71 @@ function DayCell({ day, isLastColumn, filtering, isMatch, onSelect, onShowMore }
 
       {day.count === 0 && <span className="chip self-start text-muted-foreground">No earnings</span>}
 
-      {/* 4 tiles per row in a full-width cell; wraps to 3 on narrower screens */}
-      <div className="grid grid-cols-[repeat(auto-fill,48px)] gap-2">
-        {day.earnings.map((e) => (
+      {/* Fills the rest of the cell; MonthGrid measures it to decide how many tiles fit */}
+      <div data-tiles className="grid min-h-0 flex-1 grid-cols-[repeat(auto-fill,48px)] content-start gap-2">
+        {tiles.map((e) => (
           <TickerTile key={e.ticker} earnings={e} dimmed={!isMatch(e)} dotBorder={dotBorder} onSelect={onSelect} />
         ))}
-        {day.hidden > 0 && (
-          <MoreTile day={day} matches={filtering ? day.hiddenIndex.filter(isMatch).length : null} onShowMore={onShowMore} />
+        {hidden > 0 && (
+          <MoreTile day={{ ...day, hidden, overflow }} matches={hiddenMatches} onShowMore={onShowMore} />
         )}
       </div>
     </div>
   );
 }
 
+const TILE_PX = 48;
+const TILE_GAP_PX = 8;
+// Most tiles a cell shows: the server sends at most this many per day
+const MAX_TILES = 16;
+// Shortest week row (date + one row of tiles); shorter windows scroll instead of squashing
+const MIN_ROW_PX = 92;
+const HEADER_ROW_PX = 32;
+
+function tilesAcross(px) {
+  return Math.max(1, Math.floor((px + TILE_GAP_PX) / (TILE_PX + TILE_GAP_PX)));
+}
+
+// How many tiles fit one day cell, re-measured as the window resizes.
+// Every cell is the same size; cells showing "No earnings" have less room but no tiles.
+function useTileCapacity(gridRef) {
+  const [capacity, setCapacity] = useState(MAX_TILES);
+
+  useLayoutEffect(() => {
+    const grid = gridRef.current;
+    const measure = () => {
+      const boxes = [...grid.querySelectorAll("[data-tiles]")];
+      if (!boxes.length) return;
+      const height = Math.max(...boxes.map((box) => box.clientHeight));
+      setCapacity(Math.min(MAX_TILES, tilesAcross(boxes[0].clientWidth) * tilesAcross(height)));
+    };
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(grid);
+    return () => observer.disconnect();
+  }, [gridRef]);
+
+  return capacity;
+}
+
 export function MonthGrid({ days, filtering, isMatch, onSelect, onShowMore }) {
+  const gridRef = useRef(null);
+  const capacity = useTileCapacity(gridRef);
+  const weeks = days.length / 5;
+
   return (
-    <div className="overflow-x-auto border-t">
-      <div className="grid min-w-275 grid-cols-5">
+    // Takes the height left between the toolbar and the legend; each week gets an equal share
+    <div className="mx-6 flex-1 overflow-x-auto border-x border-t" style={{ minHeight: HEADER_ROW_PX + weeks * MIN_ROW_PX }}>
+      <div
+        ref={gridRef}
+        className="grid h-full min-w-275 grid-cols-5"
+        style={{ gridTemplateRows: `${HEADER_ROW_PX}px repeat(${weeks}, minmax(${MIN_ROW_PX}px, 1fr))` }}
+      >
         {WEEKDAYS.map((weekday, i) => (
           <div
             key={weekday}
             className={cn(
-              "flex items-center justify-between border-b px-5 py-3 font-mono text-[11px] font-medium tracking-[0.15em]",
+              "flex items-center justify-between border-b px-4 font-mono text-[11px] font-medium tracking-[0.15em]",
               i < 4 && "border-r"
             )}
           >
@@ -123,6 +184,7 @@ export function MonthGrid({ days, filtering, isMatch, onSelect, onShowMore }) {
           <DayCell
             key={day.key}
             day={day}
+            capacity={capacity}
             isLastColumn={i % 5 === 4}
             filtering={filtering}
             isMatch={isMatch}

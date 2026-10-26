@@ -30,7 +30,8 @@ export default function RootLayout({ children }) {
       suppressHydrationWarning
       className={`${inter.variable} ${geistMono.variable} ${bricolage.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
+      {/* One screen tall so the month grid fits between header and footer; overflows (and scrolls) only on very short windows */}
+      <body className="flex h-dvh flex-col">
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>

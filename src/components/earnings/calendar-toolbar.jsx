@@ -22,8 +22,8 @@ export function CalendarToolbar({ view, scope, onScopeChange, onToday }) {
   const todayLabel = `Jump to today, ${view.todayLabel}`;
 
   return (
-    <div className="flex flex-wrap items-end justify-between gap-6 px-6 pt-9 pb-8">
-      <h1 className="display-type m-0 text-[56px]">
+    <div className="flex flex-wrap items-end justify-between gap-6 px-6 py-3">
+      <h1 className="display-type m-0 text-[44px]">
         {view.monthName} <span className="text-blue">earnings</span>.
       </h1>
 

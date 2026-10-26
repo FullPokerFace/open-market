@@ -4,7 +4,7 @@ export function SectionBar({ index, title, aside, className }) {
   return (
     <div
       className={cn(
-        "eyebrow flex flex-wrap justify-between gap-2 px-6 py-2.5 text-muted-foreground",
+        "eyebrow flex flex-wrap justify-between gap-2 px-6 py-2 text-muted-foreground",
         className
       )}
     >
