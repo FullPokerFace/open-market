@@ -5,6 +5,8 @@ import { SiteFooter } from "@/components/earnings/site-footer";
 import { buildMonthView, monthGridRange, parseExchange, parseMonthKey, shiftMonth, todayInNewYork } from "@/lib/earnings";
 import { getEarningsCalendar, getListedSymbols } from "@/lib/finnhub";
 import { getCompanyDirectory } from "@/lib/sec";
+import { getMacroEvents } from "@/lib/kalshi";
+import { getFearGreed } from "@/lib/sentiment";
 
 export default function Home({ searchParams }) {
   return (
@@ -28,6 +30,16 @@ async function Calendar({ searchParams }) {
   // Once the page is sent, make sure this month and the next two are in the cache
   after(() => warmCalendar(current));
 
+  // Sentiment and key releases are extras: the calendar shows without them
+  const sentiment = getFearGreed().catch((error) => {
+    console.error(error);
+    return null;
+  });
+  const events = getMacroEvents().catch((error) => {
+    console.error(error);
+    return null;
+  });
+
   let view = null;
   try {
     const [rows, directory, listings] = await Promise.all([
@@ -48,7 +60,7 @@ async function Calendar({ searchParams }) {
   }
 
   if (!view) return <CalendarMessage>Earnings data is unavailable right now. Try again in a minute.</CalendarMessage>;
-  return <EarningsCalendar view={view} />;
+  return <EarningsCalendar view={view} sentiment={await sentiment} events={await events} />;
 }
 
 // Months kept warm from this month on, so paging ahead never waits on Finnhub

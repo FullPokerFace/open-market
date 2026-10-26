@@ -5,11 +5,6 @@ import { cn } from "@/lib/utils";
 const square = "grid size-10 place-items-center border border-line-strong text-foreground";
 const pressed = "bg-foreground text-background";
 
-const SCOPES = [
-  { value: "all", label: "All" },
-  { value: "watchlist", label: "Watchlist" },
-];
-
 const VIEWS = [
   { value: "list", label: "List view", Icon: ListIcon },
   { value: "week", label: "Week view", Icon: Columns3Icon },
@@ -47,22 +42,7 @@ export function CalendarToolbar({ view, scope, onScopeChange, onToday }) {
           </Link>
         </div>
 
-        <div className="flex">
-          {SCOPES.map(({ value, label }) => (
-            <button
-              key={value}
-              type="button"
-              onClick={() => onScopeChange(value)}
-              aria-pressed={scope === value}
-              className={cn(
-                "-ml-px h-10 cursor-pointer border border-line-strong px-4 text-foreground uppercase first:ml-0",
-                scope === value && pressed
-              )}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+
 
         <div className="flex">
           {VIEWS.map(({ value, label, Icon }) => (

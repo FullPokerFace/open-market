@@ -7,8 +7,8 @@ import { CalendarToolbar } from "./calendar-toolbar";
 import { EarningsDetailsSheet } from "./earnings-details-sheet";
 import { ExchangeFilter } from "./exchange-filter";
 import { MonthGrid } from "./month-grid";
+import { MarketSentiment } from "./market-sentiment";
 import { MoreCompaniesDialog } from "./more-companies-dialog";
-import { SectionBar } from "./section-bar";
 import { SiteHeader } from "./site-header";
 import { StatusLegend } from "./status-legend";
 
@@ -25,7 +25,7 @@ function countMatches(days, isMatch) {
 // Wait for a pause in typing before searching
 const SEARCH_DELAY_MS = 150;
 
-export function EarningsCalendar({ view }) {
+export function EarningsCalendar({ view, sentiment, events }) {
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");
   const watchlist = useWatchlist();
@@ -154,12 +154,7 @@ export function EarningsCalendar({ view }) {
       />
 
       <main className="mx-auto box-border flex w-full max-w-360 flex-1 flex-col border-x">
-        <SectionBar
-          className="border-b"
-          index="01"
-          title="Earnings calendar"
-          aside={`${view.total} companies${view.exchangeNote ? ` ${view.exchangeNote}` : ""} · ${view.weeks} weeks`}
-        />
+        <MarketSentiment sentiment={sentiment} events={events} today={view.today} />
         <ExchangeFilter filters={view.filters} />
         <CalendarToolbar view={view} scope={scope} onScopeChange={setScope} onToday={jumpToToday} />
         <StatusLegend />
