@@ -12,9 +12,13 @@ async function finnhub(path, params) {
   const token = process.env.FINNHUB_API_KEY;
   if (!token) throw new Error("FINNHUB_API_KEY is not set in .env.local");
 
-  const res = await fetch(`${BASE_URL}${path}?${new URLSearchParams(params)}`, {
+  const query = new URLSearchParams(params);
+  const started = performance.now();
+  const res = await fetch(`${BASE_URL}${path}?${query}`, {
     headers: { "X-Finnhub-Token": token },
   });
+  // One line per real request (cache hits never get here); the token is in a header, so it stays out of the log
+  console.log(`[finnhub] GET ${path}?${query} → ${res.status} in ${Math.round(performance.now() - started)}ms`);
   if (!res.ok) throw new Error(`Finnhub ${path} responded ${res.status}`);
   return res.json();
 }
