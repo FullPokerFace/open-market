@@ -19,7 +19,9 @@ Needs Node.js and a free [Finnhub](https://finnhub.io) API key. Create `.env.loc
 
 ```bash
 FINNHUB_API_KEY=your_key
-# Optional: lets the "Suggest a feature" form send email through Gmail SMTP
+# Optional: the "Suggest a feature" board (moderation and card titles by OpenAI)
+OPEN_AI_KEY=your_openai_key
+# Optional: emails each suggestion to you through Gmail SMTP
 GMAIL_SENDER_ADDRESS=you@gmail.com
 GMAIL_APP_PASSWORD=your_app_password
 ```

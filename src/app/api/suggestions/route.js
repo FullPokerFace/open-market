@@ -1,33 +1,33 @@
+import { cookies } from "next/headers";
 import { emailConfigured, sendEmail } from "@/lib/email";
+import { isFlagged, openaiConfigured, suggestionCard } from "@/lib/openai";
+import { rateLimit, sameOrigin, visitor } from "@/lib/rate-limit";
 import { buildSuggestionEmail } from "@/lib/suggestion-email";
+import { listSuggestions, saveSuggestion, suggestionsToCompare, voterFrom } from "@/lib/suggestions";
 
 // Runs on Node.js (the default; `runtime` can't be set with cacheComponents), which nodemailer needs
 export const maxDuration = 30;
 
 const MAX_LENGTH = 2000;
-// Per visitor: at most this many suggestions an hour. Kept in memory, so it resets on
-// restart and isn't shared between server instances: enough to stop a stuck button or a casual flood.
-const HOURLY_LIMIT = 5;
-const HOUR_MS = 60 * 60 * 1000;
-const recent = new Map();
+const overLimit = rateLimit(3);
 
 const reply = (body, status = 200) => Response.json(body, { status, headers: { "Cache-Control": "no-store" } });
 
-function visitor(request) {
-  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+// The suggestion board, with this visitor's votes
+export async function GET() {
+  try {
+    const voter = voterFrom(await cookies());
+    return reply({ suggestions: await listSuggestions(voter) });
+  } catch (error) {
+    console.error(error);
+    return reply({ error: "Couldn't load suggestions." }, 503);
+  }
 }
 
-function overLimit(id) {
-  const now = Date.now();
-  const times = (recent.get(id) ?? []).filter((t) => now - t < HOUR_MS);
-  if (times.length >= HOURLY_LIMIT) return true;
-  recent.set(id, [...times, now]);
-  return false;
-}
-
-// Feature suggestion from the header dialog, emailed to GMAIL_SENDER_ADDRESS: POST { message }
+// New suggestion from the dialog: POST { message }. It's moderated, turned into a card by OpenAI
+// (or merged into the card it duplicates), saved with the author's upvote, and emailed to GMAIL_SENDER_ADDRESS.
 export async function POST(request) {
-  if (request.headers.get("origin") !== new URL(request.url).origin) return reply({ error: "Request not allowed." }, 403);
+  if (!sameOrigin(request)) return reply({ error: "Request not allowed." }, 403);
 
   let body;
   try {
@@ -42,15 +42,28 @@ export async function POST(request) {
   if (message.length < 3) return reply({ error: "Write a few words about the feature." }, 400);
   if (message.length > MAX_LENGTH) return reply({ error: `Keep it under ${MAX_LENGTH} characters.` }, 400);
 
-  if (!emailConfigured()) return reply({ error: "Suggestions are temporarily unavailable." }, 503);
+  if (!openaiConfigured()) return reply({ error: "Suggestions are temporarily unavailable." }, 503);
   if (overLimit(visitor(request))) return reply({ error: "Thanks! That's a lot of ideas. Try again in an hour." }, 429);
 
+  let suggestion;
   try {
-    const result = await sendEmail(buildSuggestionEmail({ message, site: new URL(request.url).origin }));
-    if (!result.accepted?.length || result.rejected?.length) throw new Error("Not accepted");
-    return reply({ sent: true });
+    if (await isFlagged(message)) return reply({ error: "That can't be posted. Keep it about a feature for the site." }, 400);
+    const card = await suggestionCard(message, await suggestionsToCompare());
+    suggestion = await saveSuggestion({ message, card, voter: voterFrom(await cookies(), { create: true }) });
+    if (!suggestion) throw new Error("Saved suggestion not found");
   } catch (error) {
     console.error(error);
-    return reply({ error: "We couldn't send that. Please try again shortly." }, 503);
+    return reply({ error: "We couldn't post that. Please try again shortly." }, 503);
   }
+
+  // The suggestion is saved either way; the email is only a heads-up for the developer
+  const merged = suggestion.requests > 1;
+  if (emailConfigured()) {
+    try {
+      await sendEmail(buildSuggestionEmail({ message, card: suggestion, merged, site: new URL(request.url).origin }));
+    } catch (error) {
+      console.error("[email] suggestion email failed", error);
+    }
+  }
+  return reply({ suggestion, merged });
 }

@@ -45,7 +45,8 @@ function detailRow(label, value, last = false) {
 </tr>`;
 }
 
-export function buildSuggestionEmail({ message, sentAt = new Date(), site }) {
+// `card` is the board card it was saved as; `merged` when it was added to an existing card as a duplicate
+export function buildSuggestionEmail({ message, card, merged = false, sentAt = new Date(), site }) {
   const preview = message.replace(/\s+/g, " ").slice(0, 60);
   const subject = `Feature suggestion: ${preview}${message.length > 60 ? "…" : ""}`;
   const sent = formatSent(sentAt);
@@ -55,6 +56,7 @@ export function buildSuggestionEmail({ message, sentAt = new Date(), site }) {
     "",
     message,
     "",
+    card && `Card: ${card.title}${merged ? ` (duplicate, now ${card.requests} requests, score ${card.score})` : " (new)"}`,
     `Sent: ${sent}`,
     site && `Site: ${site}`,
     `Length: ${message.length} characters`,
@@ -65,6 +67,14 @@ export function buildSuggestionEmail({ message, sentAt = new Date(), site }) {
   const body = escapeHtml(message).replace(/\r?\n/g, "<br>");
   const siteRow = site
     ? detailRow("Site", `<a href="${escapeHtml(site)}" style="color:${C.blue};">${escapeHtml(site.replace(/^https?:\/\//, ""))}</a>`)
+    : "";
+  const cardRow = card
+    ? detailRow(
+        "Card",
+        `<strong style="color:${C.ink};">${escapeHtml(card.title)}</strong> · ${
+          merged ? `duplicate, now ${card.requests} requests, score ${card.score}` : "new"
+        }`
+      )
     : "";
 
   const html = `<!doctype html>
@@ -102,6 +112,7 @@ export function buildSuggestionEmail({ message, sentAt = new Date(), site }) {
   <tr><td style="padding:10px 24px;border-top:1px solid ${C.line};border-bottom:1px solid ${C.line};${hud}">02 / <b style="color:${C.ink};font-weight:500;">Details</b></td></tr>
   <tr><td style="padding:0;">
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+      ${cardRow}
       ${detailRow("Sent", escapeHtml(sent))}
       ${siteRow}
       ${detailRow("Length", `${message.length} characters`, true)}

@@ -2,6 +2,7 @@ import { GroupTitle, Item, SectionBar } from "@/components/earnings/page-parts";
 import { SiteFooter } from "@/components/earnings/site-footer";
 import { SiteHeader } from "@/components/earnings/site-header";
 import { SuggestFeatureButton } from "@/components/earnings/suggest-feature-dialog";
+import { SuggestionBoard } from "@/components/earnings/suggestion-board";
 import { SHIPPED, STAGES, UPCOMING } from "@/lib/roadmap";
 import { SITE_NAME } from "@/lib/site";
 
@@ -12,6 +13,7 @@ export const metadata = {
 
 const shippedCount = SHIPPED.reduce((sum, group) => sum + group.items.length, 0);
 const total = shippedCount + UPCOMING.length;
+const suggestButton = "eyebrow h-10 shrink-0 cursor-pointer bg-foreground px-4.5 text-[11px] font-bold tracking-[0.12em] text-background";
 
 export default function RoadmapPage() {
   return (
@@ -31,10 +33,27 @@ export default function RoadmapPage() {
             </p>
           </header>
 
+          <section className="border-b">
+            <SectionBar index="01" name="Requested" count="Vote for what's next" />
+            <div className="flex flex-wrap items-end justify-between gap-4 px-6 pt-7 pb-6">
+              <div>
+                <h2 className="display-type m-0 text-[clamp(30px,4.5vw,40px)]">
+                  User-suggested <span className="text-blue">features</span>.
+                </h2>
+                <p className="m-0 mt-2 max-w-190 text-[15px] text-body">
+                  Ideas from visitors, most votes first. Vote for the ones you want built next: one vote per idea, click
+                  it again to take it back.
+                </p>
+              </div>
+              <SuggestFeatureButton className={suggestButton} />
+            </div>
+            <SuggestionBoard className="border-t" />
+          </section>
+
           <Progress />
 
           <section className="border-b">
-            <SectionBar index="01" name="Shipped" count={`${shippedCount} features`} />
+            <SectionBar index="02" name="Shipped" count={`${shippedCount} features`} />
             <div className="px-6 pt-7 pb-1">
               <h2 className="display-type m-0 text-[clamp(30px,4.5vw,40px)]">
                 What&apos;s <span className="text-beat">live</span>.
@@ -53,7 +72,7 @@ export default function RoadmapPage() {
           </section>
 
           <section className="border-b">
-            <SectionBar index="02" name="Coming" count={`${UPCOMING.length} planned`} />
+            <SectionBar index="03" name="Coming" count={`${UPCOMING.length} planned`} />
             <div className="px-6 pt-7 pb-1">
               <h2 className="display-type m-0 text-[clamp(30px,4.5vw,40px)]">
                 What&apos;s <span className="text-blue">next</span>.
@@ -76,9 +95,9 @@ export default function RoadmapPage() {
               <h2 className="display-type m-0 text-[28px]">
                 Have an <span className="text-blue">idea</span>?
               </h2>
-              <p className="m-0 mt-1 text-[14px] text-body">It goes straight to the developer&apos;s inbox.</p>
+              <p className="m-0 mt-1 text-[14px] text-body">Post it to the board so others can vote for it.</p>
             </div>
-            <SuggestFeatureButton className="eyebrow h-10 cursor-pointer bg-foreground px-4.5 text-[11px] font-bold tracking-[0.12em] text-background" />
+            <SuggestFeatureButton className={suggestButton} />
           </section>
         </main>
       </div>

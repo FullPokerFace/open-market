@@ -47,6 +47,7 @@ export const COLLECTIONS = {
   companies: "companies", // _id: symbol; see companies.js
   fearGreed: "fearGreed",
   keyReleases: "keyReleases",
+  suggestions: "suggestions", // feature suggestion board; see suggestions.js
 };
 // Collections whose every fetch is also added to "<name>History", e.g. fearGreedHistory, to chart over time
 const KEEP_HISTORY = new Set([COLLECTIONS.fearGreed, COLLECTIONS.keyReleases]);

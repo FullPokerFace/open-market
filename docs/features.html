@@ -120,17 +120,17 @@
 
   <header class="title">
     <h1>Open Market <span>features</span>.</h1>
-    <p class="lead"><strong>Open Market is a free, open-source earnings calendar whose features are created and maintained by its community. The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, your own ticker lists (remembered between visits), and a "Suggest a feature" form that emails ideas to the developer.</strong> The header, filters, market panel and day view now work on phones. Everything fetched from Finnhub, SEC, CNN and Kalshi is now saved in MongoDB, so it survives deploys and serverless hosting, and page views are counted with Vercel Analytics. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
+    <p class="lead"><strong>Open Market is a free, open-source earnings calendar whose features are created and maintained by its community. The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, your own ticker lists (remembered between visits), and a "Suggest a feature" board where visitors post ideas and vote on them.</strong> The header, filters, market panel and day view now work on phones. Everything fetched from Finnhub, SEC, CNN and Kalshi is now saved in MongoDB, so it survives deploys and serverless hosting, and page views are counted with Vercel Analytics. Feature suggestions are now a public board at the top of the Roadmap: OpenAI moderates each idea, writes its card and merges repeats into the idea they match, and visitors vote ideas up or down so the most wanted rise to the top. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>71 features tracked</span></div>
-    <div class="progress-head"><b>80%</b><span>57 of 71 features done · 14 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 57, high priority 1, medium 4, before launch 3, low 6">
-      <span class="c-done" style="flex: 57"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 6"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>72 features tracked</span></div>
+    <div class="progress-head"><b>81%</b><span>58 of 72 features done · 14 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 58, high priority 1, medium 4, before launch 3, low 6">
+      <span class="c-done" style="flex: 58"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 6"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>57</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>58</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -145,7 +145,7 @@
           <li>Calendar <b>17</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
-          <li>Header &amp; feedback <b>6</b></li>
+          <li>Header &amp; feedback <b>7</b></li>
           <li>Ticker lists <b>3</b></li>
           <li>Phone layout <b>4</b></li>
         </ul>
@@ -172,7 +172,7 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>57 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>58 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">9</span></div>
     <div class="scroll">
@@ -273,7 +273,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Header &amp; feedback</h3><span class="hud">6</span></div>
+    <div class="sub"><h3>Header &amp; feedback</h3><span class="hud">7</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -281,9 +281,10 @@
         </thead>
         <tbody>
           <tr><th scope="row">Header menu</th><td>Calendar | Roadmap | About | Suggest a feature, with a faint "|" between items; the current page is highlighted. The search box only shows on the calendar. The Watchlist button and the unused Insights link were removed.</td><td><code>site-header.jsx</code></td></tr>
-          <tr><th scope="row">Suggest a feature dialog</th><td>Opens from the menu: "Suggest a <span style="color: var(--blue)">feature</span>." title, a text box (example: "Add a P/L calendar") with a character count, and a Send button. Send stays off until there are 3+ characters; shows "Sending…", then "Sent. Thanks for the idea!", or the error under the box. An unsent draft is kept if the dialog is closed. Built from the shared UI parts: Button, Dialog, and the new Label and Textarea.</td><td><code>suggest-feature-dialog.jsx</code>, <code>src/components/ui/label.jsx</code>, <code>textarea.jsx</code></td></tr>
-          <tr><th scope="row">Roadmap page</th><td>Public page at <code>/roadmap</code> built from this doc, written for visitors: percent live with a progress bar, "What's live" by area, "What's next" as Next up / Planned / Later, and a "Have an idea?" button that opens Suggest a feature. Internal work (caching, hosting, licensing, docs) stays out. Update <code>src/lib/roadmap.js</code> when this doc changes.</td><td><code>src/app/roadmap/page.js</code>, <code>src/lib/roadmap.js</code></td></tr>
-          <tr><th scope="row">Suggestion email</th><td>The server emails each suggestion to <code>GMAIL_SENDER_ADDRESS</code> through Gmail SMTP with <code>GMAIL_APP_PASSWORD</code> (nodemailer, same setup as FedWatch), subject "Feature suggestion: …". Rejects other sites' requests, messages under 3 or over 2,000 characters, and more than 5 a visitor an hour (kept in memory, resets on restart). Says "temporarily unavailable" if the env vars are missing. Tested: a real suggestion arrived.</td><td><code>/api/suggestions</code>, <code>src/lib/email.js</code></td></tr>
+          <tr><th scope="row">Suggest a feature dialog</th><td>Opens from the menu: "Suggest a <span style="color: var(--blue)">feature</span>." title, a text box (example: "Add a P/L calendar") with a character count, and a Post button, with the suggestion board under it. Post stays off until there are 3+ characters; shows "Posting…", then "Posted." or "Already on the board." (when it matched an existing idea) with a "Suggest another" button, or the error under the box. An unsent draft is kept if the dialog is closed.</td><td><code>suggest-feature-dialog.jsx</code>, <code>src/components/ui/label.jsx</code>, <code>textarea.jsx</code></td></tr>
+          <tr><th scope="row">Suggestion board</th><td>Every suggestion becomes a card (icon, title, one-line description, number of requests) in a 3 × 2 grid that scrolls, most votes first; headed "Board / Most popular user submissions" with a count of ideas; shown under the form in the dialog and at the top of the Roadmap as "01 / Requested: User-suggested features." with its own Suggest a feature button. Up and down vote buttons: one vote per card per visitor, kept by an anonymous <code>om_voter</code> cookie (stored hashed); clicking your vote again takes it back. Cards keep their place while you vote and re-sort on the next load; a new card or vote shows on every board on the page. Saved in the <code>suggestions</code> collection; set <code>hidden: true</code> on a document to take it off the board. Max 120 votes a visitor an hour.</td><td><code>suggestion-board.jsx</code>, <code>/api/suggestions/[id]/vote</code>, <code>src/lib/suggestions.js</code></td></tr>
+          <tr><th scope="row">Roadmap page</th><td>Public page at <code>/roadmap</code> built from this doc, written for visitors: the suggestion board first ("01 / Requested"), then percent live with a progress bar, "02 / Shipped" by area, "03 / Coming" as Next up / Planned / Later, and a "Have an idea?" button that opens Suggest a feature. Internal work (caching, hosting, licensing, docs) stays out. Update <code>src/lib/roadmap.js</code> when this doc changes.</td><td><code>src/app/roadmap/page.js</code>, <code>src/lib/roadmap.js</code></td></tr>
+          <tr><th scope="row">Suggestion posting</th><td>Each suggestion is checked by OpenAI moderation (<code>omni-moderation-latest</code>; flagged text is refused), then GPT-6.1 Sol (ultrafast tier) writes the card: a 2–6 word title, one sentence, an icon from a fixed list of line icons, and whether it duplicates a card already on the board. A duplicate adds the visitor's words and vote to that card instead of making a new one. The author's upvote is added either way. Then it's emailed to <code>GMAIL_SENDER_ADDRESS</code> (subject "Feature suggestion: …", with the card it became); a failed email doesn't fail the post. Rejects other sites' requests, messages under 3 or over 2,000 characters, and more than 3 a visitor an hour (kept in memory, resets on restart). Says "temporarily unavailable" without <code>OPEN_AI_KEY</code>. Tested: new card, duplicate merged, vote switching, moderation refusal.</td><td><code>/api/suggestions</code>, <code>src/lib/openai.js</code>, <code>src/lib/email.js</code></td></tr>
           <tr><th scope="row">Open Market name</th><td>The app is called Open Market (it was "Earnings Report"): browser titles ("Open Market · Earnings calendar", "Roadmap · Open Market", "About · Open Market" through a title template), the header wordmark beside the logo (from 1024px), the Roadmap heading, the suggestion email and these docs. Open source at <a href="https://github.com/FullPokerFace/open-market">github.com/FullPokerFace/open-market</a>: a GitHub button in the header (from 1024px), a "GitHub ↗" item in the burger menu, and "Open source on GitHub" in the footer. The header now switches to the burger menu below 1024px (was 768px) to make room. The README was rewritten for contributors.</td><td><code>src/lib/site.js</code>, <code>src/app/layout.js</code>, <code>site-header.jsx</code>, <code>site-footer.jsx</code>, <code>README.md</code></td></tr>
           <tr><th scope="row">About page</th><td>Public page at <code>/about</code>: what Open Market is, "Built by its users" (made for its users to create and maintain features as a community: suggest, build, maintain), links to GitHub and the roadmap, credits for the data (Finnhub, SEC EDGAR, Kalshi, CNN Fear &amp; Greed) and the design (inspired by <a href="https://getartcraft.com">getartcraft.com</a>), and a not-investment-advice note. Shares its section blocks with the Roadmap page.</td><td><code>src/app/about/page.js</code>, <code>page-parts.jsx</code></td></tr>
         </tbody>

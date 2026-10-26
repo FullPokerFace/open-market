@@ -17,15 +17,6 @@ export function SiteFooter() {
         </a>
       </span>
       <span className="flex flex-wrap items-center gap-x-4 gap-y-1">
-        <a
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 text-foreground no-underline hover:underline"
-        >
-          <GitHubIcon className="size-3" />
-          Open source on GitHub
-        </a>
         <FooterDate />
       </span>
     </footer>
