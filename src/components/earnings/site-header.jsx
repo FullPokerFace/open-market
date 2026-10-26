@@ -6,12 +6,14 @@ import { MoonIcon, SearchIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { cn } from "@/lib/utils";
 import { SearchResults } from "./search-results";
+import { SuggestFeatureDialog } from "./suggest-feature-dialog";
 
 const navItem = "px-2.5 py-1 text-foreground no-underline";
 
-export function SiteHeader({ query, onQueryChange, results, searchState, onSelectResult, watchlistOnly, onToggleWatchlist }) {
+export function SiteHeader({ query, onQueryChange, results, searchState, onSelectResult }) {
   const { resolvedTheme, setTheme } = useTheme();
   const [resultsOpen, setResultsOpen] = useState(false);
+  const [suggestOpen, setSuggestOpen] = useState(false);
   const searchRef = useRef(null);
   const showResults = resultsOpen && query.trim() !== "";
 
@@ -46,17 +48,9 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
         <Link href="/" aria-current="page" className={cn(navItem, "bg-foreground text-background")}>
           Calendar
         </Link>
-        <button
-          type="button"
-          onClick={onToggleWatchlist}
-          aria-pressed={watchlistOnly}
-          className={cn(navItem, "cursor-pointer uppercase", watchlistOnly && "bg-foreground text-background")}
-        >
-          Watchlist
+        <button type="button" onClick={() => setSuggestOpen(true)} className={cn(navItem, "cursor-pointer uppercase")}>
+          Suggest a feature
         </button>
-        <Link href="/" className={navItem}>
-          Insights
-        </Link>
       </nav>
 
       <div className="ml-auto flex items-stretch">
@@ -103,6 +97,8 @@ export function SiteHeader({ query, onQueryChange, results, searchState, onSelec
           <SunIcon className="hidden size-3.5 dark:block" aria-hidden="true" />
         </button>
       </div>
+
+      <SuggestFeatureDialog open={suggestOpen} onOpenChange={setSuggestOpen} />
     </header>
   );
 }

@@ -149,8 +149,6 @@ export function EarningsCalendar({ view, sentiment, events }) {
         results={searchResults}
         searchState={searchState}
         onSelectResult={selectEarnings}
-        watchlistOnly={scope === "watchlist"}
-        onToggleWatchlist={() => setScope(scope === "watchlist" ? "all" : "watchlist")}
       />
 
       <main className="mx-auto box-border flex w-full max-w-360 flex-1 flex-col border-x">

@@ -120,17 +120,17 @@
 
   <header class="title">
     <h1>Earnings Report <span>features</span>.</h1>
-    <p class="lead"><strong>The calendar runs on live Finnhub data in a month grid that fits the screen, with a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, and a saved watchlist.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
+    <p class="lead"><strong>The calendar runs on live Finnhub data in a month grid that fits the screen, with a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, and a "Suggest a feature" form that emails ideas to the developer.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>43 features tracked</span></div>
-    <div class="progress-head"><b>70%</b><span>30 of 43 features done · 13 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 30, high priority 1, medium 4, before launch 3, low 5">
-      <span class="c-done" style="flex: 30"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>51 features tracked</span></div>
+    <div class="progress-head"><b>75%</b><span>38 of 51 features done · 13 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 38, high priority 1, medium 4, before launch 3, low 5">
+      <span class="c-done" style="flex: 38"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>30</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>38</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -140,11 +140,12 @@
       <div class="c-done">
         <h4 class="hud">Done by area</h4>
         <ul>
-          <li>Foundation <b>5</b></li>
+          <li>Foundation <b>7</b></li>
           <li>Live data <b>7</b></li>
-          <li>Calendar <b>10</b></li>
+          <li>Calendar <b>13</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
+          <li>Header &amp; feedback <b>3</b></li>
         </ul>
       </div>
       <div>
@@ -169,9 +170,9 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>30 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>38 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
-    <div class="sub"><h3>Foundation</h3><span class="hud">5</span></div>
+    <div class="sub"><h3>Foundation</h3><span class="hud">7</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -183,6 +184,8 @@
           <tr><th scope="row">Fonts</th><td>Inter for text, Geist Mono for labels and tickers, Bricolage Grotesque for headings, with its display letter shapes at large sizes.</td><td><code>src/app/layout.js</code></td></tr>
           <tr><th scope="row">Light / dark theme</th><td>Toggle in the header; follows the system setting on first visit, then remembers the choice.</td><td><code>site-header.jsx</code></td></tr>
           <tr><th scope="row">Footer</th><td>"Proudly made in New York, USA by Island Web Apps", linked to iwan-web.com, with the visitor's current date. Sits at the bottom of short pages without adding a scrollbar.</td><td><code>site-footer.jsx</code></td></tr>
+          <tr><th scope="row">Favicon</th><td>Browser tab and home-screen icons drawn from the app's logo: SVG icon, <code>.ico</code> fallback and an Apple touch icon.</td><td><code>src/app/icon.svg</code>, <code>favicon.ico</code>, <code>apple-icon.png</code></td></tr>
+          <tr><th scope="row">Title component</th><td>Shared heading ported from ResumeFromSpace's Typography Title, with sizes (xs–4xl), colors mapped to the app's light / dark tokens, and the Bricolage display face. A <code>highlight</code> prop turns part of the text blue (e.g. "Market <span style="color: var(--blue)">sentiment</span>"). Used for the Market sentiment and Key releases headings.</td><td><code>src/components/ui/title.jsx</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -205,7 +208,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Calendar</h3><span class="hud">10</span></div>
+    <div class="sub"><h3>Calendar</h3><span class="hud">13</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -218,7 +221,9 @@
           <tr><th scope="row">Ticker tiles</th><td>As many per day as fit the cell (up to 16), measured as the window resizes; largest companies first (by revenue estimate) and the rest go in "+N". Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
           <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing: the tiles that didn't fit on this screen, then the ones the server held back (loaded on open from the cached month data). Picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
           <tr><th scope="row">Market sentiment + key releases</th><td>Replaces the old "01 / Earnings calendar" bar. Left: CNN's Fear &amp; Greed Index as a five-band meter (extreme fear → extreme greed) with score, rating and change since the last close; read from the unofficial JSON behind CNN's page with browser-like headers, cached for hours. Right: the next FOMC decision (odds of cut / hold / hike as a stacked bar), CPI, jobs report (payrolls + unemployment) and GDP, each with date, time (ET), days until, and the level traders expect, from Kalshi's free public market data (no key), cached for minutes. Either half says "unavailable" on failure; the calendar is unaffected.</td><td><code>market-sentiment.jsx</code>, <code>src/lib/sentiment.js</code>, <code>src/lib/kalshi.js</code></td></tr>
+          <tr><th scope="row">Release-day pulse</th><td>On the day a key release comes out, its card gets a blue frame with a ring that pulses outward and fades, on repeat, plus a pinging blue dot next to "Today". With reduced motion turned on, the frame stays still.</td><td><code>market-sentiment.jsx</code>, <code>animate-release-pulse</code> in <code>globals.css</code></td></tr>
           <tr><th scope="row">Month navigation</th><td>Previous / next arrows load the month before or after; the middle button shows the month on screen (e.g. November 2026) and goes back to the current month (or scrolls to today when already on it). Saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
+          <tr><th scope="row">Controls bar</th><td>Month navigation and the company filter share one bar under the "October earnings." title, which stays where it was.</td><td><code>exchange-filter.jsx</code>, <code>calendar-toolbar.jsx</code></td></tr>
           <tr><th scope="row">Company filter</th><td>"Show": Most popular (default) · NYSE · Nasdaq · All, with per-month counts. NYSE American was removed as a button (its stocks still show under All). Saved in the URL; old <code>?exchange=amex</code> links open Most popular. Ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Most popular list</th><td>The Fortune 100 (2026): US exchange-listed stocks among the 100 largest companies by revenue, 90 tickers, one per company (GOOGL, BRK.B). Kept by hand.</td><td><code>src/lib/popular.js</code></td></tr>
           <tr><th scope="row">OTC and funds excluded</th><td>OTC stocks, closed-end funds and tickers with no known exchange are left out (October: 1,627 → 1,350).</td><td><code>getListedSymbols()</code></td></tr>
@@ -236,7 +241,7 @@
         <tbody>
           <tr><th scope="row">Calendar search</th><td>Fades tiles that don't match a ticker prefix or company name, so the grid never reflows. Also sees companies inside "+N": the "+N" tile gets a blue outline and match count, or fades when nothing inside matches. The bar above the grid shows "N matches this month".</td><td><code>month-grid.jsx</code></td></tr>
           <tr><th scope="row">Search results</th><td>Drop-down under the search box listing every listed company reporting this month or the next two (plus the month on screen), on any exchange: ticker, date, name, result or timing (up to 100). Exact ticker first, then tickers starting with the query, then name matches, each by date. Enter opens the first; Escape or a click outside closes it. Waits 150ms after typing.</td><td><code>search-results.jsx</code>, <code>/api/search</code></td></tr>
-          <tr><th scope="row">Watchlist toggle</th><td>Header button and All / Watchlist switch fade tiles not on the watchlist; search results are narrowed to it too. Says so when the watchlist is empty.</td><td><code>earnings-calendar.jsx</code></td></tr>
+          <tr><th scope="row">Watchlist toggle</th><td>The All / Watchlist switch fades tiles not on the watchlist (the header Watchlist button was removed with the menu change); search results are narrowed to it too. Says so when the watchlist is empty.</td><td><code>earnings-calendar.jsx</code></td></tr>
           <tr><th scope="row">Saved watchlist</th><td>"Add to watchlist" / "On your watchlist" button in the details panel. Saved in <code>localStorage</code>, synced across open tabs; starts with 7 tickers on a first visit.</td><td><code>src/lib/watchlist.js</code></td></tr>
         </tbody>
       </table>
@@ -253,6 +258,20 @@
           <tr><th scope="row">EPS surprise chart</th><td>Last 4 quarters of EPS surprise (the free plan's limit), up/down bars with beat count.</td><td><code>eps-surprise-chart.jsx</code></td></tr>
           <tr><th scope="row">SEC filing links</th><td>"Earnings release" opens the company's 8-K filings; "SEC filings" opens all of its filings.</td><td><code>earnings-details-sheet.jsx</code></td></tr>
           <tr><th scope="row">Details API</th><td>Company profile and EPS history, loaded when a company is first opened and cached.</td><td><code>/api/earnings/[symbol]</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Header &amp; feedback</h3><span class="hud">3</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Header menu</th><td>Two items: Calendar (unchanged) and Suggest a feature. The Watchlist button and the unused Insights link were removed.</td><td><code>site-header.jsx</code></td></tr>
+          <tr><th scope="row">Suggest a feature dialog</th><td>Opens from the menu: "Suggest a <span style="color: var(--blue)">feature</span>." title, a text box (example: "Add a P/L calendar") with a character count, and a Send button. Send stays off until there are 3+ characters; shows "Sending…", then "Sent. Thanks for the idea!", or the error under the box. An unsent draft is kept if the dialog is closed. Built from the shared UI parts: Button, Dialog, and the new Label and Textarea.</td><td><code>suggest-feature-dialog.jsx</code>, <code>src/components/ui/label.jsx</code>, <code>textarea.jsx</code></td></tr>
+          <tr><th scope="row">Suggestion email</th><td>The server emails each suggestion to <code>GMAIL_SENDER_ADDRESS</code> through Gmail SMTP with <code>GMAIL_APP_PASSWORD</code> (nodemailer, same setup as FedWatch), subject "Feature suggestion: …". Rejects other sites' requests, messages under 3 or over 2,000 characters, and more than 5 a visitor an hour (kept in memory, resets on restart). Says "temporarily unavailable" if the env vars are missing. Tested: a real suggestion arrived.</td><td><code>/api/suggestions</code>, <code>src/lib/email.js</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -324,7 +343,7 @@
         <tbody>
           <tr><th scope="row">Better company names</th><td>Tidied SEC names miss some acronyms ("Aar", "Idt", "Fedex"). Use Finnhub profile names once the market-cap script has them.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Company logos on tiles</th><td>Swap ticker text for the logo in the same tile (DESIGN.md "later"). Finnhub profiles include a logo URL.</td><td><span class="tag c-low">Low</span></td></tr>
-          <tr><th scope="row">Insights page</th><td>"Insights" in the header links nowhere yet; content not defined.</td><td><span class="tag c-low">Low</span></td></tr>
+          <tr><th scope="row">Insights page</th><td>The header's "Insights" link was removed because it led nowhere; add it back to the menu once there's content.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Update DESIGN.md</th><td>Still says a 1200px frame and 8 tiles per cell; the app now uses 1440px and 16.</td><td><span class="tag c-low">Low</span></td></tr>
         </tbody>
       </table>
