@@ -17,16 +17,6 @@ import { SiteHeader } from "./site-header";
 import { StatusLegend } from "./status-legend";
 import { useCompanySearch } from "./use-company-search";
 
-// Unique companies in the month / week / day shown (visible tiles and "+N") that pass the filter
-function countMatches(days, isMatch) {
-  const tickers = new Set();
-  for (const day of days) {
-    if (!day.inPeriod) continue;
-    for (const e of [...day.earnings, ...day.hiddenIndex]) if (isMatch(e)) tickers.add(e.ticker);
-  }
-  return tickers.size;
-}
-
 export function EarningsCalendar({ view, sentiment, events }) {
   const [query, setQuery] = useState("");
   // The header's search results are open: only then does the query dim the companies that don't match
@@ -77,15 +67,6 @@ export function EarningsCalendar({ view, sentiment, events }) {
     else router.push(href, { scroll: false });
   };
   const createList = (name, tickers) => showList(tickerLists.create(name, tickers));
-
-  const matchCount = filtering ? countMatches(view.days, isMatch) : 0;
-
-  let gridNote = "Pick a company to see results";
-  if (scope === "watchlist" && !watchlist.tickers.length) {
-    gridNote = "Watchlist is empty · star a company to add it";
-  } else if (filtering) {
-    gridNote = `${matchCount} ${matchCount === 1 ? "match" : "matches"} ${view.periodNote}`;
-  }
 
   const selectEarnings = (earnings) => {
     setSelected(earnings);
