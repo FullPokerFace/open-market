@@ -227,6 +227,43 @@
   }
 }
 
+/* Scrollbars everywhere: a thin square grey thumb on no track, no arrow buttons.
+   Greys come from the line tokens, so dark mode follows. */
+@layer base {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-button {
+    display: none;
+  }
+  /* The transparent border insets the thumb to 4px; on hover it fills out and darkens */
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    background: var(--border) padding-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    border-width: 2px;
+    background-color: var(--line-strong);
+  }
+  ::-webkit-scrollbar-thumb:active {
+    background-color: var(--foreground);
+  }
+
+  /* Firefox has only the standard properties. Kept out of Chrome and Safari, which
+     drop the custom ::-webkit-scrollbar styling above once these are set. */
+  @supports (-moz-appearance: none) {
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--line-strong) transparent;
+    }
+  }
+}
+
 /* Key release card on its release day: a blue ring that pulses out and fades, on repeat */
 @theme {
   --animate-release-pulse: release-pulse 1.8s ease-out infinite;

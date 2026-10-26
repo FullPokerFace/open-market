@@ -7,7 +7,8 @@ export const SHIPPED = [
     items: [
       ["Live earnings calendar", "Every company reporting this month, with EPS and revenue against estimates once results are out."],
       ["Beat, Mixed or Miss", "A colored mark on each reported company: both numbers beat, one did, or neither did."],
-      ["Any month", "Step back or ahead a month at a time, or jump back to today."],
+      ["Day, week or month", "See one day, one week with every company showing, or the whole month. Step back or ahead, or jump back to today."],
+      ["Before open or after close", "Every company is marked by when it reports: before the open, during the day or after the close. The week and day views group them that way, with a marker for where the trading day is now."],
       ["Company filter", "Most popular (the Fortune 100), NYSE, Nasdaq or everything, with counts for the month."],
       ["Biggest names first", "Each day lists its largest companies first; the rest are one click away in \"+N\"."],
       ["Fits your screen", "The whole month fits in one window, with today framed and in view."],
@@ -50,7 +51,6 @@ export const UPCOMING = [
   { stage: "next", title: "Market-cap filter", text: "Show only large, mid or small companies." },
   { stage: "next", title: "Shareable company links", text: "Send someone a link that opens straight to a company's results." },
   { stage: "next", title: "Phone layout", text: "A day-by-day list made for small screens." },
-  { stage: "planned", title: "Week and List views", text: "A single week with every company showing, or one long list." },
   { stage: "planned", title: "US and foreign companies", text: "Filter by where a company is based." },
   { stage: "later", title: "Two years of EPS history", text: "Eight quarters in the surprise chart instead of four." },
   { stage: "later", title: "Company logos", text: "Logos on the calendar tiles instead of tickers." },

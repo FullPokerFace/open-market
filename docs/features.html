@@ -120,19 +120,19 @@
 
   <header class="title">
     <h1>Earnings Report <span>features</span>.</h1>
-    <p class="lead"><strong>The calendar runs on live Finnhub data in a month grid that fits the screen, with a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, and a "Suggest a feature" form that emails ideas to the developer.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
+    <p class="lead"><strong>The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, and a "Suggest a feature" form that emails ideas to the developer.</strong> Next up: a market-cap filter, then shareable company links and the phone layout.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>52 features tracked</span></div>
-    <div class="progress-head"><b>75%</b><span>39 of 52 features done · 13 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 39, high priority 1, medium 4, before launch 3, low 5">
-      <span class="c-done" style="flex: 39"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>56 features tracked</span></div>
+    <div class="progress-head"><b>79%</b><span>44 of 56 features done · 12 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 44, high priority 1, medium 3, before launch 3, low 5">
+      <span class="c-done" style="flex: 44"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 3"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>39</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>44</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
-      <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
+      <div class="stat c-med"><b>3</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
       <div class="stat c-low"><b>5</b><span class="hud"><i class="sw"></i>Low</span></div>
     </div>
@@ -140,9 +140,9 @@
       <div class="c-done">
         <h4 class="hud">Done by area</h4>
         <ul>
-          <li>Foundation <b>7</b></li>
+          <li>Foundation <b>8</b></li>
           <li>Live data <b>7</b></li>
-          <li>Calendar <b>13</b></li>
+          <li>Calendar <b>17</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
           <li>Header &amp; feedback <b>4</b></li>
@@ -152,7 +152,7 @@
         <h4 class="hud">To do by area</h4>
         <ul>
           <li>Filters <span class="dots"><i class="sw c-high"></i><i class="sw c-med"></i></span></li>
-          <li>Calendar &amp; layout <span class="dots"><i class="sw c-med"></i><i class="sw c-med"></i></span></li>
+          <li>Calendar &amp; layout <span class="dots"><i class="sw c-med"></i></span></li>
           <li>Details panel <span class="dots"><i class="sw c-med"></i><i class="sw c-low"></i></span></li>
           <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
           <li>Polish &amp; docs <span class="dots"><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i></span></li>
@@ -170,9 +170,9 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>39 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>44 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
-    <div class="sub"><h3>Foundation</h3><span class="hud">7</span></div>
+    <div class="sub"><h3>Foundation</h3><span class="hud">8</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -185,7 +185,8 @@
           <tr><th scope="row">Light / dark theme</th><td>Toggle in the header; follows the system setting on first visit, then remembers the choice.</td><td><code>site-header.jsx</code></td></tr>
           <tr><th scope="row">Footer</th><td>"Proudly made in New York, USA by Island Web Apps", linked to iwan-web.com, with the visitor's current date. Sits at the bottom of short pages without adding a scrollbar.</td><td><code>site-footer.jsx</code></td></tr>
           <tr><th scope="row">Favicon</th><td>Browser tab and home-screen icons drawn from the app's logo: SVG icon, <code>.ico</code> fallback and an Apple touch icon.</td><td><code>src/app/icon.svg</code>, <code>favicon.ico</code>, <code>apple-icon.png</code></td></tr>
-          <tr><th scope="row">Title component</th><td>Shared heading ported from ResumeFromSpace's Typography Title, with sizes (xs–4xl), colors mapped to the app's light / dark tokens, and the Bricolage display face. A <code>highlight</code> prop turns part of the text blue (e.g. "Market <span style="color: var(--blue)">sentiment</span>"). Used for the Market sentiment and Key releases headings.</td><td><code>src/components/ui/title.jsx</code></td></tr>
+          <tr><th scope="row">Title component</th><td>Shared heading ported from ResumeFromSpace's Typography Title, with sizes (xs–4xl), colors mapped to the app's light / dark tokens, and the Bricolage display face. A <code>highlight</code> prop turns part of the text blue (e.g. "Market <span style="color: var(--blue)">sentiment</span>"). Used for the Market sentiment and Key releases headings, and the report-time sections in week and day view.</td><td><code>src/components/ui/title.jsx</code></td></tr>
+          <tr><th scope="row">Scrollbars</th><td>One style across the app: a thin square grey thumb on no track, no arrow buttons. 4px at rest; on hover it widens and darkens to the strong line grey, and turns ink while dragging. Greys come from the line tokens, so dark mode follows. Firefox gets the standard thin grey bar (no hover change).</td><td><code>src/app/globals.css</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -208,7 +209,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Calendar</h3><span class="hud">13</span></div>
+    <div class="sub"><h3>Calendar</h3><span class="hud">17</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -217,6 +218,10 @@
         <tbody>
           <tr><th scope="row">Month grid</th><td>Monday–Friday weeks, past days shaded, inside the 1440px frame with 24px side margins and a left / right rule.</td><td><code>month-grid.jsx</code></td></tr>
           <tr><th scope="row">Fits the screen</th><td>The page is one window tall: header, filters, the whole month, legend and footer are all visible, and the weeks share the height left over. Fits 1920×960 and 1440×800 browser windows; rows stop at 92px (one row of tiles), so shorter windows scroll a little. Tighter title, bars and cells to leave room.</td><td><code>month-grid.jsx</code>, <code>src/app/layout.js</code></td></tr>
+          <tr><th scope="row">Day / Week / Month views</th><td>Three buttons in the controls bar (Day replaced the disabled List button). Saved in the URL: <code>?view=week&amp;date=2026-10-28</code>, <code>?view=day&amp;date=…</code>; month stays the default with <code>?month=</code>. Arrows step by the view (a week, a weekday skipping weekends, a month); the middle button reads "Oct 26 – 30" or "Mon Oct 26" and goes back to this week / today. Switching keeps your place (today, or the first weekday of the month you were on). Weekend dates move to the next Monday. Title, filter counts and "N matches" follow the view. Week and day reuse the month's cached data, so a week spanning two months still loads from one month.</td><td><code>calendar-toolbar.jsx</code>, <code>buildCalendarView()</code> in <code>src/lib/earnings.js</code></td></tr>
+          <tr><th scope="row">Week view</th><td>One Monday–Friday row filling the screen, every company showing (no 16-tile cap or "+N"). Each day splits into Before open · During / TBD · After close, each a third of the height or 200px, whichever is taller, scrolling on its own; rows line up across the week. Sections have a <code>Title</code> heading, report-time icon, count, colored edge and tint; empty ones stay as a dimmed "—" row. On today, the section happening now gets a pulsing "NOW · 14:52" (New York time).</td><td><code>month-grid.jsx</code>, <code>timing-sections.jsx</code></td></tr>
+          <tr><th scope="row">Day view</th><td>One day across the full width as three columns in trading-day order: Before open (4:00–9:30 ET), During / TBD (9:30–16:00), After close (16:00–20:00), each with a large title, hours and count, scrolling on its own. A bar across the top fills as the day goes: past days full, future days empty, today up to now with a marker and "NOW" badge.</td><td><code>day-view.jsx</code>, <code>timing-sections.jsx</code></td></tr>
+          <tr><th scope="row">Report-time icons</th><td>Solid icons drawn for this app (crisp at 10px), all in one color (blue, set in one constant): sun on the horizon = before open, full sun = during hours, crescent moon = after close. In a month tile's top-left corner (status dot stays top-right), in the legend, and on the week / day sections. From Finnhub's <code>hour</code> field; about 80% of upcoming reports have one, the rest show no icon.</td><td><code>timing-icons.jsx</code>, <code>ticker-tile.jsx</code></td></tr>
           <tr><th scope="row">Today</th><td>Today's cell has a 2px frame and a "TODAY" label, and the page scrolls to it when it opens.</td><td><code>month-grid.jsx</code>, <code>earnings-calendar.jsx</code></td></tr>
           <tr><th scope="row">Ticker tiles</th><td>As many per day as fit the cell (up to 16), measured as the window resizes; largest companies first (by revenue estimate) and the rest go in "+N". Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
           <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing: the tiles that didn't fit on this screen, then the ones the server held back (loaded on open from the cached month data). Picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
@@ -227,7 +232,7 @@
           <tr><th scope="row">Company filter</th><td>"Show": Most popular (default) · NYSE · Nasdaq · All, with per-month counts. NYSE American was removed as a button (its stocks still show under All). Saved in the URL; old <code>?exchange=amex</code> links open Most popular. Ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Most popular list</th><td>The Fortune 100 (2026): US exchange-listed stocks among the 100 largest companies by revenue, 90 tickers, one per company (GOOGL, BRK.B). Kept by hand.</td><td><code>src/lib/popular.js</code></td></tr>
           <tr><th scope="row">OTC and funds excluded</th><td>OTC stocks, closed-end funds and tickers with no known exchange are left out (October: 1,627 → 1,350).</td><td><code>getListedSymbols()</code></td></tr>
-          <tr><th scope="row">Legend</th><td>Beat · Mixed · Miss · No mark (upcoming), with the data source.</td><td><code>status-legend.jsx</code></td></tr>
+          <tr><th scope="row">Legend</th><td>Beat · Mixed · Miss · No mark (upcoming) · Before open · During hours · After close (with their icons), and the data source.</td><td><code>status-legend.jsx</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -280,7 +285,7 @@
   </section>
 
   <section class="c-med">
-    <div class="bar hud"><span>02 / <b>To do</b></span><span>13 items · priority is a suggestion</span></div>
+    <div class="bar hud"><span>02 / <b>To do</b></span><span>12 items · priority is a suggestion</span></div>
     <div class="section-title"><h2>What's <span>next</span>.</h2><p>Grouped by area. Priority: <span class="tag c-high">High</span> <span class="tag c-med">Medium</span> <span class="tag c-launch">Before launch</span> <span class="tag c-low">Low</span></p></div>
     <div class="sub"><h3>Filters</h3><span class="hud">2</span></div>
     <div class="scroll">
@@ -295,16 +300,14 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Calendar &amp; layout</h3><span class="hud">2</span></div>
+    <div class="sub"><h3>Calendar &amp; layout</h3><span class="hud">1</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
           <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Phone layout</th><td>Below 640px, a day-by-day list instead of the grid; details panel full-screen (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>
-          <tr><th scope="row">Week and List views</th><td>Buttons exist but are disabled. Week = one row of taller cells showing all tiles (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>
-        </tbody>
+          <tr><th scope="row">Phone layout</th><td>Below 640px, a day-by-day list instead of the grid; details panel full-screen (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>        </tbody>
       </table>
     </div>
 

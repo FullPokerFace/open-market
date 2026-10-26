@@ -1,7 +1,16 @@
+import { AfterCloseIcon, BeforeOpenIcon, DuringHoursIcon } from "./timing-icons";
+
 const ITEMS = [
   { label: "Beat", text: "text-beat", swatch: "bg-beat" },
   { label: "Mixed", text: "text-mixed", swatch: "bg-mixed" },
   { label: "Miss", text: "text-miss", swatch: "bg-miss" },
+];
+
+// Same marks as the month view tiles
+const TIMING = [
+  { label: "Before open", Icon: BeforeOpenIcon },
+  { label: "During hours", Icon: DuringHoursIcon },
+  { label: "After close", Icon: AfterCloseIcon },
 ];
 
 export function StatusLegend() {
@@ -16,6 +25,12 @@ export function StatusLegend() {
           </span>
         ))}
         <span className="chip text-muted-foreground">No mark · upcoming</span>
+        {TIMING.map(({ label, Icon }) => (
+          <span key={label} className="chip text-muted-foreground">
+            <Icon className="size-2.75" />
+            {label}
+          </span>
+        ))}
       </div>
       <span className="text-muted-foreground">Data · Finnhub</span>
     </div>

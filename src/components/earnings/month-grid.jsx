@@ -2,45 +2,11 @@
 
 import { useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
+import { dayColors, TickerTile } from "./ticker-tile";
+import { SECTION_MIN_PX, TimingSections } from "./timing-sections";
 
 const WEEKDAYS = ["MON", "TUE", "WED", "THU", "FRI"];
 export const WEEKDAY_BADGES = ["bg-badge-1", "bg-badge-2", "bg-badge-3", "bg-badge-4", "bg-badge-5"];
-
-// "Reported" = results out but no estimate to grade them against
-const STATUS_DOT = { Beat: "bg-beat", Mixed: "bg-mixed", Miss: "bg-miss", Reported: "bg-muted-foreground" };
-
-function tickerSize(ticker) {
-  if (ticker.length >= 5) return "text-[10px]";
-  if (ticker.length === 4) return "text-[11px]";
-  return "text-xs";
-}
-
-export function TickerTile({ earnings, dimmed, dotBorder, onSelect }) {
-  const { ticker, name, reported, status, timingLabel } = earnings;
-  const label = `${ticker} · ${name} · ${reported ? status : timingLabel ? `Reports ${timingLabel}` : "Upcoming"}`;
-
-  return (
-    <button
-      type="button"
-      onClick={() => onSelect(earnings)}
-      aria-label={label}
-      title={label}
-      className={cn(
-        "relative grid size-12 cursor-pointer place-items-center rounded-[10px] border bg-tile p-0 font-mono font-bold tracking-[0.02em] text-strong shadow-tile transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring",
-        tickerSize(ticker),
-        dimmed && "opacity-[0.18]"
-      )}
-    >
-      {ticker}
-      {reported && (
-        <span
-          aria-hidden="true"
-          className={cn("absolute -top-1 -right-1 size-2.5 border-2", STATUS_DOT[status], dotBorder)}
-        />
-      )}
-    </button>
-  );
-}
 
 // `matches`: how many hidden companies pass the search / watchlist, or null when nothing is filtered
 function MoreTile({ day, matches, onShowMore }) {
@@ -71,14 +37,7 @@ function MoreTile({ day, matches, onShowMore }) {
   );
 }
 
-// Day background and the matching border for status dots, so a dot reads as cut out of the tile
-export function dayColors(day) {
-  if (day.isToday) return { background: "bg-bg-today", dotBorder: "border-bg-today" };
-  if (day.isPast) return { background: "bg-bg-past", dotBorder: "border-bg-past" };
-  return { background: "bg-background", dotBorder: "border-background" };
-}
-
-// `capacity` null = show every tile and let the cell scroll (week view)
+// `capacity` null = week view: every company, split by report time, scrolling inside the cell
 function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, onShowMore }) {
   const { background, dotBorder } = dayColors(day);
 
@@ -98,8 +57,8 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
         "flex min-h-0 flex-col gap-2 overflow-hidden border-b px-4 pt-2.5 pb-2 [contain:size]",
         background,
         !isLastColumn && "border-r",
-        // inset ring so the thicker frame doesn't shift the grid
-        day.isToday && "shadow-[inset_0_0_0_2px_var(--color-foreground)]"
+        // Inset outline so the thicker frame doesn't shift the grid; outlines paint over the week view's tinted sections
+        day.isToday && "outline-2 -outline-offset-2 outline-foreground"
       )}
     >
       <div className="flex min-h-5 items-center justify-between font-mono text-[11px] font-medium tracking-[0.15em]">
@@ -115,22 +74,28 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
 
       {day.count === 0 && <span className="chip self-start text-muted-foreground">No earnings</span>}
 
-      {/* Fills the rest of the cell; MonthGrid measures it to decide how many tiles fit */}
-      <div
-        data-tiles
-        className={cn(
-          "grid min-h-0 flex-1 grid-cols-[repeat(auto-fill,48px)] content-start gap-2",
-          // Room for the status dots that poke out of the top row
-          capacity == null && "-mx-1 overflow-y-auto px-1 pt-1"
-        )}
-      >
-        {tiles.map((e) => (
-          <TickerTile key={e.ticker} earnings={e} dimmed={!isMatch(e)} dotBorder={dotBorder} onSelect={onSelect} />
-        ))}
-        {hidden > 0 && (
-          <MoreTile day={{ ...day, hidden, overflow }} matches={hiddenMatches} onShowMore={onShowMore} />
-        )}
-      </div>
+      {capacity == null ? (
+        day.count > 0 && (
+          <TimingSections day={day} dotBorder={dotBorder} isMatch={isMatch} onSelect={onSelect} />
+        )
+      ) : (
+        // Fills the rest of the cell; MonthGrid measures it to decide how many tiles fit
+        <div data-tiles className="grid min-h-0 flex-1 grid-cols-[repeat(auto-fill,48px)] content-start gap-2">
+          {tiles.map((e) => (
+            <TickerTile
+              key={e.ticker}
+              earnings={e}
+              dimmed={!isMatch(e)}
+              dotBorder={dotBorder}
+              showTiming
+              onSelect={onSelect}
+            />
+          ))}
+          {hidden > 0 && (
+            <MoreTile day={{ ...day, hidden, overflow }} matches={hiddenMatches} onShowMore={onShowMore} />
+          )}
+        </div>
+      )}
     </div>
   );
 }
@@ -142,6 +107,8 @@ const MAX_TILES = 16;
 // Shortest week row (date + one row of tiles); shorter windows scroll instead of squashing
 const MIN_ROW_PX = 92;
 const HEADER_ROW_PX = 32;
+// Week view row: the date line (38px with its padding and gap) above three sections
+const WEEK_ROW_PX = 38 + 3 * SECTION_MIN_PX;
 
 function tilesAcross(px) {
   return Math.max(1, Math.floor((px + TILE_GAP_PX) / (TILE_PX + TILE_GAP_PX)));
@@ -175,15 +142,16 @@ export function MonthGrid({ days, fit = true, filtering, isMatch, onSelect, onSh
   const gridRef = useRef(null);
   const measured = useTileCapacity(gridRef);
   const capacity = fit ? measured : null;
+  const minRow = fit ? MIN_ROW_PX : WEEK_ROW_PX;
   const weeks = days.length / 5;
 
   return (
     // Takes the height left between the toolbar and the legend; each week gets an equal share
-    <div className="m-6 flex-1 overflow-x-auto border-x border-t" style={{ minHeight: HEADER_ROW_PX + weeks * MIN_ROW_PX }}>
+    <div className="m-6 flex-1 overflow-x-auto border-x border-t" style={{ minHeight: HEADER_ROW_PX + weeks * minRow }}>
       <div
         ref={gridRef}
         className="grid h-full min-w-275 grid-cols-5"
-        style={{ gridTemplateRows: `${HEADER_ROW_PX}px repeat(${weeks}, minmax(${MIN_ROW_PX}px, 1fr))` }}
+        style={{ gridTemplateRows: `${HEADER_ROW_PX}px repeat(${weeks}, minmax(${minRow}px, 1fr))` }}
       >
         {WEEKDAYS.map((weekday, i) => (
           <div
@@ -193,8 +161,7 @@ export function MonthGrid({ days, fit = true, filtering, isMatch, onSelect, onSh
               i < 4 && "border-r"
             )}
           >
-            <span className={cn("px-2 py-0.5 text-white", WEEKDAY_BADGES[i])}>0{i + 1}</span>
-            <span className="text-muted-foreground">{weekday}</span>
+            <span className={cn("px-2 py-0.5 text-white", WEEKDAY_BADGES[i])}>{weekday}</span>
           </div>
         ))}
         {days.map((day, i) => (
