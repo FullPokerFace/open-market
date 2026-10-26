@@ -42,6 +42,7 @@ export const SHIPPED = [
     area: "Everything else",
     items: [
       ["Light and dark", "Follows your system setting, or pick one in the header."],
+      ["Steady data", "Earnings and market data are saved as they come in, so pages load fast and keep working even when a data source has a hiccup."],
       ["On your phone", "A menu button, a dropdown for the exchange filter, and the day view top to bottom. The calendar comes first, with the market panel under it."],
       ["Suggest a feature", "Send an idea straight to the developer from the menu."],
       ["Open source", "The code is on GitHub: anyone can build a feature or fix a bug and send it in."],

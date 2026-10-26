@@ -120,28 +120,28 @@
 
   <header class="title">
     <h1>Open Market <span>features</span>.</h1>
-    <p class="lead"><strong>Open Market is a free, open-source earnings calendar whose features are created and maintained by its community. The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, your own ticker lists (remembered between visits), and a "Suggest a feature" form that emails ideas to the developer.</strong> The header, filters, market panel and day view now work on phones. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
+    <p class="lead"><strong>Open Market is a free, open-source earnings calendar whose features are created and maintained by its community. The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, your own ticker lists (remembered between visits), and a "Suggest a feature" form that emails ideas to the developer.</strong> The header, filters, market panel and day view now work on phones. Everything fetched from Finnhub, SEC, CNN and Kalshi is now saved in MongoDB, so it survives deploys and serverless hosting, and page views are counted with Vercel Analytics. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>67 features tracked</span></div>
-    <div class="progress-head"><b>79%</b><span>44 of 56 features done · 12 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 44, high priority 1, medium 3, before launch 3, low 5">
-      <span class="c-done" style="flex: 44"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 3"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 5"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>71 features tracked</span></div>
+    <div class="progress-head"><b>80%</b><span>57 of 71 features done · 14 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 57, high priority 1, medium 4, before launch 3, low 6">
+      <span class="c-done" style="flex: 57"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 6"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>54</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>57</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
-      <div class="stat c-low"><b>5</b><span class="hud"><i class="sw"></i>Low</span></div>
+      <div class="stat c-low"><b>6</b><span class="hud"><i class="sw"></i>Low</span></div>
     </div>
     <div class="glance">
       <div class="c-done">
         <h4 class="hud">Done by area</h4>
         <ul>
-          <li>Foundation <b>8</b></li>
-          <li>Live data <b>8</b></li>
+          <li>Foundation <b>9</b></li>
+          <li>Live data <b>10</b></li>
           <li>Calendar <b>17</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
@@ -157,7 +157,7 @@
           <li>Calendar &amp; layout <span class="dots"><i class="sw c-med"></i></span></li>
           <li>Details panel <span class="dots"><i class="sw c-med"></i><i class="sw c-low"></i></span></li>
           <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
-          <li>Polish &amp; docs <span class="dots"><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i></span></li>
+          <li>Polish &amp; docs <span class="dots"><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i></span></li>
         </ul>
       </div>
       <div>
@@ -172,9 +172,9 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>54 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>57 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
-    <div class="sub"><h3>Foundation</h3><span class="hud">8</span></div>
+    <div class="sub"><h3>Foundation</h3><span class="hud">9</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -189,11 +189,12 @@
           <tr><th scope="row">Favicon</th><td>Browser tab and home-screen icons drawn from the app's logo: SVG icon, <code>.ico</code> fallback and an Apple touch icon.</td><td><code>src/app/icon.svg</code>, <code>favicon.ico</code>, <code>apple-icon.png</code></td></tr>
           <tr><th scope="row">Title component</th><td>Shared heading ported from ResumeFromSpace's Typography Title, with sizes (xs–4xl), colors mapped to the app's light / dark tokens, and the Bricolage display face. A <code>highlight</code> prop turns part of the text blue (e.g. "Market <span style="color: var(--blue)">sentiment</span>"). Used for the Market sentiment and Key releases headings, and the report-time sections in week and day view.</td><td><code>src/components/ui/title.jsx</code></td></tr>
           <tr><th scope="row">Scrollbars</th><td>One style across the app: a thin square grey thumb on no track, no arrow buttons. 4px at rest; on hover it widens and darkens to the strong line grey, and turns ink while dragging. Greys come from the line tokens, so dark mode follows. Firefox gets the standard thin grey bar (no hover change).</td><td><code>src/app/globals.css</code></td></tr>
+          <tr><th scope="row">Vercel Analytics</th><td>Page views and visitors, counted by <code>@vercel/analytics</code> on every page. Collects only once deployed on Vercel with Web Analytics turned on in the project's dashboard.</td><td><code>&lt;Analytics /&gt;</code> in <code>src/app/layout.js</code></td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="sub"><h3>Live data</h3><span class="hud">8</span></div>
+    <div class="sub"><h3>Live data</h3><span class="hud">10</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -201,13 +202,15 @@
         </thead>
         <tbody>
           <tr><th scope="row">Finnhub earnings calendar</th><td>Every earnings report in the month: date, ticker, timing, fiscal quarter, EPS and revenue estimate and actual. Fetched week by week, with busy weeks split to get past the 1,500-row cap.</td><td><code>src/lib/finnhub.js</code></td></tr>
-          <tr><th scope="row">Finnhub request log</th><td>Every request that really reaches Finnhub prints one server-console line: <code>[finnhub] GET /calendar/earnings?from=…&amp;to=… → 200 in 52ms</code>. Cache hits don't print (in dev, Next replays a cached call's line with a "Cache" badge; that isn't a new request). The API key is sent in a header, so it stays out of the log. Cache warming of this month and the next two after each page view accounts for bursts on a cold cache.</td><td><code>src/lib/finnhub.js</code></td></tr>
+          <tr><th scope="row">Data source log</th><td>Each lookup prints one server-console line saying where the data came from: <code>[db] fearGreed/latest from database (saved 3m ago) in 21ms</code>, <code>[db] companyProfiles/MSFT not saved yet, fetched from source and saved in 144ms</code>, or "refreshing … failed, using the copy from …". Company lookups print <code>[db] companies: 1385 listed of 1676 symbols (listing saved 3h ago)</code>. Every request that really reaches Finnhub also prints <code>[finnhub] GET /calendar/earnings?from=…&amp;to=… → 200 in 52ms</code>; the API key is sent in a header, so it stays out of the log.</td><td><code>src/lib/db.js</code>, <code>src/lib/companies.js</code>, <code>src/lib/finnhub.js</code></td></tr>
           <tr><th scope="row">Beat / Mixed / Miss</th><td>Beat = EPS and revenue both met estimates; Miss = neither did; Mixed = one did. "Reported" when there was no estimate to compare.</td><td><code>src/lib/earnings.js</code></td></tr>
-          <tr><th scope="row">Company names</th><td>From SEC's free ticker list, tidied from legal names ("NETFLIX INC" → "Netflix"). Also gives each company's SEC ID for filing links.</td><td><code>src/lib/sec.js</code></td></tr>
-          <tr><th scope="row">Caching</th><td>Earnings cached on the server for hours, names and exchange lists for days, so repeat visits make no Finnhub calls. Well under the free plan's 60 calls/min. The cache lives in server memory: it empties on every deploy or restart (see Before launch).</td><td><code>"use cache"</code> in <code>src/lib</code></td></tr>
-          <tr><th scope="row">Cache warm-up</th><td>After each page is sent, this month and the next two are loaded into the cache in the background, so paging ahead and search never wait on Finnhub. Months already cached cost nothing; a failure only means that month loads when opened.</td><td><code>after()</code> in <code>src/app/page.js</code></td></tr>
-          <tr><th scope="row">Error handling</th><td>Shows "unavailable" instead of crashing if Finnhub fails; falls back to bare tickers or no exchange filter if names or exchange data fail.</td><td><code>src/app/page.js</code></td></tr>
-          <tr><th scope="row">API key</th><td><code>FINNHUB_API_KEY</code> in git-ignored <code>.env.local</code>, sent in a request header, never to the browser.</td><td><code>.env.local</code></td></tr>
+          <tr><th scope="row">Company names</th><td>From SEC's free ticker list, tidied from legal names ("NETFLIX INC" → "Netflix"). Also gives each company's SEC ID for filing links. Saved with each company in the <code>companies</code> collection.</td><td><code>src/lib/sec.js</code>, <code>src/lib/companies.js</code></td></tr>
+          <tr><th scope="row">MongoDB storage</th><td>Replaces Next's in-memory <code>"use cache"</code>. Everything fetched from Finnhub, SEC, CNN and Kalshi is saved in the <code>earnings-report</code> database on MongoDB Atlas, one collection per kind of data, each document <code>{ data, fetchedAt }</code>: <code>earningsCalendar</code> (one per Monday–Sunday week, so months that share a week share it; 1 hour), <code>epsHistory</code> (per symbol; 1 hour), <code>companyProfiles</code> (per symbol, saved when a company is first opened; 1 day), <code>fearGreed</code> and <code>keyReleases</code> (one <code>latest</code> document each; 5 minutes). A saved copy younger than that is used as is; an older one is refetched and overwritten. Requests that arrive together share one fetch, and if a source fails the older saved copy is shown instead of an error. Survives deploys, restarts and serverless hosting; with no visitors, nothing is fetched.</td><td><code>stored()</code> in <code>src/lib/db.js</code></td></tr>
+          <tr><th scope="row">Company directory</th><td>One document per exchange-listed company in <code>companies</code>: <code>{ _id: "AAPL", exchange: "XNAS", name, cik, listedAt }</code>, about 13,000. Merges Finnhub's symbol list (which exchange; OTC and closed-end funds left out) with SEC's names and IDs, refreshed together once a day; symbols no longer listed are removed. Pages look up only the companies on their calendar (~1,700 symbols, 70–200ms) instead of loading the whole list. Known gap: while the collection is first filled on an empty database, pages see fewer companies for a few seconds.</td><td><code>getCompanyDirectory()</code> in <code>src/lib/companies.js</code></td></tr>
+          <tr><th scope="row">Market history</th><td>Every fresh Fear &amp; Greed and key-releases fetch is also added to <code>fearGreedHistory</code> and <code>keyReleasesHistory</code> (<code>{ data, fetchedAt }</code>), at most one entry per 5 minutes and only when someone visits, so there are gaps in quiet hours. Kept for charting later; nothing reads them yet, and old entries are never deleted. Add a collection to <code>KEEP_HISTORY</code> to keep history for it too.</td><td><code>src/lib/db.js</code></td></tr>
+          <tr><th scope="row">Warm-up</th><td>After each page is sent, this month and the next two are loaded and saved in the background, so paging ahead and search never wait on Finnhub. Months saved within the hour cost one lookup; a failure only means that month loads when opened.</td><td><code>after()</code> in <code>src/app/page.js</code></td></tr>
+          <tr><th scope="row">Error handling</th><td>Shows "unavailable" instead of crashing if Finnhub fails and nothing is saved; shows the older saved copy when one exists; falls back to bare tickers and no exchange filter if the company directory fails.</td><td><code>src/app/page.js</code>, <code>src/lib/db.js</code></td></tr>
+          <tr><th scope="row">Keys</th><td><code>FINNHUB_API_KEY</code>, <code>MONGO_DB_USER</code> and <code>MONGO_DB_PASSWORD</code> in git-ignored <code>.env.local</code>, never sent to the browser. The Finnhub key goes in a request header; the Mongo user and password are URL-encoded into the Atlas connection string.</td><td><code>.env.local</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -221,14 +224,14 @@
         <tbody>
           <tr><th scope="row">Month grid</th><td>Monday–Friday weeks, past days shaded, inside the 1440px frame with 24px side margins and a left / right rule.</td><td><code>month-grid.jsx</code></td></tr>
           <tr><th scope="row">Fits the screen</th><td>The page is one window tall: header, filters, the whole month, legend and footer are all visible, and the weeks share the height left over. Fits 1920×960 and 1440×800 browser windows; rows stop at 92px (one row of tiles), so shorter windows scroll a little. Tighter title, bars and cells to leave room.</td><td><code>month-grid.jsx</code>, <code>src/app/layout.js</code></td></tr>
-          <tr><th scope="row">Day / Week / Month views</th><td>Three buttons in the controls bar (Day replaced the disabled List button). Saved in the URL: <code>?view=week&amp;date=2026-10-28</code>, <code>?view=day&amp;date=…</code>; month stays the default with <code>?month=</code>. Arrows step by the view (a week, a weekday skipping weekends, a month); the middle button reads "Oct 26 – 30" or "Mon Oct 26" and goes back to this week / today. Switching keeps your place (today, or the first weekday of the month you were on). Weekend dates move to the next Monday. Title, filter counts and "N matches" follow the view. Week and day reuse the month's cached data, so a week spanning two months still loads from one month.</td><td><code>calendar-toolbar.jsx</code>, <code>buildCalendarView()</code> in <code>src/lib/earnings.js</code></td></tr>
+          <tr><th scope="row">Day / Week / Month views</th><td>Three buttons in the controls bar (Day replaced the disabled List button). Saved in the URL: <code>?view=week&amp;date=2026-10-28</code>, <code>?view=day&amp;date=…</code>; month stays the default with <code>?month=</code>. Arrows step by the view (a week, a weekday skipping weekends, a month); the middle button reads "Oct 26 – 30" or "Mon Oct 26" and goes back to this week / today. Switching keeps your place (today, or the first weekday of the month you were on). Weekend dates move to the next Monday. Title, filter counts and "N matches" follow the view. Week and day reuse the month's saved data, so a week spanning two months still loads from one month.</td><td><code>calendar-toolbar.jsx</code>, <code>buildCalendarView()</code> in <code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Week view</th><td>One Monday–Friday row filling the screen, every company showing (no 16-tile cap or "+N"). Each day splits into Before open · During / TBD · After close, each a third of the height or 200px, whichever is taller, scrolling on its own; rows line up across the week. Sections have a <code>Title</code> heading, report-time icon, count, colored edge and tint; empty ones stay as a dimmed "—" row. On today, the section happening now gets a pulsing "NOW · 14:52" (New York time).</td><td><code>month-grid.jsx</code>, <code>timing-sections.jsx</code></td></tr>
           <tr><th scope="row">Day view</th><td>One day across the full width as three columns in trading-day order: Before open (4:00–9:30 ET), During / TBD (9:30–16:00), After close (16:00–20:00), each with a large title, hours and count, scrolling on its own. A bar across the top fills as the day goes: past days full, future days empty, today up to now with a marker and "NOW" badge.</td><td><code>day-view.jsx</code>, <code>timing-sections.jsx</code></td></tr>
           <tr><th scope="row">Report-time icons</th><td>Solid icons drawn for this app (crisp at 10px), all in one color (blue, set in one constant): sun on the horizon = before open, full sun = during hours, crescent moon = after close. In a month tile's top-left corner (status dot stays top-right), in the legend, and on the week / day sections. From Finnhub's <code>hour</code> field; about 80% of upcoming reports have one, the rest show no icon.</td><td><code>timing-icons.jsx</code>, <code>ticker-tile.jsx</code></td></tr>
           <tr><th scope="row">Today</th><td>Today's cell has a 2px frame and a "TODAY" label, and the page scrolls to it when it opens.</td><td><code>month-grid.jsx</code>, <code>earnings-calendar.jsx</code></td></tr>
           <tr><th scope="row">Ticker tiles</th><td>As many per day as fit the cell (up to 16), measured as the window resizes; largest companies first (by revenue estimate) and the rest go in "+N". Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
-          <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing: the tiles that didn't fit on this screen, then the ones the server held back (loaded on open from the cached month data). Picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
-          <tr><th scope="row">Market sentiment + key releases</th><td>Replaces the old "01 / Earnings calendar" bar. Left: CNN's Fear &amp; Greed Index as a five-band meter (extreme fear → extreme greed) with score, rating and change since the last close; read from the unofficial JSON behind CNN's page with browser-like headers, cached for hours. Right: the next FOMC decision (odds of cut / hold / hike as a stacked bar), CPI, jobs report (payrolls + unemployment) and GDP, each with date, time (ET), days until, and the level traders expect, from Kalshi's free public market data (no key), cached for minutes. Either half says "unavailable" on failure; the calendar is unaffected.</td><td><code>market-sentiment.jsx</code>, <code>src/lib/sentiment.js</code>, <code>src/lib/kalshi.js</code></td></tr>
+          <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing: the tiles that didn't fit on this screen, then the ones the server held back (loaded on open from the saved month data). Picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
+          <tr><th scope="row">Market sentiment + key releases</th><td>Replaces the old "01 / Earnings calendar" bar. Left: CNN's Fear &amp; Greed Index as a five-band meter (extreme fear → extreme greed) with score, rating and change since the last close; read from the unofficial JSON behind CNN's page with browser-like headers, refreshed every 5 minutes. Right: the next FOMC decision (odds of cut / hold / hike as a stacked bar), CPI, jobs report (payrolls + unemployment) and GDP, each with date, time (ET), days until, and the level traders expect, from Kalshi's free public market data (no key), refreshed every 5 minutes. Either half says "unavailable" on failure; the calendar is unaffected.</td><td><code>market-sentiment.jsx</code>, <code>src/lib/sentiment.js</code>, <code>src/lib/kalshi.js</code></td></tr>
           <tr><th scope="row">Release-day pulse</th><td>On the day a key release comes out, its card gets a blue frame with a ring that pulses outward and fades, on repeat, plus a pinging blue dot next to "Today". With reduced motion turned on, the frame stays still.</td><td><code>market-sentiment.jsx</code>, <code>animate-release-pulse</code> in <code>globals.css</code></td></tr>
           <tr><th scope="row">Month navigation</th><td>Previous / next arrows load the month before or after; the middle button shows the month on screen (e.g. November 2026) and goes back to the current month (or scrolls to today when already on it). Saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
           <tr><th scope="row">Controls bar</th><td>Month navigation and the company filter share one bar under the "October earnings." title, which stays where it was.</td><td><code>exchange-filter.jsx</code>, <code>calendar-toolbar.jsx</code></td></tr>
@@ -265,7 +268,7 @@
           <tr><th scope="row">Company results</th><td>Slide-over with name, industry, date and timing, status, EPS and revenue vs estimates with surprise %.</td><td><code>earnings-details-sheet.jsx</code></td></tr>
           <tr><th scope="row">EPS surprise chart</th><td>Last 4 quarters of EPS surprise (the free plan's limit), up/down bars with beat count.</td><td><code>eps-surprise-chart.jsx</code></td></tr>
           <tr><th scope="row">SEC filing links</th><td>"Earnings release" opens the company's 8-K filings; "SEC filings" opens all of its filings.</td><td><code>earnings-details-sheet.jsx</code></td></tr>
-          <tr><th scope="row">Details API</th><td>Company profile and EPS history, loaded when a company is first opened and cached.</td><td><code>/api/earnings/[symbol]</code></td></tr>
+          <tr><th scope="row">Details API</th><td>Company profile (name, industry, website) and EPS history, fetched when a company is first opened and saved in <code>companyProfiles</code> and <code>epsHistory</code>.</td><td><code>/api/earnings/[symbol]</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -319,7 +322,7 @@
   </section>
 
   <section class="c-med">
-    <div class="bar hud"><span>02 / <b>To do</b></span><span>13 items · priority is a suggestion</span></div>
+    <div class="bar hud"><span>02 / <b>To do</b></span><span>14 items · priority is a suggestion</span></div>
     <div class="section-title"><h2>What's <span>next</span>.</h2><p>Grouped by area. Priority: <span class="tag c-high">High</span> <span class="tag c-med">Medium</span> <span class="tag c-launch">Before launch</span> <span class="tag c-low">Low</span></p></div>
     <div class="sub"><h3>Filters</h3><span class="hud">3</span></div>
     <div class="scroll">
@@ -367,13 +370,13 @@
         </thead>
         <tbody>
           <tr><th scope="row">Check Finnhub license</th><td>Free plan is for personal use; confirm the terms or upgrade before making the site public.</td><td><span class="tag c-launch">Before launch</span></td></tr>
-          <tr><th scope="row">Lasting cache for hosting</th><td>The cache lives in server memory. On serverless hosting such as Vercel it may not survive between requests, so more Finnhub calls. Use a shared cache or an always-on server. It also empties on every deploy or restart. The database below would replace it.</td><td><span class="tag c-launch">Before launch</span></td></tr>
-          <tr><th scope="row">Database + Finnhub sync</th><td>Store earnings, company profiles and EPS history in a database; a scheduled job is the only thing that calls Finnhub (current week every 15–30 min in market hours and after the close, other weeks daily), and pages read only from the database. Survives deploys and serverless hosting, keeps Finnhub calls fixed whatever the traffic, and gives the market-cap script, region filter, better names and longer EPS history somewhere to live. Postgres (Neon / Supabase + Vercel Cron) if on Vercel, SQLite if self-hosted; decide hosting first. Storing Finnhub data for a public site depends on the license check above.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+          <tr><th scope="row">Vercel + Atlas setup</th><td>Add <code>MONGO_DB_USER</code> and <code>MONGO_DB_PASSWORD</code> to the Vercel project (Production, Preview and Development: <code>next build</code> also loads Fear &amp; Greed, key releases and the company listing, for reasons not yet looked into), then redeploy. In Atlas, allow access from anywhere (<code>0.0.0.0/0</code>), since Vercel has no fixed IPs on the free plan, and give the database user only readWrite on <code>earnings-report</code> with a long random password. Turn on Web Analytics in the Vercel dashboard.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+          <tr><th scope="row">Scheduled Finnhub sync</th><td>Storage is done (see Done › MongoDB storage), but pages still fetch from the source when a saved copy is stale, so the visitor who hits it waits. Next: a scheduled job (Vercel Cron) refreshes the current week every 15–30 min in market hours and after the close and other weeks daily, so pages only read the database and Finnhub calls stay fixed whatever the traffic. Storing Finnhub data for a public site depends on the license check above.</td><td><span class="tag c-launch">Before launch</span></td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="sub"><h3>Polish &amp; docs</h3><span class="hud">4</span></div>
+    <div class="sub"><h3>Polish &amp; docs</h3><span class="hud">5</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -383,6 +386,7 @@
           <tr><th scope="row">Better company names</th><td>Tidied SEC names miss some acronyms ("Aar", "Idt", "Fedex"). Use Finnhub profile names once the market-cap script has them.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Company logos on tiles</th><td>Swap ticker text for the logo in the same tile (DESIGN.md "later"). Finnhub profiles include a logo URL.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Insights page</th><td>The header's "Insights" link was removed because it led nowhere; add it back to the menu once there's content.</td><td><span class="tag c-low">Low</span></td></tr>
+          <tr><th scope="row">Companies first fill</th><td>On an empty database the first daily listing write (~13,000 documents) is visible while it runs, so pages briefly show fewer companies and filter counts. Fix with a "listing finished" marker that lookups wait for. Only matters on a new database or after dropping <code>companies</code>.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Update DESIGN.md</th><td>Still says a 1200px frame and 8 tiles per cell; the app now uses 1440px and 16.</td><td><span class="tag c-low">Low</span></td></tr>
         </tbody>
       </table>
