@@ -1,12 +1,17 @@
 "use client";
 
-import { Fragment, useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useLayoutEffect, useRef, useState, ViewTransition } from "react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { dayColors, TickerTile } from "./ticker-tile";
 import { SECTION_MIN_PX, TimingSections } from "./timing-sections";
 
 const WEEKDAYS = ["MON", "TUE", "WED", "THU", "FRI"];
 export const WEEKDAY_BADGES = ["bg-badge-1", "bg-badge-2", "bg-badge-3", "bg-badge-4", "bg-badge-5"];
+
+// Shared by a month / week cell and the day view of the same date, so one morphs into the other
+export const dayTransitionName = (key) => `day-${key}`;
 
 // `matches`: how many hidden companies pass the search / watchlist, or null when nothing is filtered
 function MoreTile({ day, matches, onShowMore }) {
@@ -74,9 +79,16 @@ function EmptyRun({ days }) {
   );
 }
 
-// `capacity` null = week view: every company, split by report time, scrolling inside the cell
+// `capacity` null = week view: every company, split by report time, scrolling inside the cell.
+// Clicking the cell (not a tile or "+N") opens the day view, which grows out of the cell: both carry
+// the same view-transition name (see DayView). The date is a real link for keyboards and new tabs.
 function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, onShowMore }) {
   const { background, dotBorder } = dayColors(day);
+  const router = useRouter();
+  const openDay = (event) => {
+    if (event.target.closest("a, button")) return;
+    router.push(day.dayHref);
+  };
 
   // Tiles that fit this cell; past that, the last slot becomes "+N". The server already
   // holds back companies beyond 16 (`hiddenIndex`); `overflow` is what this screen can't fit.
@@ -87,12 +99,14 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
   const hiddenMatches = filtering ? [...overflow, ...day.hiddenIndex].filter(isMatch).length : null;
 
   return (
+    // onClick is a mouse shortcut only: the date link below is the keyboard and screen-reader way in
     <div
       id={`day-${day.key}`}
+      onClick={openDay}
       className={cn(
         // contain:size keeps tiles from stretching the row: rows split the height, tiles adapt.
         // Below md the cell is a full-width agenda row that grows with its tiles.
-        "flex min-h-0 flex-col gap-2 border-b px-4 pt-2.5 pb-2 md:overflow-hidden md:contain-[size]",
+        "group/day flex min-h-0 cursor-pointer flex-col gap-2 border-b px-4 pt-2.5 pb-2 md:overflow-hidden md:contain-[size]",
         background,
         !isLastColumn && "md:border-r",
         // The agenda lists only the period's own days, not the next/previous month's padding;
@@ -113,7 +127,11 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
           background
         )}
       >
-        <span className="flex items-center gap-2">
+        <Link
+          href={day.dayHref}
+          aria-label={`Open ${day.longLabel} in day view`}
+          className="flex items-center gap-2 no-underline decoration-1 underline-offset-4 group-hover/day:underline"
+        >
           {/* No weekday column headers in the agenda, so each day carries its own */}
           <span className={cn("px-2 py-0.5 text-white md:hidden", WEEKDAY_BADGES[day.weekday])}>
             {WEEKDAYS[day.weekday]}
@@ -123,7 +141,7 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
           ) : (
             <span className={day.inPeriod ? "text-foreground" : "text-muted-foreground"}>{day.label}</span>
           )}
-        </span>
+        </Link>
         {!day.isToday && day.count > 0 && (
           <span className="text-muted-foreground">{String(day.count).padStart(2, "0")}</span>
         )}
@@ -240,15 +258,18 @@ export function MonthGrid({ days, fit = true, filtering, isMatch, onSelect, onSh
           // md:hidden run lines take no grid slot, so the desktop columns stay in step
           <Fragment key={day.key}>
             {runs[i] && <EmptyRun days={runs[i]} />}
-            <DayCell
-              day={day}
-              capacity={capacity}
-              isLastColumn={i % 5 === 4}
-              filtering={filtering}
-              isMatch={isMatch}
-              onSelect={onSelect}
-              onShowMore={onShowMore}
-            />
+            {/* default="none": only the cell ↔ day view morph animates, not every navigation */}
+            <ViewTransition name={dayTransitionName(day.key)} share="day-morph" default="none">
+              <DayCell
+                day={day}
+                capacity={capacity}
+                isLastColumn={i % 5 === 4}
+                filtering={filtering}
+                isMatch={isMatch}
+                onSelect={onSelect}
+                onShowMore={onShowMore}
+              />
+            </ViewTransition>
           </Fragment>
         ))}
       </div>

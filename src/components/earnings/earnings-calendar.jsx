@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, ViewTransition } from "react";
 import { useRouter } from "next/navigation";
 import { calendarHref, matchesQuery } from "@/lib/earnings";
 import { rememberList, useTickerLists } from "@/lib/ticker-lists";
@@ -10,7 +10,7 @@ import { CreateListDialog } from "./create-list-dialog";
 import { DayView } from "./day-view";
 import { EarningsDetailsSheet } from "./earnings-details-sheet";
 import { ExchangeFilter } from "./exchange-filter";
-import { MonthGrid } from "./month-grid";
+import { dayTransitionName, MonthGrid } from "./month-grid";
 import { MarketSentiment } from "./market-sentiment";
 import { MoreCompaniesDialog } from "./more-companies-dialog";
 import { SiteHeader } from "./site-header";
@@ -171,7 +171,10 @@ export function EarningsCalendar({ view, sentiment, events }) {
         </ExchangeFilter>
 
         {view.mode === "day" ? (
-          <DayView day={view.days[0]} isMatch={isMatch} onSelect={selectEarnings} />
+          // Same name as the date's month / week cell: opening the day from there grows the cell into this box, and back
+          <ViewTransition name={dayTransitionName(view.days[0].key)} share="day-morph" default="none">
+            <DayView day={view.days[0]} isMatch={isMatch} onSelect={selectEarnings} />
+          </ViewTransition>
         ) : (
           <MonthGrid
             days={view.days}

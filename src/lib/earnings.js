@@ -417,6 +417,8 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
       isToday: iso === today,
       isPast: iso < today,
       inPeriod,
+      // This day on its own, with the same filter; month and week cells open it
+      dayHref: href({ view: "day", date: iso }),
       count: companies.length,
       hidden: companies.length - visible.length,
       earnings: visible.map((row) => toEarnings(row, directory)),

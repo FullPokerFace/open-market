@@ -4,6 +4,7 @@
 // One shared store so every tile and open tab stays in sync.
 
 import { useSyncExternalStore } from "react";
+import { logoFileName } from "./logos";
 
 const STORAGE_KEY = "earnings:tile-display";
 export const TILE_DISPLAYS = ["logos", "tickers"];
@@ -56,7 +57,8 @@ export function useTileDisplay() {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
-// A ticker's logo, served from MongoDB by /api/logo (see logos.js); 404 when there's none, so the tile can fall back to the ticker
-export function logoUrl(ticker) {
-  return `/api/logo/${encodeURIComponent(ticker)}`;
+// Where to look for a ticker's logo, in order (see logos.js): the committed file on the CDN, then logo.dev
+// through /api/logo for one not synced yet. Each answers 404 when it has none.
+export function logoUrls(ticker) {
+  return [`/logos/${encodeURIComponent(logoFileName(ticker))}`, `/api/logo/${encodeURIComponent(ticker)}`];
 }

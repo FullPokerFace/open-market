@@ -11,7 +11,9 @@
     "test:e2e:ui": "playwright test --ui",
     "test:e2e:live": "playwright test",
     "test:e2e:live:ui": "playwright test --ui",
-    "video:tour": "node scripts/record-tour.mjs"
+    "video:tour": "node scripts/record-tour.mjs",
+    "logos:export": "node scripts/export-logos.mjs",
+    "logos:sync": "node scripts/sync-logos.mjs"
   },
   "dependencies": {
     "@base-ui/react": "^1.9.0",

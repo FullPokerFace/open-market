@@ -1,29 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { logoUrl, useTileDisplay } from "@/lib/tile-display";
+import MISSING_LOGOS from "@/lib/logo-missing.json";
+import { logoUrls, useTileDisplay } from "@/lib/tile-display";
 import { cn } from "@/lib/utils";
 
-// Tickers with no logo (or a failed load) this visit, so other tiles, rows and views skip straight to the fallback
-const missingLogos = new Set();
+// Tickers with no logo: the synced list, plus any that failed every source this visit,
+// so other tiles, rows and views skip straight to the fallback
+const missingLogos = new Set(MISSING_LOGOS);
 
-// The company's logo while the tickers / logos toggle is on logos; `fallback` otherwise, or when there's no logo
+// The company's logo while the tickers / logos toggle is on logos; `fallback` otherwise, or when there's no logo.
+// Tries each of logoUrls() in turn as the one before fails to load.
 export function CompanyLogo({ ticker, className, fallback = null }) {
   const display = useTileDisplay();
-  const [failed, setFailed] = useState(() => missingLogos.has(ticker));
-  if (display !== "logos" || failed) return fallback;
+  const sources = logoUrls(ticker);
+  const [source, setSource] = useState(() => (missingLogos.has(ticker) ? sources.length : 0));
+  if (display !== "logos" || source >= sources.length) return fallback;
 
   return (
-    // Plain img: /api/logo already serves small cached PNGs, so Next's image optimizer would only add cost
+    // Plain img: the logos are already small PNGs, so Next's image optimizer would only add cost
     // eslint-disable-next-line @next/next/no-img-element
     <img
-      src={logoUrl(ticker)}
+      src={sources[source]}
       alt=""
       loading="lazy"
       decoding="async"
       onError={() => {
-        missingLogos.add(ticker);
-        setFailed(true);
+        if (source + 1 >= sources.length) missingLogos.add(ticker);
+        setSource(source + 1);
       }}
       className={cn("object-contain", className)}
     />

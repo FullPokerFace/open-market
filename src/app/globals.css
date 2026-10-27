@@ -288,3 +288,25 @@
     font-size: 16px;
   }
 }
+
+/* A month / week cell growing into the day view, and back (dayTransitionName in month-grid.jsx).
+   The cell and the day view look different inside, so a brief blur mid-flight hides the cross-fade's stretching. */
+::view-transition-group(.day-morph) {
+  animation-duration: 400ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+::view-transition-image-pair(.day-morph) {
+  animation-name: day-morph-blur;
+}
+@keyframes day-morph-blur {
+  40% {
+    filter: blur(3px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+}
