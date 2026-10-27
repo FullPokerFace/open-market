@@ -128,8 +128,8 @@ function WeekSection({ section, dotBorder, live, minutes, isMatch, onSelect }) {
           </span>
         </span>
       </div>
-      {/* Fills the section's third of the cell and scrolls on its own */}
-      <div className={cn("min-h-0 flex-1 overflow-y-auto", !empty && section.tint)}>
+      {/* Fills the section's third of the cell and scrolls on its own; in the mobile agenda it just grows */}
+      <div className={cn("min-h-0 flex-1 md:overflow-y-auto", !empty && section.tint)}>
         {!empty && (
           // Top padding leaves room for the status dots that poke out of the first row
           <div className="grid grid-cols-[repeat(auto-fill,48px)] gap-2 px-4 pt-2 pb-3">
@@ -143,7 +143,8 @@ function WeekSection({ section, dotBorder, live, minutes, isMatch, onSelect }) {
   );
 }
 
-// Week view cell body: the day's companies in three sections, each a third of the height or SECTION_MIN_PX, whichever is taller
+// Week view cell body: the day's companies in three sections, each a third of the height or SECTION_MIN_PX,
+// whichever is taller. Below md (the agenda) each section is only as tall as its tiles.
 export function TimingSections({ day, dotBorder, isMatch, onSelect }) {
   const minutes = useNewYorkMinutes();
   const live = liveSection(day, minutes);
@@ -151,8 +152,8 @@ export function TimingSections({ day, dotBorder, isMatch, onSelect }) {
   return (
     // Bleeds to the cell's edges so the section bars and tints run full width
     <div
-      className="-mx-4 -mb-2 grid min-h-0 flex-1"
-      style={{ gridTemplateRows: `repeat(3, minmax(${SECTION_MIN_PX}px, 1fr))` }}
+      className="-mx-4 -mb-2 grid min-h-0 flex-1 md:grid-rows-(--section-rows)"
+      style={{ "--section-rows": `repeat(3, minmax(${SECTION_MIN_PX}px, 1fr))` }}
     >
       {splitByTiming(day.earnings).map((section) => (
         <WeekSection

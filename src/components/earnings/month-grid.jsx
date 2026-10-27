@@ -1,6 +1,6 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
+import { Fragment, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/utils";
 import { dayColors, TickerTile } from "./ticker-tile";
 import { SECTION_MIN_PX, TimingSections } from "./timing-sections";
@@ -37,6 +37,43 @@ function MoreTile({ day, matches, onShowMore }) {
   );
 }
 
+// Days the mobile agenda folds into one line. Today always keeps its own row, so "jump to today" has somewhere to land.
+const isFoldedEmpty = (day) => day.inPeriod && day.count === 0 && !day.isToday;
+
+// Back-to-back folded days, keyed by the index of each run's first day
+function emptyRuns(days) {
+  const runs = {};
+  let start = null;
+  days.forEach((day, i) => {
+    if (!isFoldedEmpty(day)) start = null;
+    else if (start == null) runs[(start = i)] = [day];
+    else runs[start].push(day);
+  });
+  return runs;
+}
+
+// Mobile agenda only: one muted line standing in for a run of days without earnings
+function EmptyRun({ days }) {
+  const first = days[0];
+  const last = days.at(-1);
+  const name = (day) => `${WEEKDAYS[day.weekday]} ${day.label}`;
+
+  return (
+    <div
+      className={cn(
+        "flex items-center justify-between gap-2 border-b px-4 py-2.5 font-mono text-[11px] font-medium tracking-[0.15em] text-muted-foreground md:hidden",
+        dayColors(first).background
+      )}
+    >
+      <span>
+        {name(first)}
+        {days.length > 1 && ` – ${name(last)}`}
+      </span>
+      <span>NO EARNINGS</span>
+    </div>
+  );
+}
+
 // `capacity` null = week view: every company, split by report time, scrolling inside the cell
 function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, onShowMore }) {
   const { background, dotBorder } = dayColors(day);
@@ -53,26 +90,48 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
     <div
       id={`day-${day.key}`}
       className={cn(
-        // contain:size keeps tiles from stretching the row: rows split the height, tiles adapt
-        "flex min-h-0 flex-col gap-2 overflow-hidden border-b px-4 pt-2.5 pb-2 [contain:size]",
+        // contain:size keeps tiles from stretching the row: rows split the height, tiles adapt.
+        // Below md the cell is a full-width agenda row that grows with its tiles.
+        "flex min-h-0 flex-col gap-2 border-b px-4 pt-2.5 pb-2 md:overflow-hidden md:contain-[size]",
         background,
-        !isLastColumn && "border-r",
+        !isLastColumn && "md:border-r",
+        // The agenda lists only the period's own days, not the next/previous month's padding;
+        // empty days there are folded into an EmptyRun line
+        (!day.inPeriod || isFoldedEmpty(day)) && "max-md:hidden",
         // Inset outline so the thicker frame doesn't shift the grid; outlines paint over the week view's tinted sections
         day.isToday && "outline-2 -outline-offset-2 outline-foreground"
       )}
     >
-      <div className="flex min-h-5 items-center justify-between font-mono text-[11px] font-medium tracking-[0.15em]">
-        {day.isToday ? (
-          <span className="bg-foreground px-2 py-0.5 text-background">{day.label} · TODAY</span>
-        ) : (
-          <span className={day.inPeriod ? "text-foreground" : "text-muted-foreground"}>{day.label}</span>
+      {/* Sticks to the top of the screen in the agenda while its day's tiles scroll by */}
+      <div
+        className={cn(
+          "flex min-h-5 items-center justify-between font-mono text-[11px] font-medium tracking-[0.15em] max-md:sticky max-md:top-0 max-md:z-10 max-md:py-2.5",
+          // Bleeds to the cell's edges so tiles don't show beside it; on today it stops inside the 2px frame
+          day.isToday
+            ? "max-md:-mx-3.5 max-md:-mt-2 max-md:px-3.5"
+            : "max-md:-mx-4 max-md:-mt-2.5 max-md:px-4",
+          background
         )}
+      >
+        <span className="flex items-center gap-2">
+          {/* No weekday column headers in the agenda, so each day carries its own */}
+          <span className={cn("px-2 py-0.5 text-white md:hidden", WEEKDAY_BADGES[day.weekday])}>
+            {WEEKDAYS[day.weekday]}
+          </span>
+          {day.isToday ? (
+            <span className="bg-foreground px-2 py-0.5 text-background">{day.label} · TODAY</span>
+          ) : (
+            <span className={day.inPeriod ? "text-foreground" : "text-muted-foreground"}>{day.label}</span>
+          )}
+        </span>
         {!day.isToday && day.count > 0 && (
           <span className="text-muted-foreground">{String(day.count).padStart(2, "0")}</span>
         )}
+        {day.count === 0 && <span className="text-muted-foreground md:hidden">NO EARNINGS</span>}
       </div>
 
-      {day.count === 0 && <span className="chip self-start text-muted-foreground">No earnings</span>}
+      {/* The agenda says it on the date line instead, keeping empty days one line tall */}
+      {day.count === 0 && <span className="chip self-start text-muted-foreground max-md:hidden">No earnings</span>}
 
       {capacity == null ? (
         day.count > 0 && (
@@ -121,7 +180,10 @@ function useTileCapacity(gridRef) {
 
   useLayoutEffect(() => {
     const grid = gridRef.current;
+    const wide = window.matchMedia("(min-width: 48rem)");
     const measure = () => {
+      // The agenda below md grows with its tiles, so it shows every one the server sent
+      if (!wide.matches) return setCapacity(MAX_TILES);
       const boxes = [...grid.querySelectorAll("[data-tiles]")];
       if (!boxes.length) return;
       const height = Math.max(...boxes.map((box) => box.clientHeight));
@@ -144,20 +206,25 @@ export function MonthGrid({ days, fit = true, filtering, isMatch, onSelect, onSh
   const capacity = fit ? measured : null;
   const minRow = fit ? MIN_ROW_PX : WEEK_ROW_PX;
   const weeks = days.length / 5;
+  const runs = emptyRuns(days);
 
   return (
-    // Takes the height left between the toolbar and the legend; each week gets an equal share
-    <div className="m-6 flex-1 overflow-x-auto border-x border-t" style={{ minHeight: HEADER_ROW_PX + weeks * minRow }}>
+    // Takes the height left between the toolbar and the legend; each week gets an equal share.
+    // Below md it's an agenda instead: one day per row, scrolling with the page (no overflow here, so date lines can stick).
+    <div
+      className="m-6 flex-1 border-x border-t md:min-h-(--grid-min) md:overflow-x-auto"
+      style={{ "--grid-min": `${HEADER_ROW_PX + weeks * minRow}px` }}
+    >
       <div
         ref={gridRef}
-        className="grid h-full min-w-275 grid-cols-5"
-        style={{ gridTemplateRows: `${HEADER_ROW_PX}px repeat(${weeks}, minmax(${minRow}px, 1fr))` }}
+        className="flex h-full flex-col md:grid md:min-w-275 md:grid-cols-5 md:grid-rows-(--grid-rows)"
+        style={{ "--grid-rows": `${HEADER_ROW_PX}px repeat(${weeks}, minmax(${minRow}px, 1fr))` }}
       >
         {WEEKDAYS.map((weekday, i) => (
           <div
             key={weekday}
             className={cn(
-              "flex items-center justify-between border-b px-4 font-mono text-[11px] font-medium tracking-[0.15em]",
+              "hidden items-center justify-between border-b px-4 font-mono text-[11px] font-medium tracking-[0.15em] md:flex",
               i < 4 && "border-r"
             )}
           >
@@ -165,16 +232,19 @@ export function MonthGrid({ days, fit = true, filtering, isMatch, onSelect, onSh
           </div>
         ))}
         {days.map((day, i) => (
-          <DayCell
-            key={day.key}
-            day={day}
-            capacity={capacity}
-            isLastColumn={i % 5 === 4}
-            filtering={filtering}
-            isMatch={isMatch}
-            onSelect={onSelect}
-            onShowMore={onShowMore}
-          />
+          // md:hidden run lines take no grid slot, so the desktop columns stay in step
+          <Fragment key={day.key}>
+            {runs[i] && <EmptyRun days={runs[i]} />}
+            <DayCell
+              day={day}
+              capacity={capacity}
+              isLastColumn={i % 5 === 4}
+              filtering={filtering}
+              isMatch={isMatch}
+              onSelect={onSelect}
+              onShowMore={onShowMore}
+            />
+          </Fragment>
         ))}
       </div>
     </div>

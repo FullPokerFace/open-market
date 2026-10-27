@@ -13,8 +13,7 @@ export function ExchangeFilter({ filters, lists, activeListId, showingList, onSe
   return (
     <div className="flex flex-wrap items-center justify-between gap-3 border-b px-6 py-2">
       {filters.length > 0 && (
-        <nav aria-label="Filter companies" className="flex flex-wrap items-center gap-3">
-          <span className="eyebrow text-muted-foreground">Show</span>
+        <nav aria-label="Filter companies" className="flex flex-wrap items-center ">
           <ExchangeSelect
             filters={filters}
             lists={lists}
@@ -36,10 +35,12 @@ function NewListButton({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      className="flex h-10 cursor-pointer items-center gap-2 border border-line-strong px-4 font-mono text-[11px] font-bold tracking-[0.12em] text-foreground uppercase hover:bg-tag"
+      aria-label="Create list"
+      className="flex h-10 w-10 cursor-pointer items-center justify-center gap-2 border border-line-strong font-mono text-[11px] font-bold tracking-[0.12em] text-foreground uppercase hover:bg-tag sm:w-auto sm:px-4"
     >
       <PlusIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
-      Create list
+      {/* Icon only on phones */}
+      <span className="hidden sm:inline">Create list</span>
     </button>
   );
 }

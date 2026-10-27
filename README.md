@@ -11,6 +11,8 @@ It starts with an earnings calendar and market context. What comes next is up to
   <img alt="Open Market's main page: the market sentiment meter and upcoming Fed, GDP, jobs and CPI releases above an October earnings calendar, with each company's ticker marked by when it reports and whether it beat or missed" src="docs/images/calendar-light.png">
 </picture>
 
+▶ **[Watch the 1-minute tour](docs/video/open-market-tour.webm)**: the market panel, the calendar, company details, search, views, ticker lists, and voting on the roadmap.
+
 ## What's in it today
 
 **Earnings calendar**
@@ -89,6 +91,8 @@ npm run test:e2e:live      # against the live site, E2E_LIVE_URL in .env.local
 npm run test:e2e:live:ui   # live site, in the UI
 npx playwright show-report # HTML report of the last run
 ```
+
+To re-record the tour video, run `npm run video:tour` against a production build or the live site (set `TOUR_URL`, e.g. `https://www.getopenmarket.app`; the default is localhost:3000). It saves `docs/video/open-market-tour.webm`, and like the tests it never writes real data.
 
 Tests live in `e2e/`. They never write real data: suggestion posts and votes are answered by mocks in the browser, so a run doesn't call OpenAI, change the database or send email, and is safe against production.
 

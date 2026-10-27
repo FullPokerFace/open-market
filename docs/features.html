@@ -124,13 +124,13 @@
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>77 features tracked</span></div>
-    <div class="progress-head"><b>82%</b><span>63 of 77 features done · 14 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 63, high priority 1, medium 4, before launch 3, low 6">
-      <span class="c-done" style="flex: 63"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 6"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>78 features tracked</span></div>
+    <div class="progress-head"><b>82%</b><span>64 of 78 features done · 14 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 64, high priority 1, medium 4, before launch 3, low 6">
+      <span class="c-done" style="flex: 64"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 6"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>63</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>64</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -140,7 +140,7 @@
       <div class="c-done">
         <h4 class="hud">Done by area</h4>
         <ul>
-          <li>Foundation <b>14</b></li>
+          <li>Foundation <b>15</b></li>
           <li>Live data <b>10</b></li>
           <li>Calendar <b>17</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
@@ -172,9 +172,9 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>63 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>64 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
-    <div class="sub"><h3>Foundation</h3><span class="hud">14</span></div>
+    <div class="sub"><h3>Foundation</h3><span class="hud">15</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -192,6 +192,7 @@
           <tr><th scope="row">Vercel Analytics</th><td>Page views and visitors, counted by <code>@vercel/analytics</code> on every page. Collects only once deployed on Vercel with Web Analytics turned on in the project's dashboard.</td><td><code>&lt;Analytics /&gt;</code> in <code>src/app/layout.js</code></td></tr>
           <tr><th scope="row">Link previews (Open Graph)</th><td>Shared links show a title, description and a 1200 × 630 image on X, Slack, iMessage, LinkedIn and the like. Each page has its own: the calendar ("Every free market tool, <span style="color: var(--blue)">in one place</span>."), the Roadmap ("What's next is <span style="color: var(--blue)">your call</span>.") and About ("Built by its <span style="color: var(--blue)">users</span>."). Images are drawn in the site's light style (mono header bar, display headline with a blue phrase, ticker tiles with beat / mixed / miss marks, the site's address) by one shared renderer, from Bricolage Grotesque and Geist Mono font files, and are prerendered at build time. Also sets the canonical address, <code>og:url</code>, site name, locale and a large X card. Absolute addresses come from <code>SITE_URL</code> (https://www.getopenmarket.app); pages use <code>pageMetadata()</code> so their preview gets their own title instead of the calendar's. Tested: tags on all three pages, images render, production build points at the real domain.</td><td><code>src/lib/site.js</code>, <code>src/lib/og-image.js</code>, <code>opengraph-image.js</code> (app, roadmap, about), <code>src/og-fonts/</code></td></tr>
           <tr><th scope="row">End-to-end tests</th><td>Playwright suite of 27 tests: 25 on a 1440px desktop Chrome and 2 on a Pixel 7. Covers the calendar (month, week and day, next / previous, details sheet, watchlist, exchange filter), search (results, Enter, no matches, dimming only while search is open), creating a ticker list, Suggest a feature (new idea, duplicate, error keeps the draft), board voting (up, switch to down, take it back), page links, roadmap order, theme toggle, link previews (tags and image on every page) and the phone burger menu. Tests pick whatever companies are on screen, since live data changes daily. Suggestion posts and votes are answered by mocks in the browser, so no run calls OpenAI, writes to MongoDB or sends email; the only real API calls are read-only or rejected (other-site origin, bad vote), so the suite is safe on production. <code>npm run test:e2e</code> / <code>test:e2e:ui</code> run against localhost (starting <code>npm run dev</code> if needed); <code>test:e2e:live</code> / <code>test:e2e:live:ui</code> run against <code>E2E_LIVE_URL</code> from <code>.env.local</code>, which the config loads itself; <code>E2E_BASE_URL</code> picks any other site. Tested: all pass on localhost; the live site passed before the link-preview tests were added.</td><td><code>e2e/</code>, <code>playwright.config.mjs</code></td></tr>
+          <tr><th scope="row">Tour video</th><td>A 64-second, 1600 × 900 walkthrough with captions and a visible cursor: title card ("Every free market tool, in one place"), Fear &amp; Greed and key releases, the month calendar, a company's details, search with matches lighting up, day / week / month, creating a ticker list, voting on the roadmap board, posting a suggestion, and an end card with the site and GitHub addresses. Recorded by Playwright driving the real site, so it shows real data; posting and voting are answered in the browser, so recording never writes to the database. Re-record with <code>npm run video:tour</code> against a production build or the live site (<code>TOUR_URL</code>). WebM (VP8, about 13 MB): plays in browsers; convert to MP4 for places that need it.</td><td><code>scripts/record-tour.mjs</code>, <code>docs/video/open-market-tour.webm</code></td></tr>
           <tr><th scope="row">Environment template</th><td><code>example.env</code> lists every variable with a comment: required <code>FINNHUB_API_KEY</code>, <code>MONGO_DB_USER</code>, <code>MONGO_DB_PASSWORD</code>; optional <code>OPEN_AI_KEY</code>, <code>GMAIL_SENDER_ADDRESS</code>, <code>GMAIL_APP_PASSWORD</code>, <code>SEC_USER_AGENT</code> and <code>E2E_LIVE_URL</code>. Copy it to <code>.env.local</code>. <code>MONGO_CONNECTION_URL</code> is left out: nothing reads it (the cluster host is set in <code>db.js</code>).</td><td><code>example.env</code></td></tr>
           <tr><th scope="row">README</th><td>Rewritten around the idea: every free market tool in one place, built by the people who use it. What's in it today, the idea (one place, free, community-run), how to contribute, getting started, testing and credits, with screenshots of the main page that follow GitHub's light or dark setting.</td><td><code>README.md</code>, <code>docs/images/</code></td></tr>
           <tr><th scope="row">npm only</th><td>The project had both <code>package-lock.json</code> and <code>yarn.lock</code>, so a host could install with Yarn and get other versions. <code>yarn.lock</code> was removed from git and is now in <code>.gitignore</code>; npm is the package manager.</td><td><code>.gitignore</code></td></tr>

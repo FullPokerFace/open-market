@@ -18,7 +18,7 @@ export function CalendarToolbar({ view, scope, onScopeChange, onToday }) {
   const currentLabel = view.isCurrent ? `Jump to today, ${view.todayLabel}` : `Go to ${view.currentName}`;
 
   return (
-    <div className="flex flex-wrap gap-2 font-mono text-[11px] font-bold tracking-[0.12em] uppercase">
+    <div className="flex flex-wrap font-mono text-[11px] font-bold tracking-[0.12em] uppercase">
       <div className="flex">
         <Link href={view.prevHref} aria-label={`Previous ${view.unit}`} className={square}>
           <ChevronLeftIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
