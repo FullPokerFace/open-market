@@ -13,6 +13,7 @@ export const SHIPPED = [
       ["Your own lists", "Name a list, search and add the companies you follow, and see only them on the calendar. Your last list opens next time you visit."],
       ["Biggest names first", "Each day lists its largest companies first; the rest are one click away in \"+N\"."],
       ["Fits your screen", "The whole month fits in one window, with today framed and in view."],
+      ["Company logos", "Logos on the calendar, in search and lists, and next to the name in company details. Switch back to tickers any time."],
     ],
   },
   {
@@ -43,7 +44,7 @@ export const SHIPPED = [
     items: [
       ["Light and dark", "Follows your system setting, or pick one in the header."],
       ["Steady data", "Earnings and market data are saved as they come in, so pages load fast and keep working even when a data source has a hiccup."],
-      ["On your phone", "A menu button, a dropdown for the exchange filter, and the day view top to bottom. The calendar comes first, with the market panel under it."],
+      ["On your phone", "A menu button, a dropdown for the exchange filter, and every view as a day-by-day list with the date pinned as you scroll. Days without earnings fold into one line, and typing never zooms the page. The calendar comes first, with the market panel under it."],
       ["Suggest a feature", "Post an idea from the menu or the roadmap. It's turned into a short card, and an idea that's already there gets your vote instead of a copy."],
       ["Vote on ideas", "Every idea visitors sent, at the top of the roadmap. Vote them up or down, one vote each; the most wanted rise to the top."],
       ["Open source", "The code is on GitHub: anyone can build a feature or fix a bug and send it in."],
@@ -55,11 +56,9 @@ export const SHIPPED = [
 export const UPCOMING = [
   { stage: "next", title: "Market-cap filter", text: "Show only large, mid or small companies." },
   { stage: "next", title: "Shareable company links", text: "Send someone a link that opens straight to a company's results." },
-  { stage: "next", title: "Week and month on phones", text: "A day-by-day list made for small screens." },
   { stage: "planned", title: "US and foreign companies", text: "Filter by where a company is based." },
   { stage: "planned", title: "Edit your lists", text: "Rename a list, change its companies or delete it." },
   { stage: "later", title: "Two years of EPS history", text: "Eight quarters in the surprise chart instead of four." },
-  { stage: "later", title: "Company logos", text: "Logos on the calendar tiles instead of tickers." },
   { stage: "later", title: "Insights", text: "A page for a closer look at earnings season. Details to come." },
 ];
 

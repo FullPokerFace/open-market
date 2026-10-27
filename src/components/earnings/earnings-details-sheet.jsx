@@ -4,6 +4,7 @@ import { ArrowUpRightIcon, StarIcon, XIcon } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { formatEps, formatPercent, formatRevenue } from "@/lib/earnings";
 import { cn } from "@/lib/utils";
+import { CompanyLogo } from "./company-logo";
 import { EpsSurpriseChart } from "./eps-surprise-chart";
 
 const BADGES = ["bg-badge-1", "bg-badge-2", "bg-badge-3", "bg-badge-4", "bg-badge-5"];
@@ -95,7 +96,11 @@ function Details({ earnings: e, details, watched, onToggleWatch }) {
           <span className={cn("px-2 py-0.5 text-white", badgeFor(e.ticker))}>{e.ticker}</span>
           <span className="truncate text-muted-foreground">{details?.profile?.industry}</span>
         </div>
-        <SheetTitle className="display-type mt-1 text-[34px] font-bold">{details?.profile?.name || e.name}</SheetTitle>
+        <div className="mt-1 flex items-center gap-4">
+          {/* Keyed by ticker: the sheet stays mounted between companies, and a missing logo mustn't carry over */}
+          <CompanyLogo key={e.ticker} ticker={e.ticker} className="size-12 shrink-0" />
+          <SheetTitle className="display-type min-w-0 text-[34px] font-bold">{details?.profile?.name || e.name}</SheetTitle>
+        </div>
         <SheetDescription className="text-[15px] text-body">
           {e.reported ? "Reported" : "Reports"} {e.dateLabel}
           {when}.

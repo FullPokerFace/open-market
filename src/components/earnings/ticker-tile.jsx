@@ -1,8 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { logoUrl, useTileDisplay } from "@/lib/tile-display";
 import { cn } from "@/lib/utils";
+import { CompanyLogo } from "./company-logo";
 import { TIMING_ICONS } from "./timing-icons";
 
 // "Reported" = results out but no estimate to grade them against
@@ -21,18 +20,13 @@ export function dayColors(day) {
   return { background: "bg-background", dotBorder: "border-background" };
 }
 
-// Tickers with no logo (or a failed load) this visit, so other tiles and views skip straight to the ticker
-const missingLogos = new Set();
-
+// Shows the company's logo in logos mode, else (or when it has none) the ticker.
 // `showTiming` adds a corner badge for when the company reports (sunrise / sun / moon); the week and day views group by timing instead.
 // The badge and the result dot sit outside the tile's top-right corner so neither covers a logo.
 export function TickerTile({ earnings, dimmed, dotBorder, showTiming = false, onSelect }) {
   const { ticker, name, reported, status, timing, timingLabel } = earnings;
   const label = `${ticker} · ${name} · ${reported ? status : timingLabel ? `Reports ${timingLabel}` : "Upcoming"}`;
   const TimingIcon = showTiming ? TIMING_ICONS[timing] : null;
-  const display = useTileDisplay();
-  const [logoFailed, setLogoFailed] = useState(() => missingLogos.has(ticker));
-  const showLogo = display === "logos" && !logoFailed;
 
   return (
     <button
@@ -46,23 +40,7 @@ export function TickerTile({ earnings, dimmed, dotBorder, showTiming = false, on
         dimmed && "opacity-[0.18]"
       )}
     >
-      {showLogo ? (
-        // Plain img: /api/logo already serves small cached PNGs, so Next's image optimizer would only add cost
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src={logoUrl(ticker)}
-          alt=""
-          loading="lazy"
-          decoding="async"
-          onError={() => {
-            missingLogos.add(ticker);
-            setLogoFailed(true);
-          }}
-          className="size-8 object-contain"
-        />
-      ) : (
-        ticker
-      )}
+      <CompanyLogo ticker={ticker} className="size-8" fallback={ticker} />
       {TimingIcon && (
         // Left of the result dot when there is one, otherwise in the dot's corner
         <span

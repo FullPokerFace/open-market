@@ -1,7 +1,8 @@
 // Server-only: the public feature-suggestion board, one MongoDB document per feature:
 // { title, description, icon, messages: [{ text, createdAt }], up: [voter], down: [voter], score, createdAt, hidden }
 // `messages` holds every visitor's own words, so a duplicate adds to the original instead of making a new card.
-// `voter` is a SHA-256 of the visitor's anonymous cookie id; set `hidden: true` by hand to take a card off the board.
+// `voter` is a SHA-256 of the visitor's anonymous cookie id; set `hidden: true` by hand to take a card off the board,
+// or `doneAt: <date>` once the feature ships: the card is marked Done, moves below the open ideas and takes no more votes.
 import "server-only";
 import { createHash, randomUUID } from "node:crypto";
 import { ObjectId } from "mongodb";
@@ -14,6 +15,7 @@ const BOARD_LIMIT = 300;
 const DUPLICATE_CHECK_LIMIT = 150;
 
 const visible = { hidden: { $ne: true } };
+const open = { doneAt: { $exists: false } };
 
 let indexed = null;
 async function getSuggestions() {
@@ -54,6 +56,7 @@ const cardFields = (voter) => ({
   description: 1,
   icon: 1,
   score: 1,
+  done: { $ifNull: [{ $toBool: "$doneAt" }, false] },
   requests: { $size: "$messages" },
   myVote: voter
     ? { $cond: [{ $in: [voter, "$up"] }, 1, { $cond: [{ $in: [voter, "$down"] }, -1, 0] }] }
@@ -66,11 +69,17 @@ async function findCard(suggestions, _id, voter) {
   return card ?? null;
 }
 
-// The board, most votes first and newest first among equal scores
+// The board: open ideas first, most votes first and newest first among equal scores, then done ones the same way
 export async function listSuggestions(voter) {
   const suggestions = await getSuggestions();
   return suggestions
-    .aggregate([{ $match: visible }, { $sort: { score: -1, createdAt: -1 } }, { $limit: BOARD_LIMIT }, { $project: cardFields(voter) }])
+    .aggregate([
+      { $match: visible },
+      { $set: { isDone: { $ifNull: [{ $toBool: "$doneAt" }, false] } } },
+      { $sort: { isDone: 1, score: -1, createdAt: -1 } },
+      { $limit: BOARD_LIMIT },
+      { $project: cardFields(voter) },
+    ])
     .toArray();
 }
 
@@ -124,9 +133,10 @@ function voteStages(voter, value) {
   ];
 }
 
-// The card after the vote, or null when there's no such card
+// The card after the vote, null when there's no such card, or { done: true } when it's done and takes no votes
 export async function voteSuggestion({ id, voter, value }) {
   const suggestions = await getSuggestions();
-  const { matchedCount } = await suggestions.updateOne({ _id: id, ...visible }, voteStages(voter, value));
-  return matchedCount ? findCard(suggestions, id, voter) : null;
+  const { matchedCount } = await suggestions.updateOne({ _id: id, ...visible, ...open }, voteStages(voter, value));
+  if (matchedCount) return findCard(suggestions, id, voter);
+  return (await suggestions.countDocuments({ _id: id, ...visible }, { limit: 1 })) ? { done: true } : null;
 }

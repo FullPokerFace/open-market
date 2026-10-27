@@ -173,12 +173,15 @@ function tilesAcross(px) {
   return Math.max(1, Math.floor((px + TILE_GAP_PX) / (TILE_PX + TILE_GAP_PX)));
 }
 
-// How many tiles fit one day cell, re-measured as the window resizes.
+// How many tiles fit one day cell, re-measured whenever a cell's tile area changes size.
 // Every cell is the same size; cells showing "No earnings" have less room but no tiles.
-function useTileCapacity(gridRef) {
+// Month and week share this component, so it measures again on every switch back to month (`fit`, `days`):
+// the grid itself can come back the same size, or from being hidden, while its cells don't.
+function useTileCapacity(gridRef, fit, days) {
   const [capacity, setCapacity] = useState(MAX_TILES);
 
   useLayoutEffect(() => {
+    if (!fit) return;
     const grid = gridRef.current;
     const wide = window.matchMedia("(min-width: 48rem)");
     const measure = () => {
@@ -190,10 +193,12 @@ function useTileCapacity(gridRef) {
       setCapacity(Math.min(MAX_TILES, tilesAcross(boxes[0].clientWidth) * tilesAcross(height)));
     };
     measure();
+    // The tile areas are sized by their cells (contain:size), not by the tiles, so this can't loop
     const observer = new ResizeObserver(measure);
     observer.observe(grid);
+    grid.querySelectorAll("[data-tiles]").forEach((box) => observer.observe(box));
     return () => observer.disconnect();
-  }, [gridRef]);
+  }, [gridRef, fit, days]);
 
   return capacity;
 }
@@ -202,7 +207,7 @@ function useTileCapacity(gridRef) {
 // with a "+N" tile; off, cells show every company and scroll.
 export function MonthGrid({ days, fit = true, filtering, isMatch, onSelect, onShowMore }) {
   const gridRef = useRef(null);
-  const measured = useTileCapacity(gridRef);
+  const measured = useTileCapacity(gridRef, fit, days);
   const capacity = fit ? measured : null;
   const minRow = fit ? MIN_ROW_PX : WEEK_ROW_PX;
   const weeks = days.length / 5;

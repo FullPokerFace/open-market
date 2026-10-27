@@ -21,6 +21,7 @@ export async function POST(request, { params }) {
   try {
     const suggestion = await voteSuggestion({ id, value, voter: voterFrom(await cookies(), { create: true }) });
     if (!suggestion) return reply({ error: "That suggestion is gone." }, 404);
+    if (suggestion.done) return reply({ error: "That one's already built, so it takes no more votes." }, 409);
     return reply({ suggestion });
   } catch (error) {
     console.error(error);

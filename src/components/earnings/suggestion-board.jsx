@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { ChevronDownIcon, ChevronUpIcon } from "lucide-react";
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "lucide-react";
 import { DEFAULT_SUGGESTION_ICON, SUGGESTION_ICONS } from "@/lib/suggestion-icons";
 import { cn } from "@/lib/utils";
 
@@ -66,6 +66,12 @@ function useSuggestions() {
   return { suggestions, state, error, vote };
 }
 
+// "12 ideas · 2 done · by votes"
+function boardCount(suggestions) {
+  const done = suggestions.filter((s) => s.done).length;
+  return `${suggestions.length} ${suggestions.length === 1 ? "idea" : "ideas"}${done ? ` · ${done} done` : ""} · by votes`;
+}
+
 // 3 columns by 2 rows on wide screens (fewer columns on narrow ones), scrolling for the rest.
 // `highlightId`: the card the visitor just posted or added to.
 export function SuggestionBoard({ highlightId, className }) {
@@ -77,7 +83,7 @@ export function SuggestionBoard({ highlightId, className }) {
         <span>
           Board / <span className="text-foreground">Most popular user submissions</span>
         </span>
-        <span>{state === "ready" ? `${suggestions.length} ${suggestions.length === 1 ? "idea" : "ideas"} · by votes` : ""}</span>
+        <span>{state === "ready" ? boardCount(suggestions) : ""}</span>
       </div>
 
       {state === "loading" && <p className="m-0 px-6 py-6 text-[14px] text-muted-foreground">Loading suggestions…</p>}
@@ -100,6 +106,7 @@ export function SuggestionBoard({ highlightId, className }) {
   );
 }
 
+// A done card (the feature shipped) says so and swaps its vote buttons for a check: it takes no more votes
 function SuggestionCard({ card, highlighted, onVote }) {
   const Icon = SUGGESTION_ICONS[card.icon] ?? SUGGESTION_ICONS[DEFAULT_SUGGESTION_ICON];
   return (
@@ -112,17 +119,31 @@ function SuggestionCard({ card, highlighted, onVote }) {
           </span>
         </div>
         <p className="m-0 mt-1.5 line-clamp-3 text-[13px] text-body">{card.description}</p>
-        <span className="eyebrow mt-auto pt-2 text-[10px] text-muted-foreground">
-          {highlighted ? "Yours · " : ""}
-          {card.requests} {card.requests === 1 ? "request" : "requests"}
+        <span className="eyebrow mt-auto flex items-center gap-2 pt-2 text-[10px] text-muted-foreground">
+          {card.done && <span className="chip text-beat">Done</span>}
+          <span>
+            {highlighted ? "Yours · " : ""}
+            {card.requests} {card.requests === 1 ? "request" : "requests"}
+          </span>
         </span>
       </div>
       <div className="flex w-12 shrink-0 flex-col items-center justify-center gap-0.5 border-l">
-        <VoteButton direction={1} card={card} onVote={onVote} />
-        <span className="font-mono text-[13px] font-bold text-foreground" aria-label={`Score ${card.score}`}>
-          {card.score}
-        </span>
-        <VoteButton direction={-1} card={card} onVote={onVote} />
+        {card.done ? (
+          <>
+            <CheckIcon className="size-4.5 text-beat" strokeWidth={2.4} aria-label="Done" />
+            <span className="font-mono text-[13px] font-bold text-muted-foreground" aria-label={`Final score ${card.score}`}>
+              {card.score}
+            </span>
+          </>
+        ) : (
+          <>
+            <VoteButton direction={1} card={card} onVote={onVote} />
+            <span className="font-mono text-[13px] font-bold text-foreground" aria-label={`Score ${card.score}`}>
+              {card.score}
+            </span>
+            <VoteButton direction={-1} card={card} onVote={onVote} />
+          </>
+        )}
       </div>
     </li>
   );

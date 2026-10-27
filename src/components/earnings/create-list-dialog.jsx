@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { LIST_NAME_MAX } from "@/lib/ticker-lists";
+import { TickerLabel } from "./company-logo";
 import { useCompanySearch } from "./use-company-search";
 
 const actionButton = "h-10 px-4.5 font-mono text-[11px] font-bold tracking-[0.12em] uppercase";
@@ -67,9 +68,9 @@ export function CreateListDialog({ open, onOpenChange, month, onCreate }) {
                   type="button"
                   onClick={() => add(e)}
                   disabled={inList}
-                  className="grid w-full cursor-pointer grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5 text-left hover:bg-tag focus-visible:bg-tag focus-visible:outline-none disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent"
+                  className="grid w-full cursor-pointer grid-cols-[88px_minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5 text-left hover:bg-tag focus-visible:bg-tag focus-visible:outline-none disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent"
                 >
-                  <span className="font-mono text-xs font-bold text-strong">{e.ticker}</span>
+                  <TickerLabel ticker={e.ticker} />
                   <span className="truncate text-body">{e.name}</span>
                   <span className="chip text-muted-foreground">
                     {inList ? (
@@ -166,9 +167,9 @@ export function CreateListDialog({ open, onOpenChange, month, onCreate }) {
                 {companies.map((c) => (
                   <li
                     key={c.ticker}
-                    className="grid grid-cols-[64px_minmax(0,1fr)_auto] items-center gap-3 border-b pl-4 last:border-b-0"
+                    className="grid grid-cols-[88px_minmax(0,1fr)_auto] items-center gap-3 border-b pl-4 last:border-b-0"
                   >
-                    <span className="font-mono text-xs font-bold text-strong">{c.ticker}</span>
+                    <TickerLabel ticker={c.ticker} />
                     <span className="truncate text-body">{c.name}</span>
                     <button
                       type="button"

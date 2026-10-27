@@ -120,21 +120,21 @@
 
   <header class="title">
     <h1>Open Market <span>features</span>.</h1>
-    <p class="lead"><strong>Open Market is a free, open-source earnings calendar whose features are created and maintained by its community. The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, your own ticker lists (remembered between visits), and a "Suggest a feature" board where visitors post ideas and vote on them.</strong> The header, filters, market panel and day view now work on phones. Everything fetched from Finnhub, SEC, CNN and Kalshi is now saved in MongoDB, so it survives deploys and serverless hosting, and page views are counted with Vercel Analytics. Feature suggestions are now a public board at the top of the Roadmap: OpenAI moderates each idea, writes its card and merges repeats into the idea they match, and visitors vote ideas up or down so the most wanted rise to the top. A Playwright end-to-end suite covers the main flows and runs against localhost or the live site without writing any data. Next up: a market-cap filter, then shareable company links and the week and month views on phones.</p>
+    <p class="lead"><strong>Open Market is a free, open-source earnings calendar whose features are created and maintained by its community. The calendar runs on live Finnhub data in day, week and month views that fit the screen, with each company marked by when it reports (before the open, during the day, after the close), a Most popular (Fortune 100) and exchange filter, a details panel, a "+N" companies modal, search across this month and the next two, a saved watchlist, your own ticker lists (remembered between visits), and a "Suggest a feature" board where visitors post ideas and vote on them.</strong> Phones get their own layout: the week and month views become a day-by-day list with sticky dates and empty days folded into one line, and fields are 16px so iOS doesn't zoom. Tiles, search, lists and the details panel now show company logos (switchable back to tickers), cached in MongoDB for 30 days. Everything fetched from Finnhub, SEC, CNN and Kalshi is now saved in MongoDB, so it survives deploys and serverless hosting, and page views are counted with Vercel Analytics. Feature suggestions are now a public board at the top of the Roadmap: OpenAI moderates each idea, writes its card and merges repeats into the idea they match, and visitors vote ideas up or down so the most wanted rise to the top. A Playwright end-to-end suite covers the main flows and runs against localhost or the live site without writing any data. Next up: a market-cap filter, then shareable company links.</p>
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>78 features tracked</span></div>
-    <div class="progress-head"><b>82%</b><span>64 of 78 features done · 14 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 64, high priority 1, medium 4, before launch 3, low 6">
-      <span class="c-done" style="flex: 64"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 4"></span><span class="c-launch" style="flex: 3"></span><span class="c-low" style="flex: 6"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>87 features tracked</span></div>
+    <div class="progress-head"><b>85%</b><span>74 of 87 features done · 13 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 74, high priority 1, medium 3, before launch 4, low 5">
+      <span class="c-done" style="flex: 74"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 3"></span><span class="c-launch" style="flex: 4"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>64</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>74</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
-      <div class="stat c-med"><b>4</b><span class="hud"><i class="sw"></i>Medium</span></div>
-      <div class="stat c-launch"><b>3</b><span class="hud"><i class="sw"></i>Before launch</span></div>
-      <div class="stat c-low"><b>6</b><span class="hud"><i class="sw"></i>Low</span></div>
+      <div class="stat c-med"><b>3</b><span class="hud"><i class="sw"></i>Medium</span></div>
+      <div class="stat c-launch"><b>4</b><span class="hud"><i class="sw"></i>Before launch</span></div>
+      <div class="stat c-low"><b>5</b><span class="hud"><i class="sw"></i>Low</span></div>
     </div>
     <div class="glance">
       <div class="c-done">
@@ -142,22 +142,22 @@
         <ul>
           <li>Foundation <b>15</b></li>
           <li>Live data <b>10</b></li>
-          <li>Calendar <b>17</b></li>
+          <li>Calendar <b>18</b></li>
           <li>Search &amp; watchlist <b>4</b></li>
           <li>Details panel <b>4</b></li>
           <li>Header &amp; feedback <b>7</b></li>
           <li>Ticker lists <b>3</b></li>
-          <li>Phone layout <b>4</b></li>
+          <li>Phone layout <b>8</b></li>
+          <li>Company logos <b>5</b></li>
         </ul>
       </div>
       <div>
         <h4 class="hud">To do by area</h4>
         <ul>
           <li>Filters <span class="dots"><i class="sw c-high"></i><i class="sw c-med"></i><i class="sw c-med"></i></span></li>
-          <li>Calendar &amp; layout <span class="dots"><i class="sw c-med"></i></span></li>
           <li>Details panel <span class="dots"><i class="sw c-med"></i><i class="sw c-low"></i></span></li>
-          <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
-          <li>Polish &amp; docs <span class="dots"><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i></span></li>
+          <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
+          <li>Polish &amp; docs <span class="dots"><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i></span></li>
         </ul>
       </div>
       <div>
@@ -165,14 +165,14 @@
         <ol>
           <li><span class="n">1</span> Market-cap filter</li>
           <li><span class="n">2</span> Shareable company link</li>
-          <li><span class="n">3</span> Phone layout: week &amp; month</li>
+          <li><span class="n">3</span> Check logo.dev terms</li>
         </ol>
       </div>
     </div>
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>64 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>74 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">15</span></div>
     <div class="scroll">
@@ -221,7 +221,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Calendar</h3><span class="hud">17</span></div>
+    <div class="sub"><h3>Calendar</h3><span class="hud">18</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -233,18 +233,19 @@
           <tr><th scope="row">Day / Week / Month views</th><td>Three buttons in the controls bar (Day replaced the disabled List button). Saved in the URL: <code>?view=week&amp;date=2026-10-28</code>, <code>?view=day&amp;date=…</code>; month stays the default with <code>?month=</code>. Arrows step by the view (a week, a weekday skipping weekends, a month); the middle button reads "Oct 26 – 30" or "Mon Oct 26" and goes back to this week / today. Switching keeps your place (today, or the first weekday of the month you were on). Weekend dates move to the next Monday. Title and filter counts follow the view. Week and day reuse the month's saved data, so a week spanning two months still loads from one month.</td><td><code>calendar-toolbar.jsx</code>, <code>buildCalendarView()</code> in <code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Week view</th><td>One Monday–Friday row filling the screen, every company showing (no 16-tile cap or "+N"). Each day splits into Before open · During / TBD · After close, each a third of the height or 200px, whichever is taller, scrolling on its own; rows line up across the week. Sections have a <code>Title</code> heading, report-time icon, count, colored edge and tint; empty ones stay as a dimmed "—" row. On today, the section happening now gets a pulsing "NOW · 14:52" (New York time).</td><td><code>month-grid.jsx</code>, <code>timing-sections.jsx</code></td></tr>
           <tr><th scope="row">Day view</th><td>One day across the full width as three columns in trading-day order: Before open (4:00–9:30 ET), During / TBD (9:30–16:00), After close (16:00–20:00), each with a large title, hours and count, scrolling on its own. A bar across the top fills as the day goes: past days full, future days empty, today up to now with a marker and "NOW" badge.</td><td><code>day-view.jsx</code>, <code>timing-sections.jsx</code></td></tr>
-          <tr><th scope="row">Report-time icons</th><td>Solid icons drawn for this app (crisp at 10px), all in one color (blue, set in one constant): sun on the horizon = before open, full sun = during hours, crescent moon = after close. In a month tile's top-left corner (status dot stays top-right), in the legend, and on the week / day sections. From Finnhub's <code>hour</code> field; about 80% of upcoming reports have one, the rest show no icon.</td><td><code>timing-icons.jsx</code>, <code>ticker-tile.jsx</code></td></tr>
+          <tr><th scope="row">Report-time icons</th><td>Solid icons drawn for this app (crisp at 10px), all in one color (blue, set in one constant): sun on the horizon = before open, full sun = during hours, crescent moon = after close. On month tiles as a small square badge outside the top-right corner, left of the status dot (or in the dot's place before results), so it never covers a logo; also in the legend and on the week / day sections. From Finnhub's <code>hour</code> field; about 80% of upcoming reports have one, the rest show no icon.</td><td><code>timing-icons.jsx</code>, <code>ticker-tile.jsx</code></td></tr>
           <tr><th scope="row">Today</th><td>Today's cell has a 2px frame and a "TODAY" label, and the page scrolls to it when it opens.</td><td><code>month-grid.jsx</code>, <code>earnings-calendar.jsx</code></td></tr>
-          <tr><th scope="row">Ticker tiles</th><td>As many per day as fit the cell (up to 16), measured as the window resizes; largest companies first (by revenue estimate) and the rest go in "+N". Colored dot shows the result once reported.</td><td><code>month-grid.jsx</code></td></tr>
+          <tr><th scope="row">Ticker tiles</th><td>As many per day as fit the cell (up to 16), measured whenever a cell's tile area changes size, including on every switch back from the week view (it used to keep a stale count, so tiles overflowed with no "+N"); largest companies first (by revenue estimate) and the rest go in "+N". Colored dot shows the result once reported. Shows the company logo or the ticker (see Company logos).</td><td><code>month-grid.jsx</code></td></tr>
           <tr><th scope="row">"+N" companies modal</th><td>Lists a day's hidden companies, largest first, with result or timing: the tiles that didn't fit on this screen, then the ones the server held back (loaded on open from the saved month data). Picking one opens its details. While searching or filtering by watchlist, matches move to the top.</td><td><code>more-companies-dialog.jsx</code></td></tr>
           <tr><th scope="row">Market sentiment + key releases</th><td>Replaces the old "01 / Earnings calendar" bar. Left: CNN's Fear &amp; Greed Index as a five-band meter (extreme fear → extreme greed) with score, rating and change since the last close; read from the unofficial JSON behind CNN's page with browser-like headers, refreshed every 5 minutes. Right: the next FOMC decision (odds of cut / hold / hike as a stacked bar), CPI, jobs report (payrolls + unemployment) and GDP, each with date, time (ET), days until, and the level traders expect, from Kalshi's free public market data (no key), refreshed every 5 minutes. Either half says "unavailable" on failure; the calendar is unaffected.</td><td><code>market-sentiment.jsx</code>, <code>src/lib/sentiment.js</code>, <code>src/lib/kalshi.js</code></td></tr>
           <tr><th scope="row">Release-day pulse</th><td>On the day a key release comes out, its card gets a blue frame with a ring that pulses outward and fades, on repeat, plus a pinging blue dot next to "Today". With reduced motion turned on, the frame stays still.</td><td><code>market-sentiment.jsx</code>, <code>animate-release-pulse</code> in <code>globals.css</code></td></tr>
           <tr><th scope="row">Month navigation</th><td>Previous / next arrows load the month before or after; the middle button shows the month on screen (e.g. November 2026) and goes back to the current month (or scrolls to today when already on it). Saved in the URL (<code>?month=2026-11</code>).</td><td><code>calendar-toolbar.jsx</code></td></tr>
           <tr><th scope="row">Controls bar</th><td>Month navigation and the company filter share one bar under the "October earnings." title, which stays where it was.</td><td><code>exchange-filter.jsx</code>, <code>calendar-toolbar.jsx</code></td></tr>
-          <tr><th scope="row">Company filter</th><td>"Show" and one dropdown at every screen size (it replaced the row of buttons): Most popular (default) · NYSE · Nasdaq · All, each with its count, then "My lists". NYSE American was removed as a button (its stocks still show under All). Saved in the URL; old <code>?exchange=amex</code> links open Most popular. Ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/earnings.js</code></td></tr>
+          <tr><th scope="row">Company filter</th><td>One dropdown at every screen size (it replaced the row of buttons; the "Show" label was dropped as the selected value explains itself): Most popular (default) · NYSE · Nasdaq · All, each with its count, then "My lists". NYSE American was removed as a button (its stocks still show under All). Saved in the URL; old <code>?exchange=amex</code> links open Most popular. Ranking and totals follow the filter.</td><td><code>exchange-filter.jsx</code>, <code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Most popular list</th><td>The Fortune 100 (2026): US exchange-listed stocks among the 100 largest companies by revenue, 90 tickers, one per company (GOOGL, BRK.B). Kept by hand.</td><td><code>src/lib/popular.js</code></td></tr>
           <tr><th scope="row">OTC and funds excluded</th><td>OTC stocks, closed-end funds and tickers with no known exchange are left out (October: 1,627 → 1,350).</td><td><code>getListedSymbols()</code></td></tr>
           <tr><th scope="row">Legend</th><td>Beat · Mixed · Miss · No mark (upcoming) · Before open · During hours · After close (with their icons), and the data source.</td><td><code>status-legend.jsx</code></td></tr>
+          <tr><th scope="row">Glide to today</th><td>The page opens at the top, so the title and filters are seen first, then after one second scrolls smoothly to today's cell. Called off if the visitor scrolls, taps, clicks or types in that second; instant for people who prefer reduced motion (the "today" button too). Does nothing when the view shown doesn't include today.</td><td><code>earnings-calendar.jsx</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -311,7 +312,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Phone layout</h3><span class="hud">4</span></div>
+    <div class="sub"><h3>Phone layout</h3><span class="hud">8</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -320,8 +321,28 @@
         <tbody>
           <tr><th scope="row">Burger menu</th><td>Below 768px (<code>md</code>) the header is one row: logo, search (fills the space left), light / dark toggle, burger. The burger opens a right-hand sheet styled like the feedback dialog (MENU label, square close box) with Calendar, Roadmap and Suggest a feature; picking one closes it. The Suggest a feature dialog now lives in the header so it survives the menu closing. On phones the search results span the header's full width instead of hanging off the search box. Desktop unchanged.</td><td><code>site-header.jsx</code></td></tr>
           <tr><th scope="row">Market panel below the calendar</th><td>Below 768px, Market sentiment and Key releases move under the calendar and legend (CSS <code>order</code>, top border instead of bottom), so the calendar comes first. Desktop keeps them on top.</td><td><code>market-sentiment.jsx</code></td></tr>
-          <tr><th scope="row">Exchange dropdown</th><td>A native select after "SHOW" (same 40px bordered mono style, chevron), each option "NYSE · 42", so phones get their own picker; choosing one goes to its filtered calendar without scrolling. Started as the phone version; now used at every size (see Calendar › Company filter).</td><td><code>exchange-filter.jsx</code></td></tr>
+          <tr><th scope="row">Exchange dropdown</th><td>A native select (same 40px bordered mono style, chevron), each option "NYSE · 42", so phones get their own picker; choosing one goes to its filtered calendar without scrolling. Started as the phone version; now used at every size (see Calendar › Company filter).</td><td><code>exchange-filter.jsx</code></td></tr>
           <tr><th scope="row">Stacked day view</th><td>Below 768px the day view's Before open / During / After close sections stack top to bottom with rules between them. Each list grows to fit and the page scrolls (no scroll box inside the page); from 768px they're three columns that scroll on their own.</td><td><code>day-view.jsx</code></td></tr>
+          <tr><th scope="row">Day-by-day list (week &amp; month)</th><td>Below 768px the week and month grids (which were 1100px wide and scrolled sideways) become one full-width row per day, scrolling with the page. Each row starts with its weekday badge (no column headers) and its date line sticks to the top of the screen while that day's tiles scroll by. Month shows only its own days (not the neighbouring months' filler days) and every tile the server sent, with "+N" past 16; week's report-time sections are only as tall as their tiles. Pure CSS breakpoints: same URLs, same server data, desktop unchanged.</td><td><code>month-grid.jsx</code>, <code>timing-sections.jsx</code></td></tr>
+          <tr><th scope="row">Empty days folded</th><td>In the phone list, back-to-back days without earnings share one muted line ("MON OCT 05 – WED OCT 07 · NO EARNINGS"), across weekends too. Today always keeps its own row, so "jump to today" has somewhere to land. Hidden from 768px, where the grid keeps every cell.</td><td><code>emptyRuns()</code> in <code>month-grid.jsx</code></td></tr>
+          <tr><th scope="row">Icon-only Create list</th><td>Below 640px (<code>sm</code>) "+ Create list" is a 40px square with just the plus; screen readers still hear "Create list".</td><td><code>exchange-filter.jsx</code></td></tr>
+          <tr><th scope="row">No zoom when typing</th><td>iOS Safari zooms into any field under 16px when it's focused. On touch screens (<code>pointer: coarse</code>) every input, textarea and select is 16px; mouse screens keep each field's own size. One unlayered rule, so it covers new fields too. Chosen over <code>maximum-scale=1</code>, which blocks pinch-zoom on Android.</td><td><code>src/app/globals.css</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Company logos</h3><span class="hud">5</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Logos on tiles</th><td>Calendar tiles show the company's logo (32px) instead of its ticker. A company logo.dev has no logo for shows its ticker, and is remembered for the visit so other views skip straight to it. The ticker stays in the tile's hover text and screen-reader label.</td><td><code>company-logo.jsx</code>, <code>ticker-tile.jsx</code></td></tr>
+          <tr><th scope="row">Logos / tickers toggle</th><td>Two square buttons after "Create list" (logos first, the default), drawn like the view buttons but real radio inputs, so arrow keys work. Saved in <code>localStorage</code> and synced across tabs. Hidden, and tiles stay on tickers, when the server has no <code>LOGO_DEV_TOKEN</code>; the browser only learns a true / false <code>LOGOS_ENABLED</code> flag set in <code>next.config.mjs</code>.</td><td><code>src/lib/tile-display.js</code>, <code>TileDisplayToggle</code> in <code>calendar-toolbar.jsx</code></td></tr>
+          <tr><th scope="row">Logo cache</th><td><code>/api/logo/[symbol]</code> serves logos from the <code>companyLogos</code> collection (cached a day in browsers, a week on the CDN). One not saved yet answers with a redirect to logo.dev's image (not cached), so nobody waits, and is fetched and saved after the response (<code>after()</code>). Saved for 30 days; an older copy is still served while it's replaced. "No logo" is saved too (a cached 404). Background fetches go out one at a time, 150ms apart, and pause on a 429 before retrying (logo.dev rate-limits a cold cache).</td><td><code>src/lib/logos.js</code>, <code>src/app/api/logo/[symbol]/route.js</code></td></tr>
+          <tr><th scope="row">Logos in lists and details</th><td>A 20px logo before the ticker in header search results, the "+N" modal and both lists of the Create list dialog (an empty slot when there's none, so tickers line up), and a 48px logo beside the name in the details panel. Same toggle as the tiles.</td><td><code>TickerLabel</code> in <code>company-logo.jsx</code>, <code>company-row.jsx</code>, <code>create-list-dialog.jsx</code>, <code>earnings-details-sheet.jsx</code></td></tr>
+          <tr><th scope="row">Report-time badge</th><td>The before open / during / after close icon left the tile for a square badge outside its top-right corner, next to the result dot, so neither covers a logo (see Calendar › Report-time icons).</td><td><code>ticker-tile.jsx</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -329,7 +350,7 @@
   </section>
 
   <section class="c-med">
-    <div class="bar hud"><span>02 / <b>To do</b></span><span>14 items · priority is a suggestion</span></div>
+    <div class="bar hud"><span>02 / <b>To do</b></span><span>13 items · priority is a suggestion</span></div>
     <div class="section-title"><h2>What's <span>next</span>.</h2><p>Grouped by area. Priority: <span class="tag c-high">High</span> <span class="tag c-med">Medium</span> <span class="tag c-launch">Before launch</span> <span class="tag c-low">Low</span></p></div>
     <div class="sub"><h3>Filters</h3><span class="hud">3</span></div>
     <div class="scroll">
@@ -342,17 +363,6 @@
           <tr><th scope="row">Region filter (US / Foreign)</th><td>Free option: split US-listed companies by home country using profile lookups, alongside the market-cap script. Real Europe / Worldwide calendars need Finnhub premium (price not checked) or another provider.</td><td><span class="tag c-med">Medium</span></td></tr>
           <tr><th scope="row">Edit and delete lists</th><td>Rename a ticker list, add or remove companies, and delete it. Today a list can only be created. Companies are found through search, so only ones reporting this month or the next two can be added; a ticker lookup that doesn't need a report date would lift that.</td><td><span class="tag c-med">Medium</span></td></tr>
         </tbody>
-      </table>
-    </div>
-
-    <div class="sub"><h3>Calendar &amp; layout</h3><span class="hud">1</span></div>
-    <div class="scroll">
-      <table>
-        <thead class="hud">
-          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Priority</th></tr>
-        </thead>
-        <tbody>
-          <tr><th scope="row">Phone layout: week &amp; month</th><td>The header, exchange filter, market panel and day view are done (see Done › Phone layout). Left: below 768px, a day-by-day list instead of the week and month grids; check the details panel goes full-screen (DESIGN.md).</td><td><span class="tag c-med">Medium</span></td></tr>        </tbody>
       </table>
     </div>
 
@@ -369,7 +379,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Before launch</h3><span class="hud">3</span></div>
+    <div class="sub"><h3>Before launch</h3><span class="hud">4</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -377,13 +387,14 @@
         </thead>
         <tbody>
           <tr><th scope="row">Check Finnhub license</th><td>Free plan is for personal use; confirm the terms or upgrade before making the site public.</td><td><span class="tag c-launch">Before launch</span></td></tr>
-          <tr><th scope="row">Vercel + Atlas setup</th><td>Add <code>MONGO_DB_USER</code>, <code>MONGO_DB_PASSWORD</code> and <code>OPEN_AI_KEY</code> (plus <code>GMAIL_SENDER_ADDRESS</code> and <code>GMAIL_APP_PASSWORD</code> for suggestion emails) to the Vercel project (Production, Preview and Development: <code>next build</code> also loads Fear &amp; Greed, key releases and the company listing, for reasons not yet looked into), then redeploy. In Atlas, allow access from anywhere (<code>0.0.0.0/0</code>), since Vercel has no fixed IPs on the free plan, and give the database user only readWrite on <code>earnings-report</code> with a long random password. Turn on Web Analytics in the Vercel dashboard.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+          <tr><th scope="row">Check logo.dev terms</th><td>Logos are saved in MongoDB for 30 days (see Done › Logo cache): confirm logo.dev allows storing them, and whether the free plan needs an attribution link (it would sit beside "Data · Finnhub" in the legend). <code>LOGO_DEV_TOKEN</code> reaches browsers in redirects, so it must be the publishable <code>pk_</code> key.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+          <tr><th scope="row">Vercel + Atlas setup</th><td>Add <code>MONGO_DB_USER</code>, <code>MONGO_DB_PASSWORD</code>, <code>OPEN_AI_KEY</code> and <code>LOGO_DEV_TOKEN</code> (needed at build time too, or the logos toggle stays hidden) (plus <code>GMAIL_SENDER_ADDRESS</code> and <code>GMAIL_APP_PASSWORD</code> for suggestion emails) to the Vercel project (Production, Preview and Development: <code>next build</code> also loads Fear &amp; Greed, key releases and the company listing, for reasons not yet looked into), then redeploy. In Atlas, allow access from anywhere (<code>0.0.0.0/0</code>), since Vercel has no fixed IPs on the free plan, and give the database user only readWrite on <code>earnings-report</code> with a long random password. Turn on Web Analytics in the Vercel dashboard.</td><td><span class="tag c-launch">Before launch</span></td></tr>
           <tr><th scope="row">Scheduled Finnhub sync</th><td>Storage is done (see Done › MongoDB storage), but pages still fetch from the source when a saved copy is stale, so the visitor who hits it waits. Next: a scheduled job (Vercel Cron) refreshes the current week every 15–30 min in market hours and after the close and other weeks daily, so pages only read the database and Finnhub calls stay fixed whatever the traffic. Storing Finnhub data for a public site depends on the license check above.</td><td><span class="tag c-launch">Before launch</span></td></tr>
         </tbody>
       </table>
     </div>
 
-    <div class="sub"><h3>Polish &amp; docs</h3><span class="hud">5</span></div>
+    <div class="sub"><h3>Polish &amp; docs</h3><span class="hud">4</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -391,7 +402,6 @@
         </thead>
         <tbody>
           <tr><th scope="row">Better company names</th><td>Tidied SEC names miss some acronyms ("Aar", "Idt", "Fedex"). Use Finnhub profile names once the market-cap script has them.</td><td><span class="tag c-low">Low</span></td></tr>
-          <tr><th scope="row">Company logos on tiles</th><td>Swap ticker text for the logo in the same tile (DESIGN.md "later"). Finnhub profiles include a logo URL.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Insights page</th><td>The header's "Insights" link was removed because it led nowhere; add it back to the menu once there's content.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Companies first fill</th><td>On an empty database the first daily listing write (~13,000 documents) is visible while it runs, so pages briefly show fewer companies and filter counts. Fix with a "listing finished" marker that lookups wait for. Only matters on a new database or after dropping <code>companies</code>.</td><td><span class="tag c-low">Low</span></td></tr>
           <tr><th scope="row">Update DESIGN.md</th><td>Still says a 1200px frame and 8 tiles per cell; the app now uses 1440px and 16.</td><td><span class="tag c-low">Low</span></td></tr>
