@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Earnings Notifications Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f1ee; --tag: #e9e8e4; --tile: #ffffff;
+    --ink: #101014; --strong: #000000;
+    --body: rgba(16,16,20,.72); --muted: rgba(16,16,20,.6);
+    --line: rgba(16,16,20,.16); --line-strong: rgba(16,16,20,.4);
+    --blue: #1a5bc4; --beat: #1d7a4c; --mixed: #8f5a00; --miss: #b83a24; --purple: #6a3fd0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0b0c; --tag: #18181b; --tile: #141417;
+      --ink: #f2f1ee; --strong: #ffffff;
+      --body: rgba(242,241,238,.75); --muted: rgba(242,241,238,.6);
+      --line: rgba(242,241,238,.16); --line-strong: rgba(242,241,238,.4);
+      --blue: #6aa0ff; --beat: #2fd39c; --mixed: #ffb347; --miss: #ff7a63; --purple: #b18cff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  main { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  .hud {
+    font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 24px; border-bottom: 1px solid var(--line); }
+  .bar b { color: var(--ink); font-weight: 500; }
+  header.title { padding: 36px 24px 28px; border-bottom: 1px solid var(--line); }
+  h1 {
+    margin: 0 0 16px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  h1 span { color: var(--blue); }
+  .lead { max-width: 760px; margin: 0; color: var(--body); font-size: 17px; }
+  .lead strong { color: var(--ink); }
+  section { border-bottom: 1px solid var(--line); }
+  code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; background: var(--tag); border: 1px solid var(--line); padding: 0 4px; }
+  .scroll { overflow-x: auto; border-top: 1px solid var(--line); }
+  table { width: 100%; min-width: 860px; border-collapse: collapse; table-layout: fixed; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+  th:last-child, td:last-child { border-right: 0; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  thead th { background: var(--tag); }
+  tbody th { font-weight: 600; color: var(--strong); }
+  td { color: var(--body); }
+  .sub { display: flex; align-items: baseline; gap: 10px; padding: 24px 24px 12px; border-top: 1px solid var(--line); }
+  .section-title + .sub { border-top: 0; }
+  .sub h3 { margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: -.03em; color: var(--strong); }
+  .tag {
+    display: inline-block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--line); background: var(--tag); padding: 1px 6px; white-space: nowrap;
+  }
+  /* Color code: blue = you listed it, purple = added (missed), amber = open decision, red = hard limit, grey = later */
+  .c-you { --c: var(--blue); } .c-add { --c: var(--purple); } .c-open { --c: var(--mixed); }
+  .c-limit { --c: var(--miss); } .c-later { --c: var(--muted); } .c-done { --c: var(--beat); }
+  .tag.c-you, .tag.c-add, .tag.c-open, .tag.c-limit { background: var(--c); border-color: var(--c); color: var(--bg); font-weight: 700; }
+  .tag.c-later { color: var(--muted); }
+  .sw { display: inline-block; width: 8px; height: 8px; background: var(--c); flex: none; }
+
+  .section-title { padding: 28px 24px 4px; }
+  .section-title h2 {
+    margin: 0 0 6px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(30px, 4.5vw, 40px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  .section-title h2 span { color: var(--c); }
+  .section-title p { margin: 0 0 20px; color: var(--body); }
+  .sub h3::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 10px; background: var(--c); vertical-align: 2px; }
+  .sub .hud { color: var(--c); font-weight: 700; }
+
+  .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .stat { padding: 16px 24px 18px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: 0; }
+  .stat b {
+    display: block; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 40px; line-height: 1.05;
+    letter-spacing: -.04em; color: var(--c);
+  }
+  .stat .hud { display: flex; align-items: center; gap: 6px; }
+  .glance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .glance > div { padding: 18px 24px 22px; border-right: 1px solid var(--line); }
+  .glance > div:last-child { border-right: 0; }
+  .glance h4 { margin: 0 0 10px; }
+  .glance ul, .glance ol { margin: 0; padding: 0; list-style: none; }
+  .glance li { display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line); color: var(--body); }
+  .glance li:last-child { border-bottom: 0; }
+  .glance ol .n { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 700; color: var(--bg); background: var(--c); padding: 1px 6px; }
+  .glance p { margin: 0; color: var(--body); }
+  @media (max-width: 760px) {
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stat { border-bottom: 1px solid var(--line); }
+    .glance { grid-template-columns: 1fr; }
+    .glance > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+  .callout { margin: 0 24px 24px; padding: 14px 16px; border: 1px solid var(--c); border-left-width: 4px; color: var(--body); }
+  .callout b { color: var(--ink); }
+  pre { margin: 0; padding: 16px 24px; overflow-x: auto; border-top: 1px solid var(--line); background: var(--tile); font: 12px/1.6 'Geist Mono', ui-monospace, monospace; color: var(--ink); }
+  footer { padding: 14px 24px 18px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar hud"><span>Docs / <b>Earnings notifications</b></span><span>Planned Oct 27, 2026 · not started</span></div>
+
+  <header class="title">
+    <h1>Earnings <span>notifications</span>.</h1>
+    <p class="lead"><strong>Signed-in visitors pick the companies they follow and get an email from <code>notifications@&lt;domain&gt;</code> each morning and evening when one of them reports.</strong> Mail goes through Resend on a sending subdomain, so the Zoho inbox on the main domain keeps working. Sign-in is a magic link sent through the same Resend setup, so there are no passwords. Follows are stored in MongoDB next to the user, because watchlists today live only in the browser (<code>ticker-lists.js</code>, localStorage) and a cron job can't read them. Two daily Vercel Cron jobs build one digest email per user, never one email per ticker, and log each one so a retry never sends twice.</p>
+  </header>
+
+  <section class="c-you">
+    <div class="bar hud"><span>01 / <b>At a glance</b></span><span>6 phases · 22 steps</span></div>
+    <div class="stats">
+      <div class="stat c-you"><b>7</b><span class="hud"><i class="sw"></i>You listed</span></div>
+      <div class="stat c-add"><b>12</b><span class="hud"><i class="sw"></i>Added</span></div>
+      <div class="stat c-open"><b>5</b><span class="hud"><i class="sw"></i>Open decisions</span></div>
+      <div class="stat c-limit"><b>100</b><span class="hud"><i class="sw"></i>Emails / day free</span></div>
+      <div class="stat c-later"><b>4</b><span class="hud"><i class="sw"></i>Later</span></div>
+    </div>
+    <div class="glance">
+      <div class="c-you">
+        <h4 class="hud">Build order</h4>
+        <ol>
+          <li><span class="n">1</span> Resend + domain DNS</li>
+          <li><span class="n">2</span> Magic-link sign-in</li>
+          <li><span class="n">3</span> Follows stored on the server</li>
+          <li><span class="n">4</span> Bell toggle per ticker</li>
+          <li><span class="n">5</span> Digest email + morning/evening cron</li>
+          <li><span class="n">6</span> Unsubscribe, bounces, launch checks</li>
+        </ol>
+      </div>
+      <div class="c-add">
+        <h4 class="hud">What was missing</h4>
+        <ul>
+          <li>Watchlists are browser-only: merge them on sign-in</li>
+          <li>One-click unsubscribe (Gmail/Yahoo rules)</li>
+          <li>Bounce and complaint handling</li>
+          <li>Send log so nobody gets the same email twice</li>
+          <li>Earnings dates move: tell people about changes</li>
+          <li>Cron times are UTC; ET shifts with daylight saving</li>
+          <li>Protecting the cron route and sign-in from abuse</li>
+        </ul>
+      </div>
+      <div class="c-limit">
+        <h4 class="hud">The real constraint</h4>
+        <p>Resend's free plan allows <b>100 emails a day</b> and 3,000 a month. With two digests a day that's about <b>50 active users</b>, and magic-link emails count too. Send only when a followed company has news, and plan for the $20/mo plan (50k/month) or Amazon SES if usage grows.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-you">
+    <div class="bar hud"><span>02 / <b>Plan</b></span><span>In build order · each phase ships on its own</span></div>
+    <div class="section-title"><h2>The <span>plan</span>.</h2><p>Each step is tagged <span class="tag c-you">You listed</span> or <span class="tag c-add">Added</span>, and <span class="tag c-open">Decide</span> marks a choice to make before that step.</p></div>
+
+    <div class="sub"><h3>1 · Hook up Resend</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Resend account + domain</th><td>Add the domain in Resend (or through the Vercel Marketplace, which sets <code>RESEND_API_KEY</code> for you). Use a sending subdomain such as <code>send.&lt;domain&gt;</code> for the return path. Leave the root MX records pointing to Zoho, so the inbox is untouched.</td><td><span class="tag c-you">You listed</span></td></tr>
+          <tr><th scope="row">DNS: SPF, DKIM, DMARC</th><td>Add Resend's DKIM TXT record and the SPF and MX records on the subdomain. A hostname can hold only one SPF record, so Zoho's root SPF is unaffected. Add <code>_dmarc</code> with <code>p=none</code> first and tighten it later. Gmail and Yahoo reject bulk mail without DMARC.</td><td><span class="tag c-add">Added</span></td></tr>
+          <tr><th scope="row">Swap <code>src/lib/email.js</code> to Resend</th><td>Keep the same <code>sendEmail({ to, subject, text, html, replyTo })</code> signature, so <code>suggestions</code> keeps working, and send through the <code>resend</code> SDK instead of nodemailer and Gmail SMTP. Add <code>headers</code> (for List-Unsubscribe) and <code>idempotencyKey</code> options. <code>emailConfigured()</code> then checks <code>RESEND_API_KEY</code>. Remove <code>nodemailer</code> and the Gmail env vars once nothing uses them.</td><td><span class="tag c-add">Added</span></td></tr>
+          <tr><th scope="row">Sender identity</th><td><code>EMAIL_FROM="Open Market &lt;notifications@&lt;domain&gt;&gt;"</code>. Reply-to goes to a real Zoho address, so replies reach a person.</td><td><span class="tag c-you">You listed</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>2 · Sign in</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Auth library</th><td>Magic-link (email) sign-in, stored in the existing MongoDB. Candidates are <b>Better Auth</b> (magic-link plugin plus MongoDB adapter) and <b>Auth.js</b> (Email provider plus <code>@auth/mongodb-adapter</code>). Before choosing, read <code>node_modules/next/dist/docs/</code> for how Next 16 does middleware and proxy, and check each library's Next 16 support. Google sign-in can be added later as a second button.</td><td><span class="tag c-open">Decide</span></td></tr>
+          <tr><th scope="row">Sign-in UI</th><td>A "Sign in" item in the header: enter an email, then see "Check your inbox". The email uses the same style as <code>suggestion-email.js</code>. Signed in, the header shows the email and offers sign out.</td><td><span class="tag c-you">You listed</span></td></tr>
+          <tr><th scope="row">Abuse protection</th><td>Rate-limit sign-in requests per IP and per email with the existing <code>rate-limit.js</code>, and add a <code>sameOrigin</code> check. Every magic link uses up the 100/day quota, so a bot could otherwise block all notifications for the day.</td><td><span class="tag c-add">Added</span></td></tr>
+          <tr><th scope="row">Privacy + terms</th><td>The site will now store email addresses. Add a short privacy note (what's stored, how to delete it) and a "Delete my account" button that removes the user, their follows and their send log.</td><td><span class="tag c-add">Added</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>3 · Follows on the server</h3><span class="hud">3</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Follows collection</th><td>Add <code>COLLECTIONS.follows</code> in <code>db.js</code> (see section 04). Store one document per user listing their followed symbols, with an index on <code>symbols</code> so the cron can ask "who follows AAPL" quickly.</td><td><span class="tag c-add">Added</span></td></tr>
+          <tr><th scope="row">Watchlists vs. notifications</th><td>Watchlists stay in localStorage, and notifications are a separate per-ticker switch on the server. Signing in doesn't move watchlists. Offer "Notify me for all of <i>Tech</i>" on the watchlists page, which follows every ticker in the list at once.</td><td><span class="tag c-open">Decide</span></td></tr>
+          <tr><th scope="row">API</th><td><code>GET/PUT /api/follows</code> (signed-in only), following the existing <code>api/suggestions</code> route style. Cap a user at about 50 symbols to keep digests short.</td><td><span class="tag c-add">Added</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>4 · Per-ticker toggle</h3><span class="hud">3</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Bell in the details panel</th><td>A "Notify me" bell button beside the watchlist picker, which updates instantly and saves in the background. Signed out, it opens the sign-in prompt and turns on after sign-in.</td><td><span class="tag c-you">You listed</span></td></tr>
+          <tr><th scope="row">Bell on watchlists page</th><td>A bell per row, plus "all on" and "all off" for the list.</td><td><span class="tag c-you">You listed</span></td></tr>
+          <tr><th scope="row">Notification settings</th><td>A small settings panel: morning digest on/off, evening digest on/off, a "week ahead" email on Sunday (later), and pause all.</td><td><span class="tag c-add">Added</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>5 · Digest + cron</h3><span class="hud">5</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">What each email says</th><td><b>Morning (~7:00 ET):</b> followed companies reporting today, with before-open and after-close times, EPS and revenue estimates, and a link to the calendar. <b>Evening (~7:00 PM ET):</b> today's results (beat, mixed or miss, as on the calendar) and tomorrow's before-open reporters. If a user has nothing to report, send nothing.</td><td><span class="tag c-you">You listed</span></td></tr>
+          <tr><th scope="row">Cron routes</th><td><code>/api/cron/digest?run=morning|evening</code>, set in <code>vercel.json</code>. The route checks <code>Authorization: Bearer $CRON_SECRET</code>, refreshes today's and tomorrow's calendar from Finnhub first (ties in with "Scheduled Finnhub sync" on the features page), then builds and sends. Set <code>maxDuration</code> high enough for the batch.</td><td><span class="tag c-you">You listed</span></td></tr>
+          <tr><th scope="row">Time zones + DST</th><td>Cron runs on UTC. 7:00 ET is 11:00 UTC in summer and 12:00 UTC in winter. Either accept a one-hour shift twice a year, or schedule both UTC hours and have the route skip the one that isn't 7 ET. On Hobby, Vercel runs a job at any point within the scheduled hour, so times are approximate.</td><td><span class="tag c-limit">Limit</span></td></tr>
+          <tr><th scope="row">Send log (no doubles)</th><td>Before sending, insert into <code>notificationLog</code> with <code>_id = userId:date:run</code>. If the insert fails as a duplicate, skip that user. Pass the same key to Resend as <code>idempotencyKey</code>. Retries and overlapping runs then can't send twice.</td><td><span class="tag c-add">Added</span></td></tr>
+          <tr><th scope="row">Date changes</th><td>Finnhub dates move, and estimated dates become confirmed. Keep the date that was last emailed for each followed symbol, and add a "Date changed: NVDA moved to Nov 20" line to the next digest.</td><td><span class="tag c-add">Added</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>6 · Deliverability + launch</h3><span class="hud">3</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">One-click unsubscribe</th><td>Every digest gets <code>List-Unsubscribe</code> and <code>List-Unsubscribe-Post: List-Unsubscribe=One-Click</code> headers, plus a footer link, both carrying a signed token (HMAC of the user ID), so unsubscribing works without signing in. Gmail and Yahoo require this. CAN-SPAM also asks for a postal address in the footer.</td><td><span class="tag c-add">Added</span></td></tr>
+          <tr><th scope="row">Bounces + complaints</th><td>A Resend webhook at <code>/api/webhooks/resend</code>, with its signature verified. A hard bounce or spam complaint sets <code>emailSuppressed</code> on the user, and the cron skips suppressed users. A high complaint rate gets the domain blocked.</td><td><span class="tag c-add">Added</span></td></tr>
+          <tr><th scope="row">Preview + dry run</th><td><code>/api/cron/digest?dryRun=1</code> returns the emails it would send without sending them. A dev-only preview page renders the template with sample data.</td><td><span class="tag c-add">Added</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="c-open">
+    <div class="bar hud"><span>03 / <b>Decisions</b></span><span>5 open</span></div>
+    <div class="section-title"><h2>Open <span>decisions</span>.</h2><p>Each one changes what gets built.</p></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Question</th><th scope="col">Options</th><th scope="col" style="width: 26%">Leaning</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Is sign-in really needed?</th><td>(a) Full accounts with magic link. (b) No accounts: enter an email on the bell, confirm it with one email (double opt-in), and manage follows through a link in every email.</td><td>(a). It costs about the same once Resend is in, and it leaves room for watchlist sync and other per-user features later.</td></tr>
+          <tr><th scope="row">Better Auth or Auth.js</th><td>Both do magic link plus MongoDB. Check Next 16 compatibility first (AGENTS.md: read the bundled Next docs).</td><td>Whichever supports Next 16 cleanly today.</td></tr>
+          <tr><th scope="row">Sync watchlists to the account?</th><td>Keep them in localStorage, or move them to the server once a user signs in.</td><td>Not in v1. Follows only.</td></tr>
+          <tr><th scope="row">Keep Gmail for suggestion emails?</th><td>Move <code>suggestion-email</code> to Resend too, or keep nodemailer for it.</td><td>Move it, so there's one email path. It's about 1 email per suggestion.</td></tr>
+          <tr><th scope="row">Vercel plan</th><td>Hobby: crons at most once a day each, approximate within the hour, functions up to 60s. Pro: precise crons and longer functions.</td><td>Hobby is fine: two daily jobs, with batched sends to stay under the limit.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="c-add">
+    <div class="bar hud"><span>04 / <b>Data</b></span><span>New collections in earnings-report</span></div>
+    <div class="section-title"><h2>Data <span>model</span>.</h2><p>Added to <code>COLLECTIONS</code> in <code>src/lib/db.js</code>. Auth tables (<code>users</code>, <code>sessions</code>, <code>verification</code>) come from the auth library's adapter.</p></div>
+<pre>follows          { _id: userId, symbols: ["AAPL", "NVDA"], lastNotifiedDate: { NVDA: "2026-11-19" },
+                   morning: true, evening: true, paused: false, updatedAt }      index: symbols
+notificationLog  { _id: "userId:2026-10-28:morning", symbols: [...], resendId, sentAt }  TTL 90 days
+users (adapter)  + emailSuppressed: "bounce" | "complaint" | null</pre>
+<pre>vercel.json
+{ "crons": [
+  { "path": "/api/cron/digest?run=morning", "schedule": "0 11 * * 1-5" },
+  { "path": "/api/cron/digest?run=evening", "schedule": "0 23 * * 1-5" }
+] }
+
+.env  RESEND_API_KEY · EMAIL_FROM · CRON_SECRET · AUTH_SECRET · UNSUBSCRIBE_SECRET · RESEND_WEBHOOK_SECRET</pre>
+  </section>
+
+  <section class="c-later">
+    <div class="bar hud"><span>05 / <b>Later</b></span><span>Not in v1</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Idea</th><th scope="col">Notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Week-ahead email</th><td>A Sunday-evening list of every followed company reporting that week.</td><td><span class="tag c-later">Later</span></td></tr>
+          <tr><th scope="row">Browser push</th><td>Web Push instead of email, for the "reporting in 1 hour" type of alert. It needs a service worker and VAPID keys.</td><td><span class="tag c-later">Later</span></td></tr>
+          <tr><th scope="row">Per-user time zone</th><td>Send at 7:00 in the user's own time zone, which needs hourly cron (Pro plan).</td><td><span class="tag c-later">Later</span></td></tr>
+          <tr><th scope="row">Watchlist sync</th><td>Move <code>ticker-lists.js</code> storage to the account for signed-in users.</td><td><span class="tag c-later">Later</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="hud">Open Market · project notes</footer>
+</main>
+</body>
+</html>

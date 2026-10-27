@@ -6,6 +6,10 @@ const nextConfig = {
   env: {
     LOGOS_ENABLED: String(Boolean(process.env.LOGO_DEV_TOKEN)),
   },
+  // Planning docs served as pages; see src/app/plans
+  outputFileTracingIncludes: {
+    "/plans/*": ["docs/*.html"],
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

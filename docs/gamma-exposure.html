@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gamma Exposure Plan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f1ee; --tag: #e9e8e4; --tile: #ffffff;
+    --ink: #101014; --strong: #000000;
+    --body: rgba(16,16,20,.72); --muted: rgba(16,16,20,.6);
+    --line: rgba(16,16,20,.16); --line-strong: rgba(16,16,20,.4);
+    --blue: #1a5bc4; --beat: #1d7a4c; --mixed: #8f5a00; --miss: #b83a24; --purple: #6a3fd0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0b0c; --tag: #18181b; --tile: #141417;
+      --ink: #f2f1ee; --strong: #ffffff;
+      --body: rgba(242,241,238,.75); --muted: rgba(242,241,238,.6);
+      --line: rgba(242,241,238,.16); --line-strong: rgba(242,241,238,.4);
+      --blue: #6aa0ff; --beat: #2fd39c; --mixed: #ffb347; --miss: #ff7a63; --purple: #b18cff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  main { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  .hud {
+    font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 24px; border-bottom: 1px solid var(--line); }
+  .bar b { color: var(--ink); font-weight: 500; }
+  header.title { padding: 36px 24px 28px; border-bottom: 1px solid var(--line); }
+  h1 {
+    margin: 0 0 16px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  h1 span { color: var(--blue); }
+  .lead { max-width: 760px; margin: 0; color: var(--body); font-size: 17px; }
+  .lead strong { color: var(--ink); }
+  section { border-bottom: 1px solid var(--line); }
+  code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; background: var(--tag); border: 1px solid var(--line); padding: 0 4px; }
+  .scroll { overflow-x: auto; border-top: 1px solid var(--line); }
+  table { width: 100%; min-width: 860px; border-collapse: collapse; table-layout: fixed; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+  th:last-child, td:last-child { border-right: 0; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  thead th { background: var(--tag); }
+  tbody th { font-weight: 600; color: var(--strong); }
+  td { color: var(--body); }
+  .sub { display: flex; align-items: baseline; gap: 10px; padding: 24px 24px 12px; border-top: 1px solid var(--line); }
+  .section-title + .sub { border-top: 0; }
+  .sub h3 { margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: -.03em; color: var(--strong); }
+  .tag {
+    display: inline-block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; font-weight: 500;
+    letter-spacing: .1em; text-transform: uppercase; border: 1px solid var(--line); background: var(--tag); padding: 1px 6px; white-space: nowrap;
+  }
+  /* Color code: green = chosen, blue = fallback, amber = open decision, red = ruled out / hard limit, grey = later */
+  .c-pick { --c: var(--beat); } .c-alt { --c: var(--blue); } .c-open { --c: var(--mixed); }
+  .c-no { --c: var(--miss); } .c-later { --c: var(--muted); }
+  .tag.c-pick, .tag.c-alt, .tag.c-open, .tag.c-no { background: var(--c); border-color: var(--c); color: var(--bg); font-weight: 700; }
+  .tag.c-later { color: var(--muted); }
+  .sw { display: inline-block; width: 8px; height: 8px; background: var(--c); flex: none; }
+
+  .section-title { padding: 28px 24px 4px; }
+  .section-title h2 {
+    margin: 0 0 6px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(30px, 4.5vw, 40px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  .section-title h2 span { color: var(--c); }
+  .section-title p { margin: 0 0 20px; color: var(--body); }
+  .sub h3::before { content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 10px; background: var(--c); vertical-align: 2px; }
+  .sub .hud { color: var(--c); font-weight: 700; }
+
+  .stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .stat { padding: 16px 24px 18px; border-right: 1px solid var(--line); }
+  .stat:last-child { border-right: 0; }
+  .stat b {
+    display: block; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-size: 40px; line-height: 1.05;
+    letter-spacing: -.04em; color: var(--c);
+  }
+  .stat .hud { display: flex; align-items: center; gap: 6px; }
+  .glance { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-top: 1px solid var(--line); }
+  .glance > div { padding: 18px 24px 22px; border-right: 1px solid var(--line); }
+  .glance > div:last-child { border-right: 0; }
+  .glance h4 { margin: 0 0 10px; }
+  .glance ul, .glance ol { margin: 0; padding: 0; list-style: none; }
+  .glance li { display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid var(--line); color: var(--body); }
+  .glance li:last-child { border-bottom: 0; }
+  .glance ol .n { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 700; color: var(--bg); background: var(--c); padding: 1px 6px; }
+  .glance p { margin: 0; color: var(--body); }
+  @media (max-width: 760px) {
+    .stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .stat { border-bottom: 1px solid var(--line); }
+    .glance { grid-template-columns: 1fr; }
+    .glance > div { border-right: 0; border-bottom: 1px solid var(--line); }
+  }
+  pre { margin: 0; padding: 16px 24px; overflow-x: auto; border-top: 1px solid var(--line); background: var(--tile); font: 12px/1.6 'Geist Mono', ui-monospace, monospace; color: var(--ink); }
+  .note { font-size: 12px; color: var(--muted); margin: 0; padding: 12px 24px 18px; border-top: 1px solid var(--line); }
+  footer { padding: 14px 24px 18px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar hud"><span>Docs / <b>Gamma exposure</b></span><span>Planned Oct 27, 2026 · not started · from a board suggestion</span></div>
+
+  <header class="title">
+    <h1>Gamma <span>exposure</span>.</h1>
+    <p class="lead"><strong>GEX is per company, but only for companies with listed options: roughly the 4–5k optionable US names out of the ~13k on the calendar, plus indexes and ETFs (SPX, SPY, QQQ), where most people actually watch it.</strong> No free service offers per-ticker GEX at our scale, so we compute it ourselves. Cboe publishes a free, 15-minute-delayed options chain for each ticker with gamma and open interest already filled in. A server function turns that into net GEX, GEX by strike, the call wall, the put wall and the flip level. The result is shown in the details panel next to the earnings data. SPX GEX can go in the market panel. The one blocker before launch is Cboe's terms for showing that data on a public site.</p>
+  </header>
+
+  <section class="c-pick">
+    <div class="bar hud"><span>01 / <b>At a glance</b></span><span>Checked against live data Oct 27, 2026 · 2:58 PM ET</span></div>
+    <div class="stats">
+      <div class="stat c-pick"><b>$0</b><span class="hud"><i class="sw"></i>Data cost (Cboe)</span></div>
+      <div class="stat c-pick"><b>3,292</b><span class="hud"><i class="sw"></i>AAPL contracts</span></div>
+      <div class="stat c-alt"><b>+$0.91B</b><span class="hud"><i class="sw"></i>AAPL net GEX / 1%</span></div>
+      <div class="stat c-open"><b>15 min</b><span class="hud"><i class="sw"></i>Quote delay</span></div>
+      <div class="stat c-no"><b>13 MB</b><span class="hud"><i class="sw"></i>SPX chain size</span></div>
+    </div>
+    <div class="glance">
+      <div class="c-pick">
+        <h4 class="hud">Build order</h4>
+        <ol>
+          <li><span class="n">1</span> Check Cboe terms (blocker)</li>
+          <li><span class="n">2</span> <code>lib/gex.js</code>: fetch + compute</li>
+          <li><span class="n">3</span> Save the summary in Mongo</li>
+          <li><span class="n">4</span> Gamma section in details panel</li>
+          <li><span class="n">5</span> SPX GEX in the market panel</li>
+        </ol>
+      </div>
+      <div class="c-alt">
+        <h4 class="hud">Why it fits an earnings site</h4>
+        <ul>
+          <li>Shows where dealers may pin or chase price into the report</li>
+          <li>Can be filtered to the first expiry after the report date</li>
+          <li>Sits next to EPS and revenue in the details panel</li>
+          <li>SPX GEX adds market-wide context to Fear &amp; Greed</li>
+        </ul>
+      </div>
+      <div class="c-no">
+        <h4 class="hud">What "plugin" can't mean</h4>
+        <p>No free embeddable GEX widget turned up, and TradingView has none built in. FlashAlpha's free API (5 requests/day, no SPY or QQQ) is too small for a public page. An "integrated plugin" in practice means our own section, fed by our own calculation.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="c-pick">
+    <div class="bar hud"><span>02 / <b>Sources</b></span><span>Where the options data comes from</span></div>
+    <div class="section-title"><h2>Data <span>sources</span>.</h2><p>GEX needs gamma and open interest for every contract. Prices are from the providers' own pages, so recheck them before paying.</p></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 22%">Source</th><th scope="col">What you get</th><th scope="col" style="width: 16%">Cost</th><th scope="col" style="width: 12%">Verdict</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Cboe delayed quotes</th><td><code>cdn-api.cboe.com/api/global/delayed_quotes/options/{SYM}.json</code>, with an underscore prefix for indexes (<code>_SPX</code>). It has the full chain with Cboe's own gamma, delta, IV, open interest and volume, plus spot price. Tested: AAPL 1.5 MB, 3,292 contracts, 23 expiries; SPY 5.6 MB; SPX 13 MB; a ticker without options returns 403. It isn't a documented API, so it can change without notice.</td><td>Free</td><td><span class="tag c-pick">Chosen</span></td></tr>
+          <tr><th scope="row">MarketData.app</th><td>Option chains with greeks. The free plan is 100 credits/day with options delayed 24h, and its docs disagree on whether greeks are included. Starter costs $12/mo (annual), and real-time needs Trader at $30/mo.</td><td>$12–30/mo</td><td><span class="tag c-alt">Fallback</span></td></tr>
+          <tr><th scope="row">Massive (was Polygon.io)</th><td>Chains, greeks, IV and open interest from an official, licensed API. The entry tier is end-of-day data at 5 calls/min.</td><td>From $29/mo</td><td><span class="tag c-alt">Fallback</span></td></tr>
+          <tr><th scope="row">FlashAlpha</th><td>Precomputed GEX, walls and flip. Free: 5 requests/day, one expiry, single stocks only. Basic: 250/day.</td><td>Free / from $63/mo</td><td><span class="tag c-no">Too small free</span></td></tr>
+          <tr><th scope="row">Tradier</th><td>Greeks only on production accounts, updated hourly, and it needs a brokerage account. The sandbox is delayed and has no greeks.</td><td>Brokerage acct</td><td><span class="tag c-no">No</span></td></tr>
+          <tr><th scope="row">Finnhub (current provider)</th><td>Its docs say nothing clear about an options chain on the free plan, and none appears in what we use now. Not confirmed either way.</td><td>—</td><td><span class="tag c-open">Check</span></td></tr>
+          <tr><th scope="row">SpotGamma / Unusual Whales</th><td>The best-known GEX products. SpotGamma has no public retail API, and Unusual Whales' API is paid and meant for one user, not redistribution.</td><td>Paid</td><td><span class="tag c-no">No</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="c-alt">
+    <div class="bar hud"><span>03 / <b>Math</b></span><span>What gets computed</span></div>
+    <div class="section-title"><h2>How GEX is <span>computed</span>.</h2><p>This is the standard "naive" model: dealers are assumed to be long the calls and short the puts that customers trade. That's a guess about who holds what, not observed positioning, and the UI should say so.</p></div>
+<pre>per contract     gex = sign × gamma × openInterest × 100 × spot² × 0.01     sign: call +1, put −1
+                 → dollars of stock dealers would buy (+) or sell (−) for a 1% move
+
+net GEX          Σ gex over all contracts           positive: dealers damp moves · negative: dealers add to moves
+by strike        Σ gex grouped by strike            the bar chart
+call wall        strike with the largest positive GEX
+put wall         strike with the most negative GEX
+flip level       strike where cumulative GEX (low → high) crosses from negative to positive
+                 v1 approximation; the exact flip re-prices gamma at each hypothetical spot (Black-Scholes), later
+
+AAPL, Oct 27 2026, spot 345.82   net +$0.91B · largest +GEX: 350 ($321M), 360 ($176M), 355 ($136M) · flip ≈ 350</pre>
+    <p class="note">Open interest is set once a day, from the prior session, while gamma and spot change through the day. So intraday GEX moves with price, not with new positions. Contracts are parsed from the OCC symbol in <code>option</code> (for example <code>AAPL261028C00250000</code>: root, YYMMDD expiry, C/P, strike × 1000).</p>
+  </section>
+
+  <section class="c-pick">
+    <div class="bar hud"><span>04 / <b>Plan</b></span><span>In build order</span></div>
+    <div class="section-title"><h2>The <span>plan</span>.</h2><p>Each step follows how the app already works: server-only modules in <code>src/lib</code>, results saved with <code>stored()</code> in <code>db.js</code>, and a route under <code>api/</code>.</p></div>
+
+    <div class="sub"><h3>1 · Server</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>src/lib/cboe.js</code></th><td>A server-only <code>getOptionChain(symbol)</code> that follows the 307 redirect, sends a browser User-Agent and times out after about 10s. It turns a 403 into "no options", which is cached too so we don't keep asking. Index symbols are mapped (SPX → <code>_SPX</code>).</td><td><span class="tag c-pick">Build</span></td></tr>
+          <tr><th scope="row"><code>src/lib/gex.js</code></th><td>A pure <code>computeGex(chain, { expiries })</code> that returns <code>{ spot, net, byStrike, callWall, putWall, flip, expiries, asOf }</code>. It keeps only strikes within ±25% of spot, so the chart stays readable and small. Filters: all expiries, the next one, or the first one after the earnings date.</td><td><span class="tag c-pick">Build</span></td></tr>
+          <tr><th scope="row">Save the summary, not the chain</th><td>Add <code>COLLECTIONS.gex</code> (<code>_id: symbol</code>) and save it with <code>stored()</code>. It goes stale after 15 min in market hours and lasts until the next open otherwise. Only the computed summary is saved (about 10 KB); the 1.5–13 MB raw chain is thrown away.</td><td><span class="tag c-pick">Build</span></td></tr>
+          <tr><th scope="row"><code>GET /api/gex/[symbol]</code></th><td>Fetched when the details panel opens, the same way <code>api/earnings/[symbol]</code> is. It's rate-limited with <code>rate-limit.js</code>, because each miss downloads a large file. It returns 404 when the ticker has no options.</td><td><span class="tag c-pick">Build</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>2 · UI</h3><span class="hud">4</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Step</th><th scope="col">Plan / notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Gamma section, details panel</th><td>A big net GEX number with a "Positive gamma" or "Negative gamma" tag, and a row of levels (call wall, put wall, flip, spot). Below it, GEX by strike as horizontal bars around spot. Hidden when the ticker has no options. Shows "Delayed 15 min · Cboe" and "as of" with the time.</td><td><span class="tag c-pick">Build</span></td></tr>
+          <tr><th scope="row">Expiry filter</th><td>Tabs: <b>Into earnings</b> (the first expiry after the report date, the default when a report is coming up), <b>Next</b>, and <b>All</b>.</td><td><span class="tag c-pick">Build</span></td></tr>
+          <tr><th scope="row">SPX in the market panel</th><td>One SPX line in <code>market-sentiment.jsx</code>, next to Fear &amp; Greed: net GEX, the regime and the flip level. It uses the same route with <code>SPX</code>.</td><td><span class="tag c-alt">Nice to have</span></td></tr>
+          <tr><th scope="row">Explainer + disclaimer</th><td>A "What is this?" popover with two sentences on what GEX is and the dealer assumption, plus "Not investment advice".</td><td><span class="tag c-pick">Build</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="c-open">
+    <div class="bar hud"><span>05 / <b>Decisions</b></span><span>4 open</span></div>
+    <div class="section-title"><h2>Open <span>decisions</span>.</h2><p>The first one decides whether the free source can be used at all.</p></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Question</th><th scope="col">Notes</th><th scope="col" style="width: 26%">Leaning</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Cboe terms</th><td>Cboe's site terms probably limit reusing its delayed quotes, and options data comes from OPRA, which has its own display rules. The same kind of check as the Finnhub license on the features page.</td><td>Check before anything goes public. If it isn't allowed, use Massive ($29/mo) and compute GEX the same way.</td></tr>
+          <tr><th scope="row">Colors for + / − gamma</th><td>DESIGN.md keeps green and red for beat and miss. GEX also has a sign, but using green and red for it could read as good and bad.</td><td>Use ink for positive bars and muted or outlined bars for negative, with tags that say "Positive" and "Negative".</td></tr>
+          <tr><th scope="row">Which tickers</th><td>Any ticker someone opens (computed on demand), or only the most popular ones, refreshed ahead of time by cron.</td><td>On demand, with a cache. Add a cron later for this week's reporters.</td></tr>
+          <tr><th scope="row">Thin chains</th><td>Small caps with little open interest give noisy, misleading walls.</td><td>Hide the section below a minimum open interest (for example under 5,000 total contracts).</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="c-later">
+    <div class="bar hud"><span>06 / <b>Later</b></span><span>Not in v1</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Idea</th><th scope="col">Notes</th><th scope="col" style="width: 12%">Tag</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Exact flip level</th><td>Re-price gamma with Black-Scholes across a grid of spot prices and find where net GEX crosses zero.</td><td><span class="tag c-later">Later</span></td></tr>
+          <tr><th scope="row">GEX history</th><td>Save a daily snapshot (<code>gexHistory</code>, like <code>fearGreedHistory</code>) to chart how GEX built up into each report.</td><td><span class="tag c-later">Later</span></td></tr>
+          <tr><th scope="row">Expected move</th><td>Use the same chain to show the options-implied earnings move (the at-the-money straddle on the expiry after the report). It may be more useful to earnings visitors than GEX itself.</td><td><span class="tag c-later">Later</span></td></tr>
+          <tr><th scope="row">Vanna / charm</th><td>Other dealer-exposure measures. Specialist content with little demand.</td><td><span class="tag c-later">Later</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="hud">Open Market · project notes</footer>
+</main>
+</body>
+</html>
