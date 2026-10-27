@@ -1,9 +1,11 @@
 import { Suspense } from "react";
+import { cookies } from "next/headers";
 import { after, connection } from "next/server";
 import { EarningsCalendar } from "@/components/earnings/earnings-calendar";
 import { SiteFooter } from "@/components/earnings/site-footer";
 import {
   buildCalendarView,
+  MARKET_PANEL_COOKIE,
   monthGridRange,
   monthOf,
   parseDateKey,
@@ -69,7 +71,10 @@ async function Calendar({ searchParams }) {
   }
 
   if (!view) return <CalendarMessage>Earnings data is unavailable right now. Try again in a minute.</CalendarMessage>;
-  return <EarningsCalendar view={view} sentiment={await sentiment} events={await events} />;
+  const marketExpanded = (await cookies()).get(MARKET_PANEL_COOKIE)?.value === "expanded";
+  return (
+    <EarningsCalendar view={view} sentiment={await sentiment} events={await events} marketExpanded={marketExpanded} />
+  );
 }
 
 // Months kept warm from this month on, so paging ahead never waits on Finnhub

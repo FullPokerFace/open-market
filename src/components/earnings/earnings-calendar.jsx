@@ -22,7 +22,7 @@ function scrollToDay(key) {
   document.getElementById(`day-${key}`)?.scrollIntoView({ behavior, block: "center", inline: "center" });
 }
 
-export function EarningsCalendar({ view, sentiment, events }) {
+export function EarningsCalendar({ view, sentiment, events, marketExpanded }) {
   const [query, setQuery] = useState("");
   // The header's search results are open: only then does the query dim the companies that don't match
   const [searchOpen, setSearchOpen] = useState(false);
@@ -166,7 +166,7 @@ export function EarningsCalendar({ view, sentiment, events }) {
 
       <main className="mx-auto box-border flex w-full max-w-360 flex-1 flex-col border-x">
 
-        <MarketSentiment sentiment={sentiment} events={events} today={view.today} />
+        <MarketSentiment sentiment={sentiment} events={events} today={view.today} defaultExpanded={marketExpanded} />
         <CalendarTitle view={view} />
         <ExchangeFilter
           filters={view.filters}

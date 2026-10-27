@@ -11,10 +11,23 @@ test.describe("calendar", () => {
   test("shows the month with companies and market context", async ({ page }) => {
     await expect(page).toHaveTitle(/Open Market/);
     await expect(page.getByRole("heading", { level: 1 })).toContainText("earnings.");
-    await expect(page.getByText("Market sentiment")).toBeVisible();
-    await expect(page.getByText("Key releases")).toBeVisible();
+    await expect(page.getByText("Fear & Greed")).toBeVisible();
     await expect(page.getByRole("link", { name: "Month view" })).toHaveAttribute("aria-current", "page");
     await expect(tiles(page).first()).toBeVisible();
+  });
+
+  test("expands the market panel and remembers it", async ({ page }) => {
+    // Collapsed by default: one row, no section headings
+    await expect(page.getByText("Market sentiment")).toBeHidden();
+    await page.getByRole("button", { name: /^Expand market sentiment/ }).click();
+    await expect(page.getByText("Market sentiment")).toBeVisible();
+    await expect(page.getByText("Key releases")).toBeVisible();
+
+    // The server reads the cookie, so a reload opens expanded
+    await page.reload();
+    await expect(page.getByText("Market sentiment")).toBeVisible();
+    await page.getByRole("button", { name: /^Collapse market sentiment/ }).click();
+    await expect(page.getByText("Market sentiment")).toBeHidden();
   });
 
   test("steps to the next month and back", async ({ page }) => {

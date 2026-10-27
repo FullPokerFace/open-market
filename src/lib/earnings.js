@@ -28,6 +28,10 @@ function inOption(option, symbol, mic) {
 // Set in the browser (ticker-lists.js), read on the server (calendar-filter.js).
 export const LIST_COOKIE = "earnings_list";
 
+// "expanded" when the visitor opened the market sentiment / key releases panel; collapsed otherwise (the default).
+// Set in the browser (market-sentiment.jsx), read on the server (page.js) so the panel renders as it was left.
+export const MARKET_PANEL_COOKIE = "market_panel";
+
 // Most tickers a list can carry
 const MAX_LIST_TICKERS = 200;
 const TICKER = /^[A-Z0-9.-]{1,10}$/;

@@ -144,7 +144,9 @@ async function tour(page) {
   await card(page, "");
   await wait(600);
 
-  // 2 · Market context
+  // 2 · Market context (collapsed to one row by default: open it)
+  await point(page, page.getByRole("button", { name: /^Expand market sentiment/ }), { click: true });
+  await wait(600);
   await caption(page, "Start with the <b>mood of the market</b>: CNN's Fear &amp; Greed Index");
   await point(page, page.getByText("Market sentiment"));
   await wait(2200);
@@ -194,13 +196,13 @@ async function tour(page) {
     await wait(1700);
   }
 
-  // 7 · Ticker lists
+  // 7 · Watchlists
   const [first, second] = await Promise.all(all.slice(0, 2).map(async (t) => (await t.getAttribute("aria-label")).split(" · ")[0]));
-  await caption(page, "Follow just your companies with <b>your own ticker lists</b>");
-  await point(page, page.getByRole("button", { name: "Create list" }), { click: true });
+  await caption(page, "Follow just your companies with <b>your own watchlists</b>");
+  await point(page, page.getByRole("button", { name: "Create watchlist" }), { click: true });
   const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("List name").waitFor();
-  await type(dialog.getByLabel("List name"), "My picks");
+  await dialog.getByLabel("Watchlist name").waitFor();
+  await type(dialog.getByLabel("Watchlist name"), "My picks");
   for (const t of [first, second]) {
     const box = dialog.getByLabel("Add companies");
     await type(box, t);
@@ -210,7 +212,7 @@ async function tour(page) {
     await point(page, row, { click: true, steps: 15 });
     await wait(500);
   }
-  await point(page, dialog.getByRole("button", { name: "Create list" }), { click: true });
+  await point(page, dialog.getByRole("button", { name: "Create watchlist" }), { click: true });
   await page.waitForLoadState("networkidle");
   await wait(2800);
   await caption(page, "");
