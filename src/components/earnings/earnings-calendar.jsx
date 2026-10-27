@@ -17,6 +17,12 @@ import { SiteHeader } from "./site-header";
 import { StatusLegend } from "./status-legend";
 import { useCompanySearch } from "./use-company-search";
 
+// Centres a day's cell on screen; jumps instead of gliding for visitors who prefer reduced motion
+function scrollToDay(key) {
+  const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
+  document.getElementById(`day-${key}`)?.scrollIntoView({ behavior, block: "center", inline: "center" });
+}
+
 export function EarningsCalendar({ view, sentiment, events }) {
   const [query, setQuery] = useState("");
   // The header's search results are open: only then does the query dim the companies that don't match
@@ -121,13 +127,19 @@ export function EarningsCalendar({ view, sentiment, events }) {
     selectEarnings(earnings);
   };
 
-  const jumpToToday = () => {
-    document.getElementById(`day-${view.today}`)?.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-  };
+  const jumpToToday = () => scrollToDay(view.today);
 
-  // Open on today's cell; no-op when the month shown doesn't include today
+  // Open at the top so the title and filters are seen first, then glide to today's cell after a second.
+  // Called off if the visitor scrolls, taps or types first; no-op when the month shown doesn't include today.
   useEffect(() => {
-    document.getElementById(`day-${view.today}`)?.scrollIntoView({ behavior: "instant", block: "center", inline: "center" });
+    const timer = setTimeout(() => scrollToDay(view.today), 1000);
+    const cancel = () => clearTimeout(timer);
+    const events = ["wheel", "touchstart", "pointerdown", "keydown"];
+    events.forEach((type) => window.addEventListener(type, cancel, { once: true, passive: true }));
+    return () => {
+      cancel();
+      events.forEach((type) => window.removeEventListener(type, cancel));
+    };
   }, [view.today]);
 
   return (
