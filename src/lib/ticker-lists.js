@@ -1,6 +1,6 @@
 "use client";
 
-// The visitor's own ticker lists (the "+" beside the exchange filter), saved in the browser like the watchlist.
+// The visitor's own ticker lists (the "+" beside the exchange filter, or the picker in the details sheet), saved in the browser.
 // One shared store so every component and open tab stays in sync.
 
 import { useSyncExternalStore } from "react";
@@ -91,6 +91,19 @@ export function useTickerLists() {
       };
       save([...getSnapshot(), list]);
       return list;
+    },
+    // Adds the ticker to the list, or takes it out; returns the updated list
+    toggle: (id, ticker) => {
+      let updated = null;
+      save(
+        getSnapshot().map((list) => {
+          if (list.id !== id) return list;
+          const tickers = list.tickers.includes(ticker) ? list.tickers.filter((t) => t !== ticker) : [...list.tickers, ticker];
+          updated = { ...list, tickers };
+          return updated;
+        })
+      );
+      return updated;
     },
   };
 }

@@ -134,7 +134,7 @@ shadcn/ui: set `--radius: 0rem` and map shadcn's `--background/--foreground/--bo
 | **SectionBar** | Full-width row, `py-2.5 px-6`, top/bottom rule, `hud` in `muted`. Left: `01 / <span ink>TITLE</span>`. Right: context note. |
 | **PageTitle** | `display` 56px; one emphasized word in `blue`, ends with a period: "October **earnings**." |
 | **Button** | 40px, `btn-label`, square. Primary: `bg-ink text-bg`. Secondary: `border border-line-strong text-ink`. Adjacent buttons merge borders (`-ml-px`). |
-| **SegmentedControl** | Row of secondary buttons; selected = primary style. Used for All/Watchlist and List/Week/Month. |
+| **SegmentedControl** | Row of secondary buttons; selected = primary style. Used for Day/Week/Month. |
 | **NumberBadge** | `hud` text, white on badge color, `px-2 py-0.5`, e.g. `01`. |
 | **Tag** | `tag-label`, `bg-tag border border-line px-1.5 py-px`; text color = meaning (`beat`/`mixed`/`miss`/`muted`). |
 | **TickerTile** | 48×48 `<button>`, `bg-tile border-line rounded-tile`, mono ticker. Reported: 10×10 square marker top-right (offset -4px) in status color with 2px border matching cell bg. Upcoming: no marker. Later: swap ticker text for logo image, same box. Dimmed (filtered out): `opacity .18`. |
@@ -152,7 +152,7 @@ Icons: lucide-react, 14px, stroke 2. No emoji.
 - Default view: current month, today highlighted; week starts Monday, weekends hidden.
 - Prev/Today/Next navigate months (Week view = same cell design, one row, taller cells, show all tiles).
 - Search: filters by ticker prefix or company name. **Dims** non-matches instead of removing them, so the grid never reflows. A `+N` tile with matches inside gets a blue border and a count badge; with none, it dims. A drop-down under the search box lists every match in the month on any exchange (rows like the `+N` modal, with the date after the ticker).
-- Watchlist toggle: dims non-watchlist tiles the same way. Add / remove with the "Add to watchlist" button in the DetailsSheet. Stored in `localStorage` for the MVP.
+- Ticker lists: the visitor's own lists, picked in the exchange dropdown, show only their companies. Add / remove a company with the list picker in the DetailsSheet. Stored in `localStorage`.
 - Click tile → DetailsSheet. URL reflects selection (`?t=NFLX`) so it's shareable; `Esc` closes.
 - Status logic: Beat = EPS ≥ est and revenue ≥ est; Miss = both below; Mixed = one each; Upcoming = not yet reported. Only compute surprise when estimate and actual share an accounting basis (adjusted vs. GAAP).
 - Theme: light default, toggle in top bar, `class="dark"` on `<html>`, persisted in `localStorage`, respects `prefers-color-scheme` on first visit.
@@ -177,7 +177,7 @@ lib/
   types.ts              Company, EarningsEvent, EarningsResult, Status
   status.ts             getStatus(), surprisePct()
   mock-earnings.ts      sample month (copy data from design/mock-home.dc.html: names() and month())
-  watchlist.ts          localStorage hook
+  ticker-lists.ts       localStorage hook
 ```
 
 ## 7. Build order
@@ -186,4 +186,4 @@ lib/
 2. TopBar, SectionBar, PageTitle, Button, Tag, NumberBadge.
 3. TickerTile → DayCell → MonthGrid with mock data. Match the mock side by side.
 4. DetailsSheet + surprise chart.
-5. Search, watchlist, URL state, responsive list view.
+5. Search, ticker lists, URL state, responsive list view.

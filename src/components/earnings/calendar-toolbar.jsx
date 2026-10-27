@@ -16,7 +16,7 @@ const VIEWS = [
 
 const currentButton = "grid h-10 cursor-pointer place-items-center bg-foreground px-4.5 text-background uppercase";
 
-export function CalendarToolbar({ view, scope, onScopeChange, onToday }) {
+export function CalendarToolbar({ view, onToday }) {
   // Shows the month / week / day on screen. On the current one it scrolls to today; on any other it goes back to the current one
   const currentLabel = view.isCurrent ? `Jump to today, ${view.todayLabel}` : `Go to ${view.currentName}`;
 

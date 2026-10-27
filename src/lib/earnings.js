@@ -3,8 +3,6 @@
 
 import { POPULAR_TICKERS } from "./popular";
 
-export const DEFAULT_WATCHLIST = ["NFLX", "TSLA", "NOW", "AAPL", "MSFT", "JPM", "IBM"];
-
 const MONTHS = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 const WEEKDAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
@@ -213,6 +211,7 @@ function toEarnings(row, directory) {
     ticker: row.symbol,
     name: companyName(row.symbol, company),
     cik: company?.cik ?? null,
+    exchange: company?.exchange ?? null,
     date: row.date,
     dateLabel: shortLabel(row.date),
     fiscalQuarter: row.quarter ?? null,

@@ -25,10 +25,10 @@ export const SHIPPED = [
     ],
   },
   {
-    area: "Search & watchlist",
+    area: "Search & lists",
     items: [
       ["Search", "Find any company reporting this month or the next two by ticker or name."],
-      ["Watchlist", "Save companies and show only them on the calendar. Kept in your browser."],
+      ["Ticker lists", "Make your own lists of companies and show only them on the calendar. Add or remove a company from its details panel. Kept in your browser."],
     ],
   },
   {

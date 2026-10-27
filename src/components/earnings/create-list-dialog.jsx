@@ -15,12 +15,19 @@ const message = "eyebrow m-0 px-4 py-4 text-muted-foreground";
 
 // Name a list, then search -> add, search -> add, then create it.
 // `onCreate(name, tickers)` saves it; the draft is kept if the dialog is closed without creating.
-export function CreateListDialog({ open, onOpenChange, month, onCreate }) {
+// `seed` ({ ticker, name }, from the details sheet) is added to the draft each time it's opened with one.
+export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) {
   const [name, setName] = useState("");
   const [query, setQuery] = useState("");
   // [{ ticker, name }] in the order they were added
   const [companies, setCompanies] = useState([]);
+  const [seeded, setSeeded] = useState(null);
   const searchInput = useRef(null);
+
+  if (open && seed && seed !== seeded) {
+    setSeeded(seed);
+    if (!companies.some((c) => c.ticker === seed.ticker)) setCompanies([...companies, seed]);
+  }
 
   const q = query.trim().toUpperCase();
   const search = useCompanySearch(q, month);

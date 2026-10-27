@@ -1,6 +1,7 @@
 "use client";
 
-import { ArrowUpRightIcon, StarIcon, XIcon } from "lucide-react";
+import { useState } from "react";
+import { ArrowUpRightIcon, CheckIcon, ChevronDownIcon, PlusIcon, XIcon } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { formatEps, formatPercent, formatRevenue } from "@/lib/earnings";
 import { cn } from "@/lib/utils";
@@ -32,6 +33,20 @@ function edgarLinks({ cik, ticker }) {
   }
   const company = `https://www.sec.gov/cgi-bin/browse-edgar?action=getcompany&CIK=${cik}`;
   return { release: `${company}&type=8-K`, filings: company };
+}
+
+// TradingView's prefix for each exchange MIC we list
+const TRADINGVIEW_EXCHANGES = { XNAS: "NASDAQ", XNYS: "NYSE", XASE: "AMEX", ARCX: "AMEX", BATS: "CBOE" };
+
+// Without a known exchange, TradingView resolves the bare ticker itself
+function tradingViewLinks({ ticker, exchange }) {
+  const prefix = TRADINGVIEW_EXCHANGES[exchange];
+  const page = prefix ? `${prefix}-${ticker}` : ticker;
+  const chart = prefix ? `${prefix}:${ticker}` : ticker;
+  return {
+    financials: `https://www.tradingview.com/symbols/${encodeURIComponent(page)}/`,
+    chart: `https://www.tradingview.com/chart/?symbol=${encodeURIComponent(chart)}`,
+  };
 }
 
 function Metric({ label, value, comparison, surprise, reported, className }) {
@@ -70,10 +85,88 @@ function SurpriseHistory({ details }) {
   return <EpsSurpriseChart history={details.history} />;
 }
 
-function Details({ earnings: e, details, watched, onToggleWatch }) {
+const NEW_LIST = "new-list";
+const listControl = "flex h-10 items-center gap-2 font-mono text-[11px] font-bold tracking-[0.12em] uppercase";
+
+// Pick one of the visitor's lists, then add the company to it or take it out; "+ New list" starts one with it in.
+// The pick stays while other companies are opened, so adding several to one list is a click each.
+function ListPicker({ ticker, lists, activeListId, onToggle, onNewList }) {
+  const [picked, setPicked] = useState(null);
+  const list = lists.find((l) => l.id === picked) ?? lists.find((l) => l.id === activeListId) ?? lists[0];
+
+  if (!list) {
+    return (
+      <button type="button" onClick={onNewList} className={cn(listControl, "mt-1 cursor-pointer justify-center bg-foreground px-5 text-background")}>
+        <PlusIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
+        Add to a new list
+      </button>
+    );
+  }
+
+  const inList = list.tickers.includes(ticker);
+  // A list can't be emptied from here: an empty list would show no calendar at all
+  const last = inList && list.tickers.length === 1;
+  let title = inList ? `Remove ${ticker} from ${list.name}` : `Add ${ticker} to ${list.name}`;
+  if (last) title = `${ticker} is the only company in ${list.name}`;
+
+  const toggle = () => {
+    // Keep this list picked: toggling the list on screen briefly unmatches it while the calendar reloads
+    setPicked(list.id);
+    onToggle(list.id);
+  };
+
+  return (
+    <div className="mt-1 flex">
+      <label className="relative flex min-w-0 flex-1">
+        <span className="sr-only">List</span>
+        {/* Native select so phones get their own picker; "+ New list" opens the dialog and the pick stays put */}
+        <select
+          value={list.id}
+          onChange={(ev) => (ev.target.value === NEW_LIST ? onNewList() : setPicked(ev.target.value))}
+          className={cn(listControl, "w-full min-w-0 cursor-pointer appearance-none truncate border border-line-strong bg-background pr-10 pl-4 text-foreground")}
+        >
+          {lists.map((l) => (
+            <option key={l.id} value={l.id}>
+              {l.name}
+              {l.tickers.includes(ticker) ? " ✓" : ""}
+            </option>
+          ))}
+          <option value={NEW_LIST}>+ New list</option>
+        </select>
+        <ChevronDownIcon
+          className="pointer-events-none absolute top-1/2 right-3.5 size-3.5 -translate-y-1/2 text-foreground"
+          strokeWidth={2.2}
+          aria-hidden="true"
+        />
+      </label>
+      <button
+        type="button"
+        onClick={toggle}
+        disabled={last}
+        aria-pressed={inList}
+        title={title}
+        className={cn(
+          listControl,
+          "-ml-px shrink-0 cursor-pointer px-5 disabled:cursor-default disabled:opacity-50",
+          inList ? "border border-blue text-blue" : "bg-foreground text-background"
+        )}
+      >
+        {inList ? (
+          <CheckIcon className="size-3.5" strokeWidth={2.4} aria-hidden="true" />
+        ) : (
+          <PlusIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
+        )}
+        {inList ? "In list" : "Add"}
+      </button>
+    </div>
+  );
+}
+
+function Details({ earnings: e, details, listProps }) {
   const history = details?.history ?? [];
   const beats = history.filter((q) => q.value >= 0).length;
   const links = edgarLinks(e);
+  const tradingView = tradingViewLinks(e);
   const quarter = e.fiscalQuarter ? `Fiscal Q${e.fiscalQuarter} ${e.fiscalYear}` : "Latest";
   const when = e.timingLabel ? `, ${e.timingLabel}` : "";
 
@@ -81,7 +174,7 @@ function Details({ earnings: e, details, watched, onToggleWatch }) {
     <>
       <div className="eyebrow flex items-center justify-between border-b pl-6 text-muted-foreground">
         <span>
-          03 / <span className="text-foreground">{quarter} results</span>
+          <span className="text-foreground">{quarter} results</span>
         </span>
         <SheetClose
           aria-label="Close details"
@@ -110,19 +203,7 @@ function Details({ earnings: e, details, watched, onToggleWatch }) {
           <span className="chip text-muted-foreground">Adjusted EPS</span>
           {e.timing && <span className="chip text-muted-foreground">{e.timing}</span>}
         </div>
-        <button
-          type="button"
-          onClick={onToggleWatch}
-          aria-pressed={watched}
-          title={watched ? `Remove ${e.ticker} from watchlist` : `Add ${e.ticker} to watchlist`}
-          className={cn(
-            "mt-1 flex h-10 cursor-pointer items-center justify-center gap-2 px-5 font-mono text-[11px] font-bold tracking-[0.12em] uppercase",
-            watched ? "border border-blue text-blue" : "bg-foreground text-background"
-          )}
-        >
-          <StarIcon className="size-3.5" strokeWidth={2.2} fill={watched ? "currentColor" : "none"} aria-hidden="true" />
-          {watched ? "On your watchlist" : "Add to watchlist"}
-        </button>
+        <ListPicker ticker={e.ticker} {...listProps} />
       </div>
 
       <div className="grid grid-cols-2 border-b">
@@ -158,7 +239,15 @@ function Details({ earnings: e, details, watched, onToggleWatch }) {
       </div>
 
       <div className="flex flex-wrap gap-2 px-6 pt-5 pb-7 font-mono text-[11px] font-bold tracking-[0.12em] uppercase">
-        <a href={links.release} target="_blank" rel="noopener noreferrer" className={cn(linkButton, "bg-foreground text-background")}>
+        <a href={tradingView.financials} target="_blank" rel="noopener noreferrer" className={cn(linkButton, "bg-foreground text-background")}>
+          Financials
+          <ArrowUpRightIcon className="size-3" strokeWidth={2.4} aria-hidden="true" />
+        </a>
+        <a href={tradingView.chart} target="_blank" rel="noopener noreferrer" className={cn(linkButton, "bg-foreground text-background")}>
+          Chart
+          <ArrowUpRightIcon className="size-3" strokeWidth={2.4} aria-hidden="true" />
+        </a>
+        <a href={links.release} target="_blank" rel="noopener noreferrer" className={cn(linkButton, "border border-line-strong text-foreground")}>
           Earnings release
           <ArrowUpRightIcon className="size-3" strokeWidth={2.4} aria-hidden="true" />
         </a>
@@ -167,21 +256,24 @@ function Details({ earnings: e, details, watched, onToggleWatch }) {
           <ArrowUpRightIcon className="size-3" strokeWidth={2.4} aria-hidden="true" />
         </a>
         <p className="mt-2 mb-0 basis-full font-sans text-xs font-normal tracking-normal text-muted-foreground normal-case">
-          Adjusted EPS compared with consensus estimates. Data from Finnhub; filings from SEC EDGAR.
+          Adjusted EPS compared with consensus estimates. Data from Finnhub; filings from SEC EDGAR; financials and charts on TradingView.
         </p>
       </div>
     </>
   );
 }
 
-export function EarningsDetailsSheet({ earnings, details, watched, onToggleWatch, open, onOpenChange }) {
+// `lists`: the visitor's ticker lists; `activeListId` is the one on screen, picked first.
+// `onToggleInList(id)` adds the company to that list or takes it out; `onNewList()` starts a list with it in.
+export function EarningsDetailsSheet({ earnings, details, lists, activeListId, onToggleInList, onNewList, open, onOpenChange }) {
+  const listProps = { lists, activeListId, onToggle: onToggleInList, onNewList };
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         showCloseButton={false}
         className="gap-0 overflow-y-auto bg-background p-0 shadow-none data-[side=right]:w-full data-[side=right]:sm:max-w-115"
       >
-        {earnings && <Details earnings={earnings} details={details} watched={watched} onToggleWatch={onToggleWatch} />}
+        {earnings && <Details earnings={earnings} details={details} listProps={listProps} />}
       </SheetContent>
     </Sheet>
   );

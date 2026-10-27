@@ -12,7 +12,7 @@ export function MoreCompaniesDialog({ day, list, open, onOpenChange, filtering, 
   } else if (list.state === "error") {
     body = <p className="eyebrow m-0 px-6 py-8 text-muted-foreground">Could not load companies. Try again.</p>;
   } else {
-    // While searching or on the watchlist, matches move to the top (still largest first)
+    // While searching, matches move to the top (still largest first)
     const matches = filtering ? list.earnings.filter(isMatch) : list.earnings;
     const rest = filtering ? list.earnings.filter((e) => !isMatch(e)) : [];
     if (filtering) matchCount = matches.length;

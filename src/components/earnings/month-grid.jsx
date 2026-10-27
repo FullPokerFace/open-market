@@ -13,7 +13,7 @@ export const WEEKDAY_BADGES = ["bg-badge-1", "bg-badge-2", "bg-badge-3", "bg-bad
 // Shared by a month / week cell and the day view of the same date, so one morphs into the other
 export const dayTransitionName = (key) => `day-${key}`;
 
-// `matches`: how many hidden companies pass the search / watchlist, or null when nothing is filtered
+// `matches`: how many hidden companies pass the search, or null when nothing is filtered
 function MoreTile({ day, matches, onShowMore }) {
   const matchNote = matches ? `, ${matches} ${matches === 1 ? "matches" : "match"}` : "";
 

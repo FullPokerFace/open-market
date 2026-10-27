@@ -38,7 +38,7 @@ export async function isFlagged(text) {
 }
 
 const INSTRUCTIONS = `You turn visitor feature suggestions for Open Market, a free earnings calendar website
-(earnings dates, EPS and revenue against estimates, market sentiment, watchlists), into short cards for a public voting board.
+(earnings dates, EPS and revenue against estimates, market sentiment, ticker lists), into short cards for a public voting board.
 
 Write:
 - title: 2 to 6 words, Title Case, no ending punctuation. Name the feature, not the request ("Company Logos", not "Please add logos").

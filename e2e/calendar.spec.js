@@ -36,21 +36,30 @@ test.describe("calendar", () => {
     }
   });
 
-  test("opens a company's details and adds it to the watchlist", async ({ page }) => {
+  test("opens a company's details and adds it to a new list", async ({ page }) => {
     const tile = tiles(page).first();
     const ticker = await tickerOf(tile);
     await tile.click();
 
-    const sheet = page.getByRole("dialog");
+    // The create-list dialog opens over the sheet, so pick the sheet out by its close button
+    const sheet = page.getByRole("dialog").filter({ has: page.getByRole("button", { name: "Close details" }) });
     await expect(sheet).toBeVisible();
     await expect(sheet.getByText(ticker, { exact: true }).first()).toBeVisible();
     await expect(sheet.getByText("EPS", { exact: true }).first()).toBeVisible();
 
-    const watch = sheet.getByRole("button", { name: /watchlist/i });
-    await expect(watch).toHaveAttribute("aria-pressed", "false");
-    await watch.click();
-    await expect(watch).toHaveAttribute("aria-pressed", "true");
-    await expect(watch).toHaveText(/On your watchlist/i);
+    // A fresh browser has no lists: start one, already holding this company
+    await sheet.getByRole("button", { name: "Add to a new list" }).click();
+    const create = page.getByRole("dialog", { name: /New ticker list/ });
+    await expect(create.getByText(ticker, { exact: true }).first()).toBeVisible();
+    await create.getByLabel("List name").fill("E2E");
+    await create.getByRole("button", { name: "Create list" }).click();
+    await expect(create).toBeHidden();
+
+    await expect(sheet.getByLabel("List", { exact: true })).toHaveValue(/.+/);
+    const inList = sheet.getByRole("button", { name: "In list" });
+    await expect(inList).toHaveAttribute("aria-pressed", "true");
+    // Its only company can't be taken out
+    await expect(inList).toBeDisabled();
 
     await sheet.getByRole("button", { name: "Close details" }).click();
     await expect(sheet).toBeHidden();

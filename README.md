@@ -19,7 +19,7 @@ It starts with an earnings calendar and market context. What comes next is up to
 - Every company reporting, by day, week or month, with the whole month fitting on one screen
 - Each company marked by when it reports (before the open, during the day, after the close) and whether it beat, missed or was mixed against estimates
 - Filter by Most popular (the Fortune 100), NYSE or Nasdaq, or make your own ticker lists
-- Search any company reporting this month or the next two, and a watchlist kept in your browser
+- Search any company reporting this month or the next two, and your own ticker lists kept in your browser
 
 **Market context**
 - The CNN Fear & Greed Index and its change since the last close

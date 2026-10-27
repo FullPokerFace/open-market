@@ -4,7 +4,6 @@ import { useEffect, useRef, useState, ViewTransition } from "react";
 import { useRouter } from "next/navigation";
 import { calendarHref, matchesQuery } from "@/lib/earnings";
 import { rememberList, useTickerLists } from "@/lib/ticker-lists";
-import { useWatchlist } from "@/lib/watchlist";
 import { CalendarTitle, CalendarToolbar } from "./calendar-toolbar";
 import { CreateListDialog } from "./create-list-dialog";
 import { DayView } from "./day-view";
@@ -27,10 +26,10 @@ export function EarningsCalendar({ view, sentiment, events }) {
   const [query, setQuery] = useState("");
   // The header's search results are open: only then does the query dim the companies that don't match
   const [searchOpen, setSearchOpen] = useState(false);
-  const [scope, setScope] = useState("all");
-  const watchlist = useWatchlist();
   const tickerLists = useTickerLists();
   const [newListOpen, setNewListOpen] = useState(false);
+  // The company a new list starts with when it's made from the details sheet, else null
+  const [newListSeed, setNewListSeed] = useState(null);
   // Kept after close so the sheet's content stays put during its exit animation
   const [selected, setSelected] = useState(null);
   const [detailsOpen, setDetailsOpen] = useState(false);
@@ -50,13 +49,11 @@ export function EarningsCalendar({ view, sentiment, events }) {
   const q = query.trim().toUpperCase();
   // Closing search (a click outside, Escape, picking a result) shows every company again; the text is kept
   const highlight = searchOpen ? q : "";
-  const filtering = Boolean(highlight) || scope === "watchlist";
-  const isMatch = (e) => matchesQuery(e, highlight) && (scope === "all" || watchlist.has(e.ticker));
+  const filtering = Boolean(highlight);
+  const isMatch = (e) => matchesQuery(e, highlight);
 
   // Search results come from the server and cover every exchange, not just the selected one
   const search = useCompanySearch(q, view.key);
-  const searchState = search.state;
-  const searchResults = scope === "watchlist" ? search.results.filter((e) => watchlist.has(e.ticker)) : search.results;
 
   // A list is a server-side filter: its tickers go in a cookie and the server sends only its companies.
   // The one on screen is whichever saved list has the same tickers.
@@ -72,7 +69,20 @@ export function EarningsCalendar({ view, sentiment, events }) {
     if (href === `${window.location.pathname}${window.location.search}`) router.refresh();
     else router.push(href, { scroll: false });
   };
-  const createList = (name, tickers) => showList(tickerLists.create(name, tickers));
+  const openNewList = (seed = null) => {
+    setNewListSeed(seed);
+    setNewListOpen(true);
+  };
+  const createList = (name, tickers) => {
+    const list = tickerLists.create(name, tickers);
+    // Made from the details sheet: the calendar stays where it is
+    if (!newListSeed) showList(list);
+  };
+  // From the details sheet. The list on screen changed: reload it so the company shows up or goes.
+  const toggleInList = (id) => {
+    const list = tickerLists.toggle(id, selected.ticker);
+    if (list && id === activeList?.id) showList(list);
+  };
 
   const selectEarnings = (earnings) => {
     setSelected(earnings);
@@ -149,8 +159,8 @@ export function EarningsCalendar({ view, sentiment, events }) {
         onQueryChange={setQuery}
         searchOpen={searchOpen}
         onSearchOpenChange={setSearchOpen}
-        results={searchResults}
-        searchState={searchState}
+        results={search.results}
+        searchState={search.state}
         onSelectResult={selectEarnings}
       />
 
@@ -165,9 +175,9 @@ export function EarningsCalendar({ view, sentiment, events }) {
           showingList={Boolean(view.listTickers)}
           onSelectList={(id) => showList(tickerLists.lists.find((list) => list.id === id))}
           onSelectExchange={() => rememberList(null)}
-          onNewList={() => setNewListOpen(true)}
+          onNewList={() => openNewList()}
         >
-          <CalendarToolbar view={view} scope={scope} onScopeChange={setScope} onToday={jumpToToday} />
+          <CalendarToolbar view={view} onToday={jumpToToday} />
         </ExchangeFilter>
 
         {view.mode === "day" ? (
@@ -189,7 +199,13 @@ export function EarningsCalendar({ view, sentiment, events }) {
 
       </main>
 
-      <CreateListDialog open={newListOpen} onOpenChange={setNewListOpen} month={view.key} onCreate={createList} />
+      <CreateListDialog
+        open={newListOpen}
+        onOpenChange={setNewListOpen}
+        month={view.key}
+        seed={newListSeed}
+        onCreate={createList}
+      />
 
       <MoreCompaniesDialog
         day={moreDay}
@@ -204,8 +220,10 @@ export function EarningsCalendar({ view, sentiment, events }) {
       <EarningsDetailsSheet
         earnings={selected}
         details={selected ? details[selected.ticker] : null}
-        watched={selected ? watchlist.has(selected.ticker) : false}
-        onToggleWatch={() => watchlist.toggle(selected.ticker)}
+        lists={tickerLists.lists}
+        activeListId={activeList?.id ?? null}
+        onToggleInList={toggleInList}
+        onNewList={() => openNewList({ ticker: selected.ticker, name: selected.name })}
         open={detailsOpen}
         onOpenChange={setDetailsOpen}
       />
