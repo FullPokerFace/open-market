@@ -25,15 +25,16 @@ export function WatchlistsBoard() {
   const [dialogOpen, setDialogOpen] = useState(false);
   // The watchlist being edited, or null for a new one
   const [editing, setEditing] = useState(null);
+  // The dialog's search month. Read on open, not while rendering: the page is prerendered at build time.
+  const [month, setMonth] = useState("");
 
-  const openNew = () => {
-    setEditing(null);
-    setDialogOpen(true);
-  };
-  const openEdit = (list) => {
+  const openDialog = (list) => {
     setEditing(list);
+    setMonth(todayInNewYork().slice(0, 7));
     setDialogOpen(true);
   };
+  const openNew = () => openDialog(null);
+  const openEdit = (list) => openDialog(list);
   const save = (name, tickers) => (editing ? update(editing.id, name, tickers) : create(name, tickers));
   const showOnCalendar = (list) => {
     rememberList(list.tickers);
@@ -112,7 +113,7 @@ export function WatchlistsBoard() {
       <CreateListDialog
         open={dialogOpen}
         onOpenChange={setDialogOpen}
-        month={todayInNewYork().slice(0, 7)}
+        month={month}
         list={editing}
         onSave={save}
       />
