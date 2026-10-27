@@ -4,7 +4,7 @@ import { useId } from "react";
 import { Title } from "@/components/ui/title";
 import { cn } from "@/lib/utils";
 import { WEEKDAY_BADGES } from "./month-grid";
-import { dayColors, TickerTile } from "./ticker-tile";
+import { dayColors, TickerTile, TodayDot } from "./ticker-tile";
 import { liveSection, NowBadge, sectionProgress, splitByTiming, useNewYorkMinutes } from "./timing-sections";
 
 function DayColumn({ section, dotBorder, progress, live, minutes, isMatch, onSelect }) {
@@ -74,8 +74,13 @@ export function DayView({ day, isMatch, onSelect }) {
     >
       <div className="flex h-8 shrink-0 items-center justify-between border-b px-4 font-mono text-[11px] font-medium tracking-[0.15em]">
         <span className={cn("px-2 py-0.5 text-white", WEEKDAY_BADGES[day.weekday])}>0{day.weekday + 1}</span>
-        <span className="text-muted-foreground">
-          {day.isToday && "TODAY · "}
+        <span className="flex items-center gap-2 text-muted-foreground">
+          {day.isToday && (
+            <>
+              <TodayDot />
+              <span className="text-foreground">TODAY</span> ·
+            </>
+          )}
           {day.count} {day.count === 1 ? "COMPANY" : "COMPANIES"}
         </span>
       </div>

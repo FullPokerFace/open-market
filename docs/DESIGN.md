@@ -25,7 +25,7 @@ Stack: Next.js (App Router) · TypeScript · Tailwind CSS v4 · shadcn/ui · Rec
 |---|---|---|---|
 | `bg` | `#f2f1ee` | `#0b0b0c` | Page, panels |
 | `bg-past` | `#efeeea` | `#0d0d0f` | Calendar cells before today |
-| `bg-today` | `#e9e8e4` | `#17171a` | Today's cell |
+| `bg-today` | `#c9c5ba` | `#2e2e35` | Today's cell |
 | `tile` | `#ffffff` | `#141417` | Ticker tiles |
 | `tag` | `#e9e8e4` | `#18181b` | Tag fill |
 | `ink` | `#101014` | `#f2f1ee` | Primary text, solid buttons |
@@ -78,7 +78,7 @@ Load with `next/font/google`: `Bricolage_Grotesque` (weights 400–800), `Geist_
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --bg: #f2f1ee; --bg-past: #efeeea; --bg-today: #e9e8e4;
+  --bg: #f2f1ee; --bg-past: #efeeea; --bg-today: #c9c5ba;
   --tile: #ffffff; --tag: #e9e8e4;
   --ink: #101014; --strong: #000000;
   --body: rgb(16 16 20 / .72); --muted: rgb(16 16 20 / .60);
@@ -87,7 +87,7 @@ Load with `next/font/google`: `Bricolage_Grotesque` (weights 400–800), `Geist_
   --scrim: rgb(16 16 20 / .25);
 }
 .dark {
-  --bg: #0b0b0c; --bg-past: #0d0d0f; --bg-today: #17171a;
+  --bg: #0b0b0c; --bg-past: #0d0d0f; --bg-today: #2e2e35;
   --tile: #141417; --tag: #18181b;
   --ink: #f2f1ee; --strong: #ffffff;
   --body: rgb(242 241 238 / .75); --muted: rgb(242 241 238 / .60);
@@ -138,7 +138,7 @@ shadcn/ui: set `--radius: 0rem` and map shadcn's `--background/--foreground/--bo
 | **NumberBadge** | `hud` text, white on badge color, `px-2 py-0.5`, e.g. `01`. |
 | **Tag** | `tag-label`, `bg-tag border border-line px-1.5 py-px`; text color = meaning (`beat`/`mixed`/`miss`/`muted`). |
 | **TickerTile** | 48×48 `<button>`, `bg-tile border-line rounded-tile`, mono ticker. Reported: 10×10 square marker top-right (offset -4px) in status color with 2px border matching cell bg. Upcoming: no marker. Later: swap ticker text for logo image, same box. Dimmed (filtered out): `opacity .18`. |
-| **DayCell** | No fixed height: the grid fills the window and week rows share it (`minmax(92px, 1fr)`), `px-4 pt-2.5 pb-2`, right + bottom rule. Grid sits in `mx-6` with a left/right rule. Header row: date `OCT 19` (hud) left, count `07` (muted) right. Past = `bg-past`, today = `bg-today` + 2px inset `foreground` frame + label as inverted chip `OCT 19 · TODAY`. Tiles: as many as fit the measured cell (max 16); if more, one fewer + dashed `+N` tile. Empty: `NO EARNINGS` tag. |
+| **DayCell** | No fixed height: the grid fills the window and week rows share it (`minmax(92px, 1fr)`), `px-4 pt-2.5 pb-2`, right + bottom rule. Grid sits in `mx-6` with a left/right rule. Header row: date `OCT 19` (hud) left, count `07` (muted) right. Past = `bg-past`, today = `bg-today` + 2px inset `foreground` frame + label as inverted chip `● OCT 19 · TODAY` with a pulsing blue dot (`release-pulse`, motion-safe). Tiles: as many as fit the measured cell (max 16); if more, one fewer + dashed `+N` tile. Empty: `NO EARNINGS` tag. |
 | **MonthGrid** | 5 columns (Mon–Fri only), header row with `NumberBadge` + weekday. Wrap in `overflow-x-auto`, `min-w-[900px]`. |
 | **Legend** | Row of Tags: Beat, Mixed, Miss, "No mark · upcoming". |
 | **DetailsSheet** | Right slide-over (shadcn `Sheet`), `w-[min(460px,100%)]`, full-screen on mobile. `bg-bg`, left rule, scrim behind. Sections separated by rules, no cards: (1) SectionBar `03 / Q3 2026 RESULTS` + 48px close cell; (2) ticker badge + sector, company name (display 34px), "Reported Oct 19, after market close." tags: status, `ADJUSTED EPS`, `BMO/AMC`; (3) 2-col stat grid with a rule between: label, big number, "vs. $X expected", surprise `+4.0% SURPRISE` in status color; (4) EPS-surprise bar chart, 8 quarters, bars up/down from an `ink` zero line, square bars 14px wide, value labels above; (5) Primary button "Earnings release ↗", secondary "SEC filings ↗", footnote in muted 12px. |

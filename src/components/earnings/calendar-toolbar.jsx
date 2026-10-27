@@ -98,6 +98,32 @@ export function TileDisplayToggle() {
   );
 }
 
+// "October 2026 › Week of Oct 26 › Tuesday, Oct 27" right above a week or day view; nothing in month view
+export function CalendarBreadcrumb({ view }) {
+  if (!view.breadcrumb) return null;
+
+  return (
+    <nav aria-label="Breadcrumb" className="eyebrow border-b px-6 py-2.5">
+      <ol className="m-0 flex list-none flex-wrap items-center gap-1.5 p-0">
+        {view.breadcrumb.map(({ label, href }, i) => (
+          <li key={label} className="flex items-center gap-1.5">
+            {i > 0 && <ChevronRightIcon className="size-3 text-muted-foreground" strokeWidth={2.2} aria-hidden="true" />}
+            {href ? (
+              <Link href={href} scroll={false} className="text-muted-foreground no-underline hover:text-foreground">
+                {label}
+              </Link>
+            ) : (
+              <span aria-current="page" className="text-foreground">
+                {label}
+              </span>
+            )}
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+}
+
 // "October earnings." / "Week of Oct 26 earnings." / "Monday, Oct 26 earnings." heading above the calendar
 export function CalendarTitle({ view }) {
   return (

@@ -432,6 +432,11 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
   // The weekday the other views open on: the one shown, else today in the current month, else the month's first
   const anchor = focus ?? (period.isCurrent ? weekdayOf(today) : weekdayOf(monthFirst));
   const todayDate = parseIso(today);
+  const viewHrefs = {
+    day: href({ view: "day", date: anchor }),
+    week: href({ view: "week", date: anchor }),
+    month: href({ month: monthKey(mode === "month" ? target : monthOf(anchor)) }),
+  };
   return {
     key: monthKey(target),
     mode,
@@ -455,12 +460,20 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
     todayHref: period.todayHref,
     prevHref: period.prevHref,
     nextHref: period.nextHref,
-    viewHrefs: {
-      day: href({ view: "day", date: anchor }),
-      week: href({ view: "week", date: anchor }),
-      month: href({ month: monthKey(mode === "month" ? target : monthOf(anchor)) }),
-    },
+    viewHrefs,
+    breadcrumb: breadcrumbFor({ mode, anchor, title: period.title, viewHrefs }),
   };
+}
+
+// Month → week → day trail above a week or day view: [{ label, href }], the last one (no href) being the view shown.
+// Null in month view.
+function breadcrumbFor({ mode, anchor, title, viewHrefs }) {
+  if (mode === "month") return null;
+  const { year, month } = monthOf(anchor);
+  const trail = [{ label: `${MONTHS[month - 1]} ${year}`, href: viewHrefs.month }];
+  if (mode === "day") trail.push({ label: `Week of ${shortLabel(mondayOf(anchor))}`, href: viewHrefs.week });
+  trail.push({ label: title, href: null });
+  return trail;
 }
 
 export function formatEps(value) {

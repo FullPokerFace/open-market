@@ -4,7 +4,7 @@ import { Fragment, useLayoutEffect, useRef, useState, ViewTransition } from "rea
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { dayColors, TickerTile } from "./ticker-tile";
+import { dayColors, TickerTile, TodayDot } from "./ticker-tile";
 import { SECTION_MIN_PX, TimingSections } from "./timing-sections";
 
 const WEEKDAYS = ["MON", "TUE", "WED", "THU", "FRI"];
@@ -137,7 +137,10 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
             {WEEKDAYS[day.weekday]}
           </span>
           {day.isToday ? (
-            <span className="bg-foreground px-2 py-0.5 text-background">{day.label} · TODAY</span>
+            <span className="flex items-center gap-2 bg-foreground px-2 py-0.5 text-background">
+              <TodayDot />
+              {day.label} · TODAY
+            </span>
           ) : (
             <span className={day.inPeriod ? "text-foreground" : "text-muted-foreground"}>{day.label}</span>
           )}

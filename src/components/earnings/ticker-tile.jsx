@@ -20,6 +20,11 @@ export function dayColors(day) {
   return { background: "bg-background", dotBorder: "border-background" };
 }
 
+// Pulsing blue point beside the TODAY label, so today's cell is found at a glance
+export function TodayDot() {
+  return <span aria-hidden="true" className="size-1.5 shrink-0 rounded-full bg-blue motion-safe:animate-release-pulse" />;
+}
+
 // Shows the company's logo in logos mode, else (or when it has none) the ticker.
 // `showTiming` adds a corner badge for when the company reports (sunrise / sun / moon); the week and day views group by timing instead.
 // The badge and the result dot sit outside the tile's top-right corner so neither covers a logo.

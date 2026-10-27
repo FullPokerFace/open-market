@@ -4,7 +4,7 @@ import { useEffect, useRef, useState, ViewTransition } from "react";
 import { useRouter } from "next/navigation";
 import { calendarHref, matchesQuery } from "@/lib/earnings";
 import { rememberList, useTickerLists } from "@/lib/ticker-lists";
-import { CalendarTitle, CalendarToolbar } from "./calendar-toolbar";
+import { CalendarBreadcrumb, CalendarTitle, CalendarToolbar } from "./calendar-toolbar";
 import { CreateListDialog } from "./create-list-dialog";
 import { DayView } from "./day-view";
 import { EarningsDetailsSheet } from "./earnings-details-sheet";
@@ -180,6 +180,7 @@ export function EarningsCalendar({ view, sentiment, events }) {
           <CalendarToolbar view={view} onToday={jumpToToday} />
         </ExchangeFilter>
 
+        <CalendarBreadcrumb view={view} />
         {view.mode === "day" ? (
           // Same name as the date's month / week cell: opening the day from there grows the cell into this box, and back
           <ViewTransition name={dayTransitionName(view.days[0].key)} share="day-morph" default="none">
