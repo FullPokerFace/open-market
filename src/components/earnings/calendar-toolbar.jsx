@@ -1,5 +1,8 @@
-import { ChevronLeftIcon, ChevronRightIcon, Columns3Icon, LayoutGridIcon, SquareIcon } from "lucide-react";
+"use client";
+
+import { CaseUpperIcon, ChevronLeftIcon, ChevronRightIcon, Columns3Icon, ImageIcon, LayoutGridIcon, SquareIcon } from "lucide-react";
 import Link from "next/link";
+import { LOGOS_ENABLED, setTileDisplay, useTileDisplay } from "@/lib/tile-display";
 import { cn } from "@/lib/utils";
 
 const square = "grid size-10 place-items-center border border-line-strong text-foreground";
@@ -52,6 +55,45 @@ export function CalendarToolbar({ view, scope, onScopeChange, onToday }) {
           </Link>
         ))}
       </nav>
+    </div>
+  );
+}
+
+const DISPLAY_OPTIONS = [
+  { value: "logos", label: "Show logos", Icon: ImageIcon },
+  { value: "tickers", label: "Show tickers", Icon: CaseUpperIcon },
+];
+
+// Company logos (the default) or tickers on the tiles. Real radio inputs (arrow keys move between them), drawn like the view buttons.
+// Sits beside "Create list"; hidden without a logo.dev key.
+export function TileDisplayToggle() {
+  const display = useTileDisplay();
+  if (!LOGOS_ENABLED) return null;
+
+  return (
+    <div role="radiogroup" aria-label="Tile display" className="flex">
+      {DISPLAY_OPTIONS.map(({ value, label, Icon }) => (
+        <label
+          key={value}
+          title={label}
+          className={cn(
+            square,
+            "-ml-px cursor-pointer first:ml-0 has-focus-visible:outline-2 has-focus-visible:outline-offset-2 has-focus-visible:outline-ring",
+            value === display && pressed
+          )}
+        >
+          <input
+            type="radio"
+            name="tile-display"
+            value={value}
+            checked={value === display}
+            onChange={() => setTileDisplay(value)}
+            aria-label={label}
+            className="sr-only"
+          />
+          <Icon className="size-3.5" aria-hidden="true" />
+        </label>
+      ))}
     </div>
   );
 }

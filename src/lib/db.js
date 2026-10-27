@@ -45,6 +45,7 @@ export const COLLECTIONS = {
   epsHistory: "epsHistory", // _id: symbol
   companyProfiles: "companyProfiles", // _id: symbol
   companies: "companies", // _id: symbol; see companies.js
+  companyLogos: "companyLogos", // _id: symbol; logo image from logo.dev, see logos.js
   fearGreed: "fearGreed",
   keyReleases: "keyReleases",
   suggestions: "suggestions", // feature suggestion board; see suggestions.js

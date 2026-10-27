@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+import { logoUrl, useTileDisplay } from "@/lib/tile-display";
 import { cn } from "@/lib/utils";
 import { TIMING_ICONS } from "./timing-icons";
 
@@ -17,11 +21,18 @@ export function dayColors(day) {
   return { background: "bg-background", dotBorder: "border-background" };
 }
 
-// `showTiming` adds a corner icon for when the company reports (sunrise / sun / moon); the week and day views group by timing instead
+// Tickers with no logo (or a failed load) this visit, so other tiles and views skip straight to the ticker
+const missingLogos = new Set();
+
+// `showTiming` adds a corner badge for when the company reports (sunrise / sun / moon); the week and day views group by timing instead.
+// The badge and the result dot sit outside the tile's top-right corner so neither covers a logo.
 export function TickerTile({ earnings, dimmed, dotBorder, showTiming = false, onSelect }) {
   const { ticker, name, reported, status, timing, timingLabel } = earnings;
   const label = `${ticker} · ${name} · ${reported ? status : timingLabel ? `Reports ${timingLabel}` : "Upcoming"}`;
   const TimingIcon = showTiming ? TIMING_ICONS[timing] : null;
+  const display = useTileDisplay();
+  const [logoFailed, setLogoFailed] = useState(() => missingLogos.has(ticker));
+  const showLogo = display === "logos" && !logoFailed;
 
   return (
     <button
@@ -35,8 +46,36 @@ export function TickerTile({ earnings, dimmed, dotBorder, showTiming = false, on
         dimmed && "opacity-[0.18]"
       )}
     >
-      {ticker}
-      {TimingIcon && <TimingIcon className="absolute top-1 left-1 size-2.5" />}
+      {showLogo ? (
+        // Plain img: /api/logo already serves small cached PNGs, so Next's image optimizer would only add cost
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={logoUrl(ticker)}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          onError={() => {
+            missingLogos.add(ticker);
+            setLogoFailed(true);
+          }}
+          className="size-8 object-contain"
+        />
+      ) : (
+        ticker
+      )}
+      {TimingIcon && (
+        // Left of the result dot when there is one, otherwise in the dot's corner
+        <span
+          aria-hidden="true"
+          className={cn(
+            "absolute -top-1.5 grid size-4 place-items-center border-2 bg-tile",
+            dotBorder,
+            reported ? "right-2" : "-right-1.5"
+          )}
+        >
+          <TimingIcon className="size-2.5" />
+        </span>
+      )}
       {reported && (
         <span
           aria-hidden="true"

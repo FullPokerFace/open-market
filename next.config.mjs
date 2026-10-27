@@ -2,6 +2,10 @@
 const nextConfig = {
   /* config options here */
   cacheComponents: true,
+  // Tells the browser whether company logos are on (a logo.dev key is set), without sending the key
+  env: {
+    LOGOS_ENABLED: String(Boolean(process.env.LOGO_DEV_TOKEN)),
+  },
   partialPrefetching: true,
   turbopack: {
     rules: {

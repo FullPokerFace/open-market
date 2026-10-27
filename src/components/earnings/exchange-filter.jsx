@@ -2,12 +2,13 @@
 
 import { useRouter } from "next/navigation";
 import { ChevronDownIcon, PlusIcon } from "lucide-react";
+import { TileDisplayToggle } from "./calendar-toolbar";
 
 const LIST_VALUE = "list:";
 const OTHER_LIST = "other-list";
 
 // `children` (the calendar toolbar) sits at the right end of the row, and still shows without filters.
-// One dropdown with the exchanges, then the visitor's own lists, and "+ Create list" beside it.
+// One dropdown with the exchanges, then the visitor's own lists, with "+ Create list" and the tickers / logos toggle beside it.
 // `showingList`: the calendar is filtered to a list's tickers (`activeListId` is null when no saved list matches).
 export function ExchangeFilter({ filters, lists, activeListId, showingList, onSelectList, onSelectExchange, onNewList, children }) {
   return (
@@ -23,6 +24,7 @@ export function ExchangeFilter({ filters, lists, activeListId, showingList, onSe
             onSelectExchange={onSelectExchange}
           />
           <NewListButton onClick={onNewList} />
+          <TileDisplayToggle />
         </nav>
       )}
       {children}
