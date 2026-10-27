@@ -10,10 +10,10 @@ export const SHIPPED = [
       ["Day, week or month", "See one day, one week with every company showing, or the whole month. Step back or ahead, or jump back to today."],
       ["Before open or after close", "Every company is marked by when it reports: before the open, during the day or after the close. The week and day views group them that way, with a marker for where the trading day is now."],
       ["Company filter", "Most popular (the Fortune 100), NYSE, Nasdaq or everything, with counts for the month."],
-      ["Your own lists", "Name a list, search and add the companies you follow, and see only them on the calendar. Your last list opens next time you visit."],
+      ["Watchlists", "Name a watchlist, search and add the companies you follow, and see only them on the calendar. Your last watchlist opens next time you visit."],
       ["Biggest names first", "Each day lists its largest companies first; the rest are one click away in \"+N\"."],
       ["Fits your screen", "The whole month fits in one window, with today framed and in view."],
-      ["Company logos", "Logos on the calendar, in search and lists, and next to the name in company details. Switch back to tickers any time."],
+      ["Company logos", "Logos on the calendar, in search and watchlists, and next to the name in company details. Switch back to tickers any time."],
     ],
   },
   {
@@ -25,10 +25,10 @@ export const SHIPPED = [
     ],
   },
   {
-    area: "Search & lists",
+    area: "Search & watchlists",
     items: [
       ["Search", "Find any company reporting this month or the next two by ticker or name."],
-      ["Ticker lists", "Make your own lists of companies and show only them on the calendar. Add or remove a company from its details panel. Kept in your browser."],
+      ["Watchlists page", "All your watchlists in one place: show one on the calendar, rename it, change its companies or delete it. Add a company from its details panel. Kept in your browser."],
     ],
   },
   {
@@ -57,7 +57,6 @@ export const UPCOMING = [
   { stage: "next", title: "Market-cap filter", text: "Show only large, mid or small companies." },
   { stage: "next", title: "Shareable company links", text: "Send someone a link that opens straight to a company's results." },
   { stage: "planned", title: "US and foreign companies", text: "Filter by where a company is based." },
-  { stage: "planned", title: "Edit your lists", text: "Rename a list, change its companies or delete it." },
   { stage: "later", title: "Two years of EPS history", text: "Eight quarters in the surprise chart instead of four." },
   { stage: "later", title: "Insights", text: "A page for a closer look at earnings season. Details to come." },
 ];

@@ -17,6 +17,7 @@ const menuItem = "flex h-12 items-center border-b px-6 text-left text-foreground
 const iconButton = "grid w-12 shrink-0 cursor-pointer place-items-center border-l text-foreground";
 const PAGES = [
   { href: "/", label: "Calendar" },
+  { href: "/watchlists", label: "Watchlists" },
   { href: "/roadmap", label: "Roadmap" },
   { href: "/about", label: "About" },
 ];

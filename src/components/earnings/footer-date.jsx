@@ -2,7 +2,7 @@
 
 import { useSyncExternalStore } from "react";
 
-const subscribe = () => () => {};
+const subscribe = () => () => { };
 
 // Read in the browser so the date is the visitor's today, not the build day
 function getToday() {
@@ -15,7 +15,7 @@ export function FooterDate() {
 
   return (
     <time dateTime={new Date().toLocaleDateString("en-CA")}>
-      © {today.slice(-4)} · {today}
+      {today}
     </time>
   );
 }

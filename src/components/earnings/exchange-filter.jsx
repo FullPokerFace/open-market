@@ -37,12 +37,10 @@ function NewListButton({ onClick }) {
     <button
       type="button"
       onClick={onClick}
-      aria-label="Create list"
+      aria-label="Create watchlist"
       className="flex h-10 w-10 cursor-pointer items-center justify-center gap-2 border border-line-strong font-mono text-[11px] font-bold tracking-[0.12em] text-foreground uppercase hover:bg-tag sm:w-auto sm:px-4"
     >
       <PlusIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
-      {/* Icon only on phones */}
-      <span className="hidden sm:inline">Create list</span>
     </button>
   );
 }
@@ -64,7 +62,7 @@ function ExchangeSelect({ filters, lists, activeListId, showingList, onSelectLis
 
   return (
     <label className="relative flex">
-      <span className="sr-only">Exchange or list</span>
+      <span className="sr-only">Exchange or watchlist</span>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
@@ -77,11 +75,11 @@ function ExchangeSelect({ filters, lists, activeListId, showingList, onSelectLis
         ))}
         {value === OTHER_LIST && (
           <option value={OTHER_LIST} disabled>
-            Ticker list
+            Watchlist
           </option>
         )}
         {lists.length > 0 && (
-          <optgroup label="My lists">
+          <optgroup label="My watchlists">
             {lists.map((list) => (
               <option key={list.id} value={`${LIST_VALUE}${list.id}`}>
                 {list.name}

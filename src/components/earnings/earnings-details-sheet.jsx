@@ -88,7 +88,7 @@ function SurpriseHistory({ details }) {
 const NEW_LIST = "new-list";
 const listControl = "flex h-10 items-center gap-2 font-mono text-[11px] font-bold tracking-[0.12em] uppercase";
 
-// Pick one of the visitor's lists, then add the company to it or take it out; "+ New list" starts one with it in.
+// Pick one of the visitor's watchlists, then add the company to it or take it out; "+ New watchlist" starts one with it in.
 // The pick stays while other companies are opened, so adding several to one list is a click each.
 function ListPicker({ ticker, lists, activeListId, onToggle, onNewList }) {
   const [picked, setPicked] = useState(null);
@@ -98,13 +98,13 @@ function ListPicker({ ticker, lists, activeListId, onToggle, onNewList }) {
     return (
       <button type="button" onClick={onNewList} className={cn(listControl, "mt-1 cursor-pointer justify-center bg-foreground px-5 text-background")}>
         <PlusIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
-        Add to a new list
+        Add to a new watchlist
       </button>
     );
   }
 
   const inList = list.tickers.includes(ticker);
-  // A list can't be emptied from here: an empty list would show no calendar at all
+  // A watchlist can't be emptied from here: an empty one would show no calendar at all
   const last = inList && list.tickers.length === 1;
   let title = inList ? `Remove ${ticker} from ${list.name}` : `Add ${ticker} to ${list.name}`;
   if (last) title = `${ticker} is the only company in ${list.name}`;
@@ -118,8 +118,8 @@ function ListPicker({ ticker, lists, activeListId, onToggle, onNewList }) {
   return (
     <div className="mt-1 flex">
       <label className="relative flex min-w-0 flex-1">
-        <span className="sr-only">List</span>
-        {/* Native select so phones get their own picker; "+ New list" opens the dialog and the pick stays put */}
+        <span className="sr-only">Watchlist</span>
+        {/* Native select so phones get their own picker; "+ New watchlist" opens the dialog and the pick stays put */}
         <select
           value={list.id}
           onChange={(ev) => (ev.target.value === NEW_LIST ? onNewList() : setPicked(ev.target.value))}
@@ -131,7 +131,7 @@ function ListPicker({ ticker, lists, activeListId, onToggle, onNewList }) {
               {l.tickers.includes(ticker) ? " ✓" : ""}
             </option>
           ))}
-          <option value={NEW_LIST}>+ New list</option>
+          <option value={NEW_LIST}>+ New watchlist</option>
         </select>
         <ChevronDownIcon
           className="pointer-events-none absolute top-1/2 right-3.5 size-3.5 -translate-y-1/2 text-foreground"
@@ -156,7 +156,7 @@ function ListPicker({ ticker, lists, activeListId, onToggle, onNewList }) {
         ) : (
           <PlusIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
         )}
-        {inList ? "In list" : "Add"}
+        {inList ? "Added" : "Add"}
       </button>
     </div>
   );

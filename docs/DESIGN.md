@@ -152,7 +152,7 @@ Icons: lucide-react, 14px, stroke 2. No emoji.
 - Default view: current month, today highlighted; week starts Monday, weekends hidden.
 - Prev/Today/Next navigate months (Week view = same cell design, one row, taller cells, show all tiles).
 - Search: filters by ticker prefix or company name. **Dims** non-matches instead of removing them, so the grid never reflows. A `+N` tile with matches inside gets a blue border and a count badge; with none, it dims. A drop-down under the search box lists every match in the month on any exchange (rows like the `+N` modal, with the date after the ticker).
-- Ticker lists: the visitor's own lists, picked in the exchange dropdown, show only their companies. Add / remove a company with the list picker in the DetailsSheet. Stored in `localStorage`.
+- Watchlists: the visitor's own, picked in the exchange dropdown, show only their companies. Add / remove a company with the watchlist picker in the DetailsSheet; view, edit and delete them on the /watchlists page. Stored in `localStorage`.
 - Click tile → DetailsSheet. URL reflects selection (`?t=NFLX`) so it's shareable; `Esc` closes.
 - Status logic: Beat = EPS ≥ est and revenue ≥ est; Miss = both below; Mixed = one each; Upcoming = not yet reported. Only compute surprise when estimate and actual share an accounting basis (adjusted vs. GAAP).
 - Theme: light default, toggle in top bar, `class="dark"` on `<html>`, persisted in `localStorage`, respects `prefers-color-scheme` on first visit.
@@ -186,4 +186,4 @@ lib/
 2. TopBar, SectionBar, PageTitle, Button, Tag, NumberBadge.
 3. TickerTile → DayCell → MonthGrid with mock data. Match the mock side by side.
 4. DetailsSheet + surprise chart.
-5. Search, ticker lists, URL state, responsive list view.
+5. Search, watchlists, URL state, responsive list view.

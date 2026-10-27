@@ -16,7 +16,7 @@ const DESIGN_INSPIRATION_URL = "https://getartcraft.com";
 
 const OFFERS = [
   ["Earnings calendar", "Every company reporting, by day, week or month, marked by when it reports and how it did."],
-  ["Your own lists", "Follow just the companies you care about; your last list opens next time."],
+  ["Your own watchlists", "Follow just the companies you care about; your last watchlist opens next time."],
   ["Market context", "The Fear & Greed Index and the next Fed, CPI, jobs and GDP releases with their expectations."],
   ["Company details", "EPS and revenue against estimates, the surprise history, and links to SEC filings."],
 ];

@@ -13,20 +13,34 @@ const actionButton = "h-10 px-4.5 font-mono text-[11px] font-bold tracking-[0.12
 const field = "h-10 w-full min-w-0 border border-line-strong bg-tile px-3 text-[14px] text-foreground outline-none focus-visible:border-ring";
 const message = "eyebrow m-0 px-4 py-4 text-muted-foreground";
 
-// Name a list, then search -> add, search -> add, then create it.
-// `onCreate(name, tickers)` saves it; the draft is kept if the dialog is closed without creating.
-// `seed` ({ ticker, name }, from the details sheet) is added to the draft each time it's opened with one.
-export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) {
+// Name a watchlist, then search -> add, search -> add, then save it with `onSave(name, tickers)`.
+// New (no `list`): the draft is kept if the dialog is closed without saving, and `seed` ({ ticker, name },
+// from the details sheet) is added to it each time it's opened with one.
+// Editing (`list`, a saved watchlist): opens on its name and companies.
+export function CreateListDialog({ open, onOpenChange, month, list = null, seed = null, onSave }) {
   const [name, setName] = useState("");
   const [query, setQuery] = useState("");
-  // [{ ticker, name }] in the order they were added
+  // [{ ticker, name }] in the order they were added; saved watchlists keep tickers only, so their names are null
   const [companies, setCompanies] = useState([]);
-  const [seeded, setSeeded] = useState(null);
+  // What the draft was last loaded from: a watchlist id, a seed, or null
+  const [source, setSource] = useState(null);
   const searchInput = useRef(null);
 
-  if (open && seed && seed !== seeded) {
-    setSeeded(seed);
-    if (!companies.some((c) => c.ticker === seed.ticker)) setCompanies([...companies, seed]);
+  const target = list ? list.id : seed;
+  if (open && target !== source) {
+    setSource(target);
+    if (list) {
+      setName(list.name);
+      setCompanies(list.tickers.map((ticker) => ({ ticker, name: null })));
+      setQuery("");
+    } else if (typeof source === "string") {
+      // Was editing a watchlist: start a new one from scratch
+      setName("");
+      setCompanies(seed ? [seed] : []);
+      setQuery("");
+    } else if (seed && !companies.some((c) => c.ticker === seed.ticker)) {
+      setCompanies([...companies, seed]);
+    }
   }
 
   const q = query.trim().toUpperCase();
@@ -53,10 +67,12 @@ export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) 
   const submit = (event) => {
     event.preventDefault();
     if (!ready) return;
-    onCreate(name, companies.map((c) => c.ticker));
+    onSave(name, companies.map((c) => c.ticker));
     setName("");
     setQuery("");
     setCompanies([]);
+    // An edited watchlist reloads from its saved state next time
+    if (list) setSource(null);
     onOpenChange(false);
   };
 
@@ -105,7 +121,7 @@ export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) 
       <DialogContent className="max-w-xl bg-background">
         <div className="eyebrow flex shrink-0 items-center justify-between border-b pl-6 text-muted-foreground">
           <span>
-            Lists / <span className="text-foreground">New list</span>
+            Watchlists / <span className="text-foreground">{list ? "Edit" : "New"}</span>
           </span>
           <DialogClose aria-label="Close" className="grid h-11 w-12 cursor-pointer place-items-center border-l text-foreground">
             <XIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
@@ -113,7 +129,7 @@ export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) 
         </div>
         <div className="shrink-0 border-b px-6 py-4">
           <DialogTitle className="display-type text-[28px] font-bold">
-            New ticker <span className="text-blue">list</span>.
+            {list ? "Edit" : "New"} <span className="text-blue">watchlist</span>.
           </DialogTitle>
           <DialogDescription className="mt-1 text-[13px] text-body">
             Name it, then search and add companies reporting this month or the next two.
@@ -124,7 +140,7 @@ export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) 
           <div className="flex flex-col gap-2">
             <div className="flex items-baseline justify-between gap-3">
               <Label htmlFor="list-name" className="eyebrow text-muted-foreground">
-                List name
+                Watchlist name
               </Label>
               <span className="eyebrow text-[10px] text-muted-foreground">
                 {name.length} / {LIST_NAME_MAX}
@@ -167,7 +183,7 @@ export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) 
 
           <div className="flex flex-col gap-2">
             <span className="eyebrow text-muted-foreground">
-              In this list · {companies.length}
+              In this watchlist · {companies.length}
             </span>
             {companies.length ? (
               <ul className="m-0 list-none border p-0">
@@ -177,7 +193,7 @@ export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) 
                     className="grid grid-cols-[88px_minmax(0,1fr)_auto] items-center gap-3 border-b pl-4 last:border-b-0"
                   >
                     <TickerLabel ticker={c.ticker} />
-                    <span className="truncate text-body">{c.name}</span>
+                    <span className="truncate text-body">{c.name ?? ""}</span>
                     <button
                       type="button"
                       onClick={() => remove(c.ticker)}
@@ -198,7 +214,7 @@ export function CreateListDialog({ open, onOpenChange, month, seed, onCreate }) 
 
           <div className="flex justify-end">
             <Button type="submit" disabled={!ready} className={actionButton}>
-              Create list
+              {list ? "Save watchlist" : "Create watchlist"}
             </Button>
           </div>
         </form>

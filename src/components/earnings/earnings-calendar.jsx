@@ -204,7 +204,7 @@ export function EarningsCalendar({ view, sentiment, events }) {
         onOpenChange={setNewListOpen}
         month={view.key}
         seed={newListSeed}
-        onCreate={createList}
+        onSave={createList}
       />
 
       <MoreCompaniesDialog

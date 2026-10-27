@@ -36,7 +36,7 @@ test.describe("calendar", () => {
     }
   });
 
-  test("opens a company's details and adds it to a new list", async ({ page }) => {
+  test("opens a company's details and adds it to a new watchlist", async ({ page }) => {
     const tile = tiles(page).first();
     const ticker = await tickerOf(tile);
     await tile.click();
@@ -48,15 +48,15 @@ test.describe("calendar", () => {
     await expect(sheet.getByText("EPS", { exact: true }).first()).toBeVisible();
 
     // A fresh browser has no lists: start one, already holding this company
-    await sheet.getByRole("button", { name: "Add to a new list" }).click();
-    const create = page.getByRole("dialog", { name: /New ticker list/ });
+    await sheet.getByRole("button", { name: "Add to a new watchlist" }).click();
+    const create = page.getByRole("dialog", { name: /New watchlist/ });
     await expect(create.getByText(ticker, { exact: true }).first()).toBeVisible();
-    await create.getByLabel("List name").fill("E2E");
-    await create.getByRole("button", { name: "Create list" }).click();
+    await create.getByLabel("Watchlist name").fill("E2E");
+    await create.getByRole("button", { name: "Create watchlist" }).click();
     await expect(create).toBeHidden();
 
-    await expect(sheet.getByLabel("List", { exact: true })).toHaveValue(/.+/);
-    const inList = sheet.getByRole("button", { name: "In list" });
+    await expect(sheet.getByLabel("Watchlist", { exact: true })).toHaveValue(/.+/);
+    const inList = sheet.getByRole("button", { name: "Added" });
     await expect(inList).toHaveAttribute("aria-pressed", "true");
     // Its only company can't be taken out
     await expect(inList).toBeDisabled();
@@ -66,7 +66,7 @@ test.describe("calendar", () => {
   });
 
   test("filters by exchange", async ({ page }) => {
-    const select = page.getByLabel("Exchange or list");
+    const select = page.getByLabel("Exchange or watchlist");
     const options = await select.locator("option:not([disabled])").evaluateAll((els) => els.map((el) => el.value));
     test.skip(options.length < 2, "Only one filter available");
 

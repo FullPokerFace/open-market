@@ -77,6 +77,33 @@ export function rememberList(tickers) {
     : `${LIST_COOKIE}=; path=/; max-age=0; samesite=lax`;
 }
 
+function sameTickers(a, b) {
+  return [...a].sort().join(",") === [...b].sort().join(",");
+}
+
+// The tickers the calendar opens with (the remembered list), or null
+function rememberedTickers() {
+  const value = document.cookie.split("; ").find((c) => c.startsWith(`${LIST_COOKIE}=`))?.slice(LIST_COOKIE.length + 1);
+  if (!value) return null;
+  try {
+    return decodeURIComponent(value).split(",");
+  } catch {
+    return null;
+  }
+}
+
+// Replaces one list (null deletes it); returns the new one. The calendar's remembered list follows along.
+function replace(id, change) {
+  const old = getSnapshot().find((list) => list.id === id);
+  if (!old) return null;
+  const updated = change(old);
+  save(getSnapshot().flatMap((list) => (list.id !== id ? [list] : updated ? [updated] : [])));
+
+  const remembered = rememberedTickers();
+  if (remembered && sameTickers(remembered, old.tickers)) rememberList(updated?.tickers ?? null);
+  return updated;
+}
+
 export function useTickerLists() {
   const lists = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
@@ -92,18 +119,16 @@ export function useTickerLists() {
       save([...getSnapshot(), list]);
       return list;
     },
+    // Renames the list and sets its companies; returns the updated list
+    update: (id, name, tickers) => replace(id, (list) => ({ ...list, name: name.trim().slice(0, LIST_NAME_MAX), tickers })),
     // Adds the ticker to the list, or takes it out; returns the updated list
-    toggle: (id, ticker) => {
-      let updated = null;
-      save(
-        getSnapshot().map((list) => {
-          if (list.id !== id) return list;
-          const tickers = list.tickers.includes(ticker) ? list.tickers.filter((t) => t !== ticker) : [...list.tickers, ticker];
-          updated = { ...list, tickers };
-          return updated;
-        })
-      );
-      return updated;
+    toggle: (id, ticker) =>
+      replace(id, (list) => ({
+        ...list,
+        tickers: list.tickers.includes(ticker) ? list.tickers.filter((t) => t !== ticker) : [...list.tickers, ticker],
+      })),
+    remove: (id) => {
+      replace(id, () => null);
     },
   };
 }

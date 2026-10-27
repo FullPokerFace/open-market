@@ -11,15 +11,16 @@ It starts with an earnings calendar and market context. What comes next is up to
   <img alt="Open Market's main page: the market sentiment meter and upcoming Fed, GDP, jobs and CPI releases above an October earnings calendar, with each company's ticker marked by when it reports and whether it beat or missed" src="docs/images/calendar-light.png">
 </picture>
 
-▶ **[Watch the 1-minute tour](docs/video/open-market-tour.webm)**: the market panel, the calendar, company details, search, views, ticker lists, and voting on the roadmap.
+▶ **[Watch the 1-minute tour](docs/video/open-market-tour.webm)**: the market panel, the calendar, company details, search, views, watchlists, and voting on the roadmap.
 
 ## What's in it today
 
 **Earnings calendar**
 - Every company reporting, by day, week or month, with the whole month fitting on one screen
 - Each company marked by when it reports (before the open, during the day, after the close) and whether it beat, missed or was mixed against estimates
-- Filter by Most popular (the Fortune 100), NYSE or Nasdaq, or make your own ticker lists
-- Search any company reporting this month or the next two, and your own ticker lists kept in your browser
+- Filter by Most popular (the Fortune 100), NYSE or Nasdaq, or make your own watchlists
+- Search any company reporting this month or the next two
+- A Watchlists page to show, edit or delete your watchlists, kept in your browser
 
 **Market context**
 - The CNN Fear & Greed Index and its change since the last close
