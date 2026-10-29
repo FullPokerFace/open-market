@@ -39,13 +39,16 @@ export function formatAge(ms) {
 // Loads running right now, by key, so requests that arrive together share one fetch
 const inFlight = new Map();
 
+// Documents this process has already read or saved, by key: { data, fetchedAt }. A fresh one is served from here
+// without asking MongoDB; on globalThis so dev reloads keep it
+const inMemory = (globalThis.storedInMemory ??= new Map());
+
 // One collection per kind of data; data that's one value overall (not per symbol or week) is saved under this id
 export const COLLECTIONS = {
   earningsCalendar: "earningsCalendar", // _id: the week's Monday
   epsHistory: "epsHistory", // _id: symbol
   companyProfiles: "companyProfiles", // _id: symbol
   companies: "companies", // _id: symbol; see companies.js
-  companyLogos: "companyLogos", // old logo store, now public/logos; read only by scripts/export-logos.mjs, then droppable
   fearGreed: "fearGreed",
   keyReleases: "keyReleases",
   suggestions: "suggestions", // feature suggestion board; see suggestions.js
@@ -56,14 +59,19 @@ export const LATEST = "latest";
 
 // The saved document `id` in `collection` if it's younger than `maxAge` (ms); otherwise runs `load`, saves and
 // returns its result. When `load` fails, an older saved copy is returned instead of the error.
+// A copy this process already has is used before asking MongoDB.
 export async function stored(collection, id, maxAge, load) {
+  const key = `${collection}/${id}`;
+  const remembered = inMemory.get(key);
+  if (remembered && Date.now() - remembered.fetchedAt.getTime() < maxAge) return remembered.data;
+
   const db = await getDb();
   const docs = db.collection(collection);
-  const key = `${collection}/${id}`;
   const started = performance.now();
   const saved = await docs.findOne({ _id: id });
   const age = saved && Date.now() - saved.fetchedAt.getTime();
   if (saved && age < maxAge) {
+    inMemory.set(key, { data: saved.data, fetchedAt: saved.fetchedAt });
     console.log(`[db] ${key} from database (saved ${formatAge(age)} ago) in ${Math.round(performance.now() - started)}ms`);
     return saved.data;
   }
@@ -76,6 +84,7 @@ export async function stored(collection, id, maxAge, load) {
         docs.replaceOne({ _id: id }, { data, fetchedAt }, { upsert: true }),
         KEEP_HISTORY.has(collection) && db.collection(`${collection}History`).insertOne({ data, fetchedAt }),
       ]);
+      inMemory.set(key, { data, fetchedAt });
       console.log(
         `[db] ${key} ${saved ? `was ${formatAge(age)} old,` : "not saved yet,"} fetched from source and saved in ${Math.round(performance.now() - started)}ms`
       );
