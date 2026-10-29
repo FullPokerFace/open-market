@@ -124,16 +124,16 @@
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>90 features tracked</span></div>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>92 features tracked</span></div>
     <div class="progress-head"><b>87%</b><span>78 of 90 features done · 12 to go</span></div>
     <div class="progress" role="img" aria-label="Done 78, high priority 1, medium 2, before launch 4, low 5">
       <span class="c-done" style="flex: 78"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 2"></span><span class="c-launch" style="flex: 4"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>78</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>79</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>2</b><span class="hud"><i class="sw"></i>Medium</span></div>
-      <div class="stat c-launch"><b>4</b><span class="hud"><i class="sw"></i>Before launch</span></div>
+      <div class="stat c-launch"><b>5</b><span class="hud"><i class="sw"></i>Before launch</span></div>
       <div class="stat c-low"><b>5</b><span class="hud"><i class="sw"></i>Low</span></div>
     </div>
     <div class="glance">
@@ -141,7 +141,7 @@
         <h4 class="hud">Done by area</h4>
         <ul>
           <li>Foundation <b>15</b></li>
-          <li>Live data <b>10</b></li>
+          <li>Live data <b>11</b></li>
           <li>Calendar <b>20</b></li>
           <li>Search <b>2</b></li>
           <li>Details panel <b>6</b></li>
@@ -156,7 +156,7 @@
         <ul>
           <li>Filters <span class="dots"><i class="sw c-high"></i><i class="sw c-med"></i></span></li>
           <li>Details panel <span class="dots"><i class="sw c-med"></i><i class="sw c-low"></i></span></li>
-          <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
+          <li>Before launch <span class="dots"><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i><i class="sw c-launch"></i></span></li>
           <li>Polish &amp; docs <span class="dots"><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i><i class="sw c-low"></i></span></li>
         </ul>
       </div>
@@ -172,7 +172,7 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>78 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>79 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">15</span></div>
     <div class="scroll">
@@ -200,7 +200,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Live data</h3><span class="hud">10</span></div>
+    <div class="sub"><h3>Live data</h3><span class="hud">11</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -211,8 +211,9 @@
           <tr><th scope="row">Data source log</th><td>Each lookup prints one server-console line saying where the data came from: <code>[db] fearGreed/latest from database (saved 3m ago) in 21ms</code>, <code>[db] companyProfiles/MSFT not saved yet, fetched from source and saved in 144ms</code>, or "refreshing … failed, using the copy from …". Company lookups print <code>[db] companies: 1385 listed of 1676 new symbols (listing saved 3h ago)</code>. Copies served from the server's memory print nothing. Every request that really reaches Finnhub also prints <code>[finnhub] GET /calendar/earnings?from=…&amp;to=… → 200 in 52ms</code>; the API key is sent in a header, so it stays out of the log.</td><td><code>src/lib/db.js</code>, <code>src/lib/companies.js</code>, <code>src/lib/finnhub.js</code></td></tr>
           <tr><th scope="row">Beat / Mixed / Miss</th><td>Beat = EPS and revenue both met estimates; Miss = neither did; Mixed = one did. "Reported" when there was no estimate to compare.</td><td><code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Company names</th><td>From SEC's free ticker list, tidied from legal names ("NETFLIX INC" → "Netflix"). Also gives each company's SEC ID for filing links. Saved with each company in the <code>companies</code> collection.</td><td><code>src/lib/sec.js</code>, <code>src/lib/companies.js</code></td></tr>
-          <tr><th scope="row">MongoDB storage</th><td>Replaces Next's in-memory <code>"use cache"</code>. Everything fetched from Finnhub, SEC, CNN and Kalshi is saved in the <code>earnings-report</code> database on MongoDB Atlas, one collection per kind of data, each document <code>{ data, fetchedAt }</code>: <code>earningsCalendar</code> (one per Monday–Sunday week, so months that share a week share it; 1 hour), <code>epsHistory</code> (per symbol; 1 hour), <code>companyProfiles</code> (per symbol, saved when a company is first opened; 1 day), <code>fearGreed</code> and <code>keyReleases</code> (one <code>latest</code> document each; 5 minutes). A saved copy younger than that is used as is; an older one is refetched and overwritten. Each server process also keeps what it read or saved in memory and serves a fresh copy from there without asking MongoDB, so repeat page loads make no database round trips. Requests that arrive together share one fetch, and if a source fails the older saved copy is shown instead of an error. Survives deploys, restarts and serverless hosting; with no visitors, nothing is fetched.</td><td><code>stored()</code> in <code>src/lib/db.js</code></td></tr>
-          <tr><th scope="row">Company directory</th><td>One document per exchange-listed company in <code>companies</code>: <code>{ _id: "AAPL", exchange: "XNAS", name, cik, listedAt }</code>, about 13,000. Merges Finnhub's symbol list (which exchange; OTC and closed-end funds left out) with SEC's names and IDs, refreshed together once a day; symbols no longer listed are removed. Pages look up only the companies on their calendar (~1,700 symbols) instead of loading the whole list; each server process remembers the ones it has looked up (listed or not) until the listing is a day old, so only symbols it hasn't seen yet reach MongoDB. A failed daily refresh is retried after 10 minutes, not on every request. Known gap: while the collection is first filled on an empty database, pages see fewer companies for a few seconds.</td><td><code>getCompanyDirectory()</code> in <code>src/lib/companies.js</code></td></tr>
+          <tr><th scope="row">MongoDB storage</th><td>Replaces Next's in-memory <code>"use cache"</code>. Everything fetched from Finnhub, SEC, CNN and Kalshi is saved in the <code>earnings-report</code> database on MongoDB Atlas, one collection per kind of data, each document <code>{ data, fetchedAt }</code>: <code>earningsCalendar</code> (one per Monday–Sunday week, so months that share a week share it; 1 hour), <code>epsHistory</code> (per symbol; 1 hour), <code>companyProfiles</code> (per symbol, saved when a company is first opened; 1 day), <code>fearGreed</code> and <code>keyReleases</code> (one <code>latest</code> document each; 5 minutes). A saved copy younger than that is used as is; an older one is refetched and overwritten. Fresh copies are also kept in server memory (see Server memory cache). Requests that arrive together share one fetch, and if a source fails the older saved copy is shown instead of an error. Survives deploys, restarts and serverless hosting; with no visitors, nothing is fetched.</td><td><code>stored()</code> in <code>src/lib/db.js</code></td></tr>
+          <tr><th scope="row">Company directory</th><td>One document per exchange-listed company in <code>companies</code>: <code>{ _id: "AAPL", exchange: "XNAS", name, cik, listedAt }</code>, about 13,000. Merges Finnhub's symbol list (which exchange; OTC and closed-end funds left out) with SEC's names and IDs, refreshed together once a day; symbols no longer listed are removed. Pages look up only the companies on their calendar (~1,700 symbols) instead of loading the whole list; each server process remembers the ones it has looked up (see Server memory cache). A failed daily refresh is retried after 10 minutes, not on every request. Known gap: while the collection is first filled on an empty database, pages see fewer companies for a few seconds.</td><td><code>getCompanyDirectory()</code> in <code>src/lib/companies.js</code></td></tr>
+          <tr><th scope="row">Server memory cache</th><td>Each server process keeps what it read from or saved to MongoDB and serves a fresh copy from memory, so repeat page loads make no database round trips: <code>stored()</code> keeps documents under the same age limits (a calendar week for 1 hour, Fear &amp; Greed for 5 minutes), and the company directory remembers every symbol it has looked up, listed or not, until the daily listing is replaced, so only symbols it hasn't seen yet reach MongoDB. Added because the Atlas free tier (M0) is shared and throughput-limited: a page used to read ~5 calendar weeks and then ~1,700 companies on every load, and parallel reads finished one after another (190ms → 1.7s, then 1.5s for companies), about 7s in all. Memory hits print no log line. Known gap: the first load on a new server instance (each Vercel cold start, each dev restart) still reads from MongoDB; on serverless, instances don't share memory.</td><td><code>src/lib/db.js</code>, <code>src/lib/companies.js</code></td></tr>
           <tr><th scope="row">Market history</th><td>Every fresh Fear &amp; Greed and key-releases fetch is also added to <code>fearGreedHistory</code> and <code>keyReleasesHistory</code> (<code>{ data, fetchedAt }</code>), at most one entry per 5 minutes and only when someone visits, so there are gaps in quiet hours. Kept for charting later; nothing reads them yet, and old entries are never deleted. Add a collection to <code>KEEP_HISTORY</code> to keep history for it too.</td><td><code>src/lib/db.js</code></td></tr>
           <tr><th scope="row">Warm-up</th><td>After each page is sent, this month and the next two are loaded and saved in the background, so paging ahead and search never wait on Finnhub. Months saved within the hour cost one lookup; a failure only means that month loads when opened.</td><td><code>after()</code> in <code>src/app/page.js</code></td></tr>
           <tr><th scope="row">Error handling</th><td>Shows "unavailable" instead of crashing if Finnhub fails and nothing is saved; shows the older saved copy when one exists; falls back to bare tickers and no exchange filter if the company directory fails.</td><td><code>src/app/page.js</code>, <code>src/lib/db.js</code></td></tr>
@@ -354,7 +355,7 @@
   </section>
 
   <section class="c-med">
-    <div class="bar hud"><span>02 / <b>To do</b></span><span>12 items · priority is a suggestion</span></div>
+    <div class="bar hud"><span>02 / <b>To do</b></span><span>13 items · priority is a suggestion</span></div>
     <div class="section-title"><h2>What's <span>next</span>.</h2><p>Grouped by area. Priority: <span class="tag c-high">High</span> <span class="tag c-med">Medium</span> <span class="tag c-launch">Before launch</span> <span class="tag c-low">Low</span></p></div>
     <div class="sub"><h3>Filters</h3><span class="hud">2</span></div>
     <div class="scroll">
@@ -382,7 +383,7 @@
       </table>
     </div>
 
-    <div class="sub"><h3>Before launch</h3><span class="hud">4</span></div>
+    <div class="sub"><h3>Before launch</h3><span class="hud">5</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -392,6 +393,7 @@
           <tr><th scope="row">Check Finnhub license</th><td>Free plan is for personal use; confirm the terms or upgrade before making the site public.</td><td><span class="tag c-launch">Before launch</span></td></tr>
           <tr><th scope="row">Check logo.dev terms</th><td>Logos are committed to <code>public/logos</code> in this public repo and served by the site (see Done › Logo files), which republishes them: confirm logo.dev allows that before committing the folder, and whether the free plan needs an attribution link (it would sit beside "Data · Finnhub" in the legend). <code>LOGO_DEV_TOKEN</code> reaches browsers in redirects, so it must be the publishable <code>pk_</code> key.</td><td><span class="tag c-launch">Before launch</span></td></tr>
           <tr><th scope="row">Vercel + Atlas setup</th><td>Add <code>MONGO_DB_USER</code>, <code>MONGO_DB_PASSWORD</code>, <code>OPEN_AI_KEY</code> and <code>LOGO_DEV_TOKEN</code> (needed at build time too, or the logos toggle stays hidden) (plus <code>GMAIL_SENDER_ADDRESS</code> and <code>GMAIL_APP_PASSWORD</code> for suggestion emails) to the Vercel project (Production, Preview and Development: <code>next build</code> also loads Fear &amp; Greed, key releases and the company listing, for reasons not yet looked into), then redeploy. In Atlas, allow access from anywhere (<code>0.0.0.0/0</code>), since Vercel has no fixed IPs on the free plan, and give the database user only readWrite on <code>earnings-report</code> with a long random password. Turn on Web Analytics in the Vercel dashboard.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+          <tr><th scope="row">Atlas free-tier limits</th><td>M0 is shared: throughput is capped and can be throttled after heavy data transfer (the old <code>companyLogos</code> images were one such load, now dropped), and storage is 512 MB. The memory cache hides most of this, but cold starts still read from MongoDB. Before launch, watch Network and data transfer in Atlas › Metrics under real traffic, and move to a paid tier if cold-start loads stay slow.</td><td><span class="tag c-launch">Before launch</span></td></tr>
           <tr><th scope="row">Scheduled Finnhub sync</th><td>Storage is done (see Done › MongoDB storage), but pages still fetch from the source when a saved copy is stale, so the visitor who hits it waits. Next: a scheduled job (Vercel Cron) refreshes the current week every 15–30 min in market hours and after the close and other weeks daily, so pages only read the database and Finnhub calls stay fixed whatever the traffic. Storing Finnhub data for a public site depends on the license check above.</td><td><span class="tag c-launch">Before launch</span></td></tr>
         </tbody>
       </table>
