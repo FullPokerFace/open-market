@@ -7,7 +7,8 @@ export const SHIPPED = [
     items: [
       ["Live earnings calendar", "Every company reporting this month, with EPS and revenue against estimates once results are out."],
       ["Beat, Mixed or Miss", "A colored mark on each reported company: both numbers beat, one did, or neither did."],
-      ["Day, week or month", "See one day, one week with every company showing, or the whole month. Step back or ahead, or jump back to today."],
+      ["Day, week or month", "See one day, one week with every company showing, or the whole month. Step back or ahead, or jump back to today. Switching views takes you to today."],
+      ["Next trading day", "On a weekend the calendar marks the Monday ahead as the next trading day, and opens on next month when this one has no trading days left."],
       ["Before open or after close", "Every company is marked by when it reports: before the open, during the day or after the close. The week and day views group them that way, with a marker for where the trading day is now."],
       ["Company filter", "Most popular (the Fortune 100), NYSE, Nasdaq or everything, with counts for the month."],
       ["Watchlists", "Name a watchlist, search and add the companies you follow, and see only them on the calendar. Your last watchlist opens next time you visit."],
@@ -44,7 +45,7 @@ export const SHIPPED = [
     items: [
       ["Light and dark", "Follows your system setting, or pick one in the header."],
       ["Steady data", "Earnings and market data are saved as they come in, so pages load fast and keep working even when a data source has a hiccup."],
-      ["On your phone", "A menu button, a dropdown for the exchange filter, and every view as a day-by-day list with the date pinned as you scroll. Days without earnings fold into one line, and typing never zooms the page. The calendar comes first, with the market panel under it."],
+      ["On your phone", "A menu button, a dropdown for the exchange filter, day and month views (the month as a day-by-day list with the date pinned as you scroll). Days without earnings fold into one line, and typing never zooms the page. The calendar comes first, with the market panel under it."],
       ["Suggest a feature", "Post an idea from the menu or the roadmap. It's turned into a short card, and an idea that's already there gets your vote instead of a copy."],
       ["Vote on ideas", "Every idea visitors sent, at the top of the roadmap. Vote them up or down, one vote each; the most wanted rise to the top."],
       ["Open source", "The code is on GitHub: anyone can build a feature or fix a bug and send it in."],

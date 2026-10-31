@@ -16,7 +16,8 @@ It starts with an earnings calendar and market context. What comes next is up to
 ## What's in it today
 
 **Earnings calendar**
-- Every company reporting, by day, week or month, with the whole month fitting on one screen
+- Every company reporting, by day, week or month (day or month on phones), with the whole month fitting on one screen
+- Opens on the next trading day: on a weekend the following Monday is marked "Next trading day", and when the month has no weekdays left the next month opens
 - Each company marked by when it reports (before the open, during the day, after the close) and whether it beat, missed or was mixed against estimates
 - Filter by Most popular (the Fortune 100), NYSE or Nasdaq, or make your own watchlists
 - Search any company reporting this month or the next two

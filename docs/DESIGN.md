@@ -25,7 +25,7 @@ Stack: Next.js (App Router) · TypeScript · Tailwind CSS v4 · shadcn/ui · Rec
 |---|---|---|---|
 | `bg` | `#f2f1ee` | `#0b0b0c` | Page, panels |
 | `bg-past` | `#efeeea` | `#0d0d0f` | Calendar cells before today |
-| `bg-today` | `#c9c5ba` | `#2e2e35` | Today's cell |
+| `bg-today` | `#c9c5ba` | `#2e2e35` | Today's cell (on weekends, the next trading day's) |
 | `tile` | `#ffffff` | `#141417` | Ticker tiles |
 | `tag` | `#e9e8e4` | `#18181b` | Tag fill |
 | `ink` | `#101014` | `#f2f1ee` | Primary text, solid buttons |
@@ -149,8 +149,9 @@ Icons: lucide-react, 14px, stroke 2. No emoji.
 
 ## 5. Behaviour
 
-- Default view: current month, today highlighted; week starts Monday, weekends hidden.
-- Prev/Today/Next navigate months (Week view = same cell design, one row, taller cells, show all tiles).
+- Default view: the month of the next trading day, today highlighted; week starts Monday, weekends hidden. On a weekend the following Monday is highlighted instead, labelled "NEXT TRADING DAY", and when no weekdays are left in the month the next month opens.
+- Prev/Today/Next navigate months (Week view = same cell design, one row, taller cells, show all tiles). Week view is desktop only: below `md` its button and breadcrumb link are hidden.
+- Switching between day, week and month scrolls to the current day (or the day shown, in day view).
 - Search: filters by ticker prefix or company name. **Dims** non-matches instead of removing them, so the grid never reflows. A `+N` tile with matches inside gets a blue border and a count badge; with none, it dims. A drop-down under the search box lists every match in the month on any exchange (rows like the `+N` modal, with the date after the ticker).
 - Watchlists: the visitor's own, picked in the exchange dropdown, show only their companies. Add / remove a company with the watchlist picker in the DetailsSheet; view, edit and delete them on the /watchlists page. Stored in `localStorage`.
 - Click tile → DetailsSheet. URL reflects selection (`?t=NFLX`) so it's shareable; `Esc` closes.
