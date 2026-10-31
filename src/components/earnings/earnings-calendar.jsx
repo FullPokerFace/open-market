@@ -16,11 +16,17 @@ import { SiteHeader } from "./site-header";
 import { StatusLegend } from "./status-legend";
 import { useCompanySearch } from "./use-company-search";
 
-// Centres a day's cell on screen; jumps instead of gliding for visitors who prefer reduced motion
-function scrollToDay(key) {
+// Centres a day's cell on screen; jumps instead of gliding for visitors who prefer reduced motion.
+// `block` "nearest" suits the day view, taller than the screen: it only scrolls when the day is out of view.
+function scrollToDay(key, block = "center") {
   const behavior = window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth";
-  document.getElementById(`day-${key}`)?.scrollIntoView({ behavior, block: "center", inline: "center" });
+  document.getElementById(`day-${key}`)?.scrollIntoView({ behavior, block, inline: "center" });
 }
+
+// Wait before gliding to the day: longer on the first load so the title and filters are seen first,
+// short after switching views so the cell ↔ day morph finishes first
+const FIRST_SCROLL_MS = 1000;
+const SWITCH_SCROLL_MS = 300;
 
 export function EarningsCalendar({ view, sentiment, events, marketExpanded }) {
   const [query, setQuery] = useState("");
@@ -137,12 +143,19 @@ export function EarningsCalendar({ view, sentiment, events, marketExpanded }) {
     selectEarnings(earnings);
   };
 
-  const jumpToToday = () => scrollToDay(view.today);
+  const jumpToToday = () => scrollToDay(view.tradingDay);
 
-  // Open at the top so the title and filters are seen first, then glide to today's cell after a second.
-  // Called off if the visitor scrolls, taps or types first; no-op when the month shown doesn't include today.
+  // The day to bring into view: the one shown in day view, else today's cell (the next trading day's on a weekend)
+  const focusDay = view.mode === "day" ? view.days[0].key : view.tradingDay;
+  // The page stays mounted when the view changes, so this tells the first load from a later switch
+  const firstView = useRef(`${view.mode}|${focusDay}`);
+
+  // Open at the top, then glide to the day; again on every switch between day, week and month.
+  // Called off if the visitor scrolls, taps or types first; no-op when the view shown doesn't include that day.
   useEffect(() => {
-    const timer = setTimeout(() => scrollToDay(view.today), 1000);
+    const first = firstView.current === `${view.mode}|${focusDay}`;
+    const block = view.mode === "day" ? "nearest" : "center";
+    const timer = setTimeout(() => scrollToDay(focusDay, block), first ? FIRST_SCROLL_MS : SWITCH_SCROLL_MS);
     const cancel = () => clearTimeout(timer);
     const events = ["wheel", "touchstart", "pointerdown", "keydown"];
     events.forEach((type) => window.addEventListener(type, cancel, { once: true, passive: true }));
@@ -150,7 +163,7 @@ export function EarningsCalendar({ view, sentiment, events, marketExpanded }) {
       cancel();
       events.forEach((type) => window.removeEventListener(type, cancel));
     };
-  }, [view.today]);
+  }, [view.mode, focusDay]);
 
   return (
     <div className="relative flex flex-1 flex-col">

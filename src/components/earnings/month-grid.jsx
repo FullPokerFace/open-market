@@ -42,8 +42,11 @@ function MoreTile({ day, matches, onShowMore }) {
   );
 }
 
-// Days the mobile agenda folds into one line. Today always keeps its own row, so "jump to today" has somewhere to land.
-const isFoldedEmpty = (day) => day.inPeriod && day.count === 0 && !day.isToday;
+// Today, or on a weekend the next trading day: framed, labelled and scrolled to
+const isHighlighted = (day) => day.isToday || day.isNextTradingDay;
+
+// Days the mobile agenda folds into one line. The highlighted day always keeps its own row, so "jump to today" has somewhere to land.
+const isFoldedEmpty = (day) => day.inPeriod && day.count === 0 && !isHighlighted(day);
 
 // Back-to-back folded days, keyed by the index of each run's first day
 function emptyRuns(days) {
@@ -113,7 +116,7 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
         // empty days there are folded into an EmptyRun line
         (!day.inPeriod || isFoldedEmpty(day)) && "max-md:hidden",
         // Inset outline so the thicker frame doesn't shift the grid; outlines paint over the week view's tinted sections
-        day.isToday && "outline-2 -outline-offset-2 outline-foreground"
+        isHighlighted(day) && "outline-2 -outline-offset-2 outline-foreground"
       )}
     >
       {/* Sticks to the top of the screen in the agenda while its day's tiles scroll by */}
@@ -121,7 +124,7 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
         className={cn(
           "flex min-h-5 items-center justify-between font-mono text-[11px] font-medium tracking-[0.15em] max-md:sticky max-md:top-0 max-md:z-10 max-md:py-2.5",
           // Bleeds to the cell's edges so tiles don't show beside it; on today it stops inside the 2px frame
-          day.isToday
+          isHighlighted(day)
             ? "max-md:-mx-3.5 max-md:-mt-2 max-md:px-3.5"
             : "max-md:-mx-4 max-md:-mt-2.5 max-md:px-4",
           background
@@ -136,16 +139,16 @@ function DayCell({ day, capacity, isLastColumn, filtering, isMatch, onSelect, on
           <span className={cn("px-2 py-0.5 text-white md:hidden", WEEKDAY_BADGES[day.weekday])}>
             {WEEKDAYS[day.weekday]}
           </span>
-          {day.isToday ? (
-            <span className="flex items-center gap-2 bg-foreground px-2 py-0.5 text-background">
+          {isHighlighted(day) ? (
+            <span className="flex items-center gap-2 bg-foreground px-2 py-0.5 whitespace-nowrap text-background">
               <TodayDot />
-              {day.label} · TODAY
+              {day.label} · {day.isToday ? "TODAY" : "NEXT TRADING DAY"}
             </span>
           ) : (
             <span className={day.inPeriod ? "text-foreground" : "text-muted-foreground"}>{day.label}</span>
           )}
         </Link>
-        {!day.isToday && day.count > 0 && (
+        {!isHighlighted(day) && day.count > 0 && (
           <span className="text-muted-foreground">{String(day.count).padStart(2, "0")}</span>
         )}
         {day.count === 0 && <span className="text-muted-foreground md:hidden">NO EARNINGS</span>}

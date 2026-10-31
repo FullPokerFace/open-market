@@ -8,17 +8,18 @@ import { cn } from "@/lib/utils";
 const square = "grid size-10 place-items-center border border-line-strong text-foreground";
 const pressed = "bg-foreground text-background";
 
+// `desktopOnly`: hidden below md, where the week view's stacked days read too much like the month agenda
 const VIEWS = [
   { value: "day", label: "Day view", Icon: SquareIcon },
-  { value: "week", label: "Week view", Icon: Columns3Icon },
+  { value: "week", label: "Week view", Icon: Columns3Icon, desktopOnly: true },
   { value: "month", label: "Month view", Icon: LayoutGridIcon },
 ];
 
 const currentButton = "grid h-10 cursor-pointer place-items-center bg-foreground px-4.5 text-background uppercase";
 
 export function CalendarToolbar({ view, onToday }) {
-  // Shows the month / week / day on screen. On the current one it scrolls to today; on any other it goes back to the current one
-  const currentLabel = view.isCurrent ? `Jump to today, ${view.todayLabel}` : `Go to ${view.currentName}`;
+  // Shows the month / week / day on screen. On the current one it scrolls to today (or the next trading day); on any other it goes back to the current one
+  const currentLabel = view.isCurrent ? `Jump to ${view.todayLabel}` : `Go to ${view.currentName}`;
 
   return (
     <div className="flex flex-wrap font-mono text-[11px] font-bold tracking-[0.12em] uppercase">
@@ -41,7 +42,7 @@ export function CalendarToolbar({ view, onToday }) {
       </div>
 
       <nav aria-label="Calendar view" className="flex">
-        {VIEWS.map(({ value, label, Icon }) => (
+        {VIEWS.map(({ value, label, Icon, desktopOnly }) => (
           <Link
             key={value}
             href={view.viewHrefs[value]}
@@ -49,7 +50,12 @@ export function CalendarToolbar({ view, onToday }) {
             aria-label={label}
             title={label}
             aria-current={value === view.mode ? "page" : undefined}
-            className={cn(square, "-ml-px no-underline first:ml-0", value === view.mode && pressed)}
+            className={cn(
+              square,
+              "-ml-px no-underline first:ml-0",
+              value === view.mode && pressed,
+              desktopOnly && "max-md:hidden"
+            )}
           >
             <Icon className="size-3.5" aria-hidden="true" />
           </Link>
@@ -105,8 +111,8 @@ export function CalendarBreadcrumb({ view }) {
   return (
     <nav aria-label="Breadcrumb" className="eyebrow border-b px-6 py-2.5">
       <ol className="m-0 flex list-none flex-wrap items-center gap-1.5 p-0">
-        {view.breadcrumb.map(({ label, href }, i) => (
-          <li key={label} className="flex items-center gap-1.5">
+        {view.breadcrumb.map(({ label, href, desktopOnly }, i) => (
+          <li key={label} className={cn("flex items-center gap-1.5", desktopOnly && "max-md:hidden")}>
             {i > 0 && <ChevronRightIcon className="size-3 text-muted-foreground" strokeWidth={2.2} aria-hidden="true" />}
             {href ? (
               <Link href={href} scroll={false} className="text-muted-foreground no-underline hover:text-foreground">

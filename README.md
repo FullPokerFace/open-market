@@ -8,7 +8,7 @@ It starts with an earnings calendar and market context. What comes next is up to
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="docs/images/calendar-dark.png">
-  <img alt="Open Market's main page: the market sentiment meter and upcoming Fed, GDP, jobs and CPI releases above an October earnings calendar, with each company's ticker marked by when it reports and whether it beat or missed" src="docs/images/calendar-light.png">
+  <img alt="Open Market's main page: a Fear &amp; Greed reading and countdowns to the next jobs, CPI, FOMC and GDP releases above a November earnings calendar, with the next trading day framed and each company's logo marked by when it reports" src="docs/images/calendar-light.png">
 </picture>
 
 ▶ **[Watch the 1-minute tour](docs/video/open-market-tour.webm)**: the market panel, the calendar, company details, search, views, watchlists, and voting on the roadmap.

@@ -70,15 +70,19 @@ export function DayView({ day, isMatch, onSelect }) {
   return (
     <div
       id={`day-${day.key}`}
-      className={cn("m-6 flex flex-1 flex-col border", background, day.isToday && "border-2 border-foreground")}
+      className={cn(
+        "m-6 flex flex-1 flex-col border",
+        background,
+        (day.isToday || day.isNextTradingDay) && "border-2 border-foreground"
+      )}
     >
       <div className="flex h-8 shrink-0 items-center justify-between border-b px-4 font-mono text-[11px] font-medium tracking-[0.15em]">
         <span className={cn("px-2 py-0.5 text-white", WEEKDAY_BADGES[day.weekday])}>0{day.weekday + 1}</span>
         <span className="flex items-center gap-2 text-muted-foreground">
-          {day.isToday && (
+          {(day.isToday || day.isNextTradingDay) && (
             <>
               <TodayDot />
-              <span className="text-foreground">TODAY</span> ·
+              <span className="text-foreground">{day.isToday ? "TODAY" : "NEXT TRADING DAY"}</span> ·
             </>
           )}
           {day.count} {day.count === 1 ? "COMPANY" : "COMPANIES"}

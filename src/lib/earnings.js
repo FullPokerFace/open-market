@@ -375,8 +375,9 @@ function viewPeriod({ mode, target, focus, today, href }) {
     title: month,
     label: `${month} ${target.year}`,
     unit: "month",
-    isCurrent: monthKey(target) === today.slice(0, 7),
-    currentName: MONTHS[parseIso(today).getUTCMonth()],
+    // The current month is the next trading day's, so a weekend ending the month counts as the next one
+    isCurrent: monthKey(target) === thisWeekday.slice(0, 7),
+    currentName: MONTHS[parseIso(thisWeekday).getUTCMonth()],
     todayHref: href({}),
     prevHref: href({ month: monthKey(shiftMonth(target, -1)) }),
     nextHref: href({ month: monthKey(shiftMonth(target, 1)) }),
@@ -393,6 +394,9 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
   const monthLast = toIso(new Date(Date.UTC(target.year, target.month, 0)));
   // Days that count: the month itself in month view (not the grid's edge days), every day otherwise
   const [from, to] = mode === "month" ? [monthFirst, monthLast] : [period.start, period.end];
+
+  // Today, or the Monday after on a weekend
+  const tradingDay = weekdayOf(today);
 
   const { listed, shown } = filterRows({ rows: allRows, directory, exchange });
   const filters = directory ? buildFilters({ rows: listed, directory, from, to, exchange, params: period.params }) : [];
@@ -418,6 +422,8 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
       // 0 = Monday … 4 = Friday
       weekday: dow - 1,
       isToday: iso === today,
+      // Weekends only: the Monday after, framed like today
+      isNextTradingDay: iso === tradingDay && iso !== today,
       isPast: iso < today,
       inPeriod,
       // This day on its own, with the same filter; month and week cells open it
@@ -434,8 +440,8 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
   }
 
   // The weekday the other views open on: the one shown, else today in the current month, else the month's first
-  const anchor = focus ?? (period.isCurrent ? weekdayOf(today) : weekdayOf(monthFirst));
-  const todayDate = parseIso(today);
+  const anchor = focus ?? (period.isCurrent ? tradingDay : weekdayOf(monthFirst));
+  const tradingDate = parseIso(tradingDay);
   const viewHrefs = {
     day: href({ view: "day", date: anchor }),
     week: href({ view: "week", date: anchor }),
@@ -450,7 +456,9 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
     days,
     total: periodCompanies.size,
     today,
-    todayLabel: `${WEEKDAYS[todayDate.getUTCDay()]} ${MONTHS[todayDate.getUTCMonth()]} ${todayDate.getUTCDate()}`,
+    // The cell "jump to today" lands on: today, or the next trading day on a weekend
+    tradingDay,
+    todayLabel: `${tradingDay === today ? "today" : "next trading day"}, ${WEEKDAYS[tradingDate.getUTCDay()]} ${MONTHS[tradingDate.getUTCMonth()]} ${tradingDate.getUTCDate()}`,
     isCurrent: period.isCurrent,
     currentName: period.currentName,
     filters,
@@ -469,13 +477,13 @@ export function buildCalendarView({ rows: allRows, directory, exchange, mode = "
   };
 }
 
-// Month → week → day trail above a week or day view: [{ label, href }], the last one (no href) being the view shown.
-// Null in month view.
+// Month → week → day trail above a week or day view: [{ label, href, desktopOnly }], the last one (no href) being the view shown.
+// The week link is desktop only, like the week view button. Null in month view.
 function breadcrumbFor({ mode, anchor, title, viewHrefs }) {
   if (mode === "month") return null;
   const { year, month } = monthOf(anchor);
   const trail = [{ label: `${MONTHS[month - 1]} ${year}`, href: viewHrefs.month }];
-  if (mode === "day") trail.push({ label: `Week of ${shortLabel(mondayOf(anchor))}`, href: viewHrefs.week });
+  if (mode === "day") trail.push({ label: `Week of ${shortLabel(mondayOf(anchor))}`, href: viewHrefs.week, desktopOnly: true });
   trail.push({ label: title, href: null });
   return trail;
 }

@@ -38,7 +38,8 @@ async function Calendar({ searchParams }) {
   const filter = await requestFilter(exchange);
 
   const today = todayInNewYork();
-  const current = { year: Number(today.slice(0, 4)), month: Number(today.slice(5, 7)) };
+  // The month of the next trading day: on a weekend that ends the month, the next month opens
+  const current = monthOf(weekdayOf(today));
   const mode = parseViewMode(viewParam);
   // Week and day views are built around one weekday and load the month it falls in
   const focus = mode === "month" ? null : weekdayOf(parseDateKey(date) ?? today);

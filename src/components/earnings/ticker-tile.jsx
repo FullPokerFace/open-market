@@ -15,7 +15,7 @@ function tickerSize(ticker) {
 
 // Day background and the matching border for status dots, so a dot reads as cut out of the tile
 export function dayColors(day) {
-  if (day.isToday) return { background: "bg-bg-today", dotBorder: "border-bg-today" };
+  if (day.isToday || day.isNextTradingDay) return { background: "bg-bg-today", dotBorder: "border-bg-today" };
   if (day.isPast) return { background: "bg-bg-past", dotBorder: "border-bg-past" };
   return { background: "bg-background", dotBorder: "border-background" };
 }
