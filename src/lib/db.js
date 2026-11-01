@@ -66,7 +66,11 @@ export const COLLECTIONS = {
   suggestions: "suggestions", // feature suggestion board; see suggestions.js
   watchlists: "watchlists", // _id: user id; a signed-in visitor's watchlists, see watchlists.js
   notificationLog: "notificationLog", // _id: "<date>:<user id>"; one per morning email, see notifications.js
-  // Better Auth keeps its own collections: user, session, account, verification, rateLimit (see auth.js)
+  adminSessions: "adminSessions", // _id: sha256 of the admin cookie; see admin.js
+  // Better Auth keeps its own collections: user, session, account, verification, rateLimit (see auth.js).
+  // Only the admin panel reads them directly (admin.js)
+  users: "user",
+  sessions: "session",
 };
 // Collections whose every fetch is also added to "<name>History", e.g. fearGreedHistory, to chart over time
 const KEEP_HISTORY = new Set([COLLECTIONS.fearGreed, COLLECTIONS.keyReleases]);
