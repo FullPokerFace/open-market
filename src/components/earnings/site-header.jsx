@@ -2,14 +2,18 @@
 
 import { Fragment, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { MenuIcon, MoonIcon, SearchIcon, SunIcon, XIcon } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { MenuIcon, MoonIcon, SearchIcon, SunIcon, UserIcon, XIcon } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
+import { authClient } from "@/lib/auth-client";
 import { GITHUB_URL, SITE_NAME } from "@/lib/site";
+import { forgetAccount, linkAccount } from "@/lib/ticker-lists";
 import { cn } from "@/lib/utils";
+import { AccountMenu } from "./account-menu";
 import { GitHubIcon } from "./github-icon";
 import { SearchResults } from "./search-results";
+import { SignInDialog } from "./sign-in-dialog";
 import { SuggestFeatureDialog } from "./suggest-feature-dialog";
 
 const navItem = "px-2.5 py-1 text-foreground no-underline";
@@ -24,12 +28,17 @@ const PAGES = [
 
 // Search only shows on pages that pass its props (the calendar). Whether its results are open is the
 // page's state (`searchOpen`), so the calendar can stop dimming non-matches once search is closed.
-// Below lg the nav (and GitHub link) moves into a burger menu; search and the theme toggle stay in the bar.
+// Below lg the nav (and GitHub link, and sign in) moves into a burger menu; search and the theme toggle stay in the bar.
 export function SiteHeader({ query, onQueryChange, searchOpen, onSearchOpenChange, results, searchState, onSelectResult }) {
   const pathname = usePathname();
+  const router = useRouter();
   const { resolvedTheme, setTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
   const [suggestOpen, setSuggestOpen] = useState(false);
+  const [signInOpen, setSignInOpen] = useState(false);
+  // Sign-in is only for earnings notifications; signed in, the account menu shows who and offers sign out
+  const { data: session, isPending: sessionPending } = authClient.useSession();
+  const user = session?.user ?? null;
   const searchRef = useRef(null);
   const showResults = Boolean(searchOpen && query?.trim());
 
@@ -52,10 +61,24 @@ export function SiteHeader({ query, onQueryChange, searchOpen, onSearchOpenChang
     if (event.key === "Enter" && showResults && searchState === "ready" && results.length) selectResult(results[0]);
   };
 
-  // The dialog lives here, not in the menu, so closing the menu doesn't unmount it
+  // The dialogs live here, not in the menu, so closing the menu doesn't unmount them
   const openSuggest = () => {
     setMenuOpen(false);
     setSuggestOpen(true);
+  };
+  const openSignIn = () => {
+    setMenuOpen(false);
+    setSignInOpen(true);
+  };
+  // Save this browser's watchlists to the account, then go where notifications are turned on
+  const onSignedIn = async (signedIn) => {
+    await linkAccount(signedIn.id);
+    if (pathname !== "/watchlists") router.push("/watchlists");
+  };
+  const signOut = async () => {
+    setMenuOpen(false);
+    await authClient.signOut().catch(() => {});
+    forgetAccount();
   };
 
   return (
@@ -135,6 +158,20 @@ export function SiteHeader({ query, onQueryChange, searchOpen, onSearchOpenChang
         >
           <GitHubIcon className="size-4" />
         </a>
+        {/* Nothing until the session is known, so "Sign in" doesn't flash for signed-in visitors */}
+        {!sessionPending &&
+          (user ? (
+            <AccountMenu email={user.email} onSignOut={signOut} className={cn(iconButton, "hidden lg:grid")} />
+          ) : (
+            <button
+              type="button"
+              onClick={openSignIn}
+              title="Sign in for earnings notifications"
+              className="hidden shrink-0 cursor-pointer items-center border-l px-4 text-foreground uppercase lg:flex"
+            >
+              Sign in
+            </button>
+          ))}
         <button
           type="button"
           onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
@@ -185,11 +222,24 @@ export function SiteHeader({ query, onQueryChange, searchOpen, onSearchOpenChang
               <GitHubIcon className="size-3.5" />
               GitHub ↗
             </a>
+            {!sessionPending &&
+              (user ? (
+                <button type="button" onClick={signOut} className={cn(menuItem, "cursor-pointer gap-2.5 uppercase")}>
+                  <UserIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
+                  <span className="min-w-0 truncate">Sign out · {user.email}</span>
+                </button>
+              ) : (
+                <button type="button" onClick={openSignIn} className={cn(menuItem, "cursor-pointer gap-2.5 uppercase")}>
+                  <UserIcon className="size-3.5" strokeWidth={2.2} aria-hidden="true" />
+                  Sign in
+                </button>
+              ))}
           </nav>
         </SheetContent>
       </Sheet>
 
       <SuggestFeatureDialog open={suggestOpen} onOpenChange={setSuggestOpen} />
+      <SignInDialog open={signInOpen} onOpenChange={setSignInOpen} onSignedIn={onSignedIn} />
     </header>
   );
 }

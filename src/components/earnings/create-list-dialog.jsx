@@ -5,7 +5,7 @@ import { PlusIcon, SearchIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { LIST_NAME_MAX } from "@/lib/ticker-lists";
+import { LIST_NAME_MAX, MAX_LISTS, MAX_TICKERS, useTickerLists } from "@/lib/ticker-lists";
 import { TickerLabel } from "./company-logo";
 import { useCompanySearch } from "./use-company-search";
 
@@ -48,9 +48,13 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
   // A company can report more than once in the months searched: one row each
   const results = [...new Map(search.results.map((e) => [e.ticker, e])).values()];
   const added = new Set(companies.map((c) => c.ticker));
+  const listFull = companies.length >= MAX_TICKERS;
+  // A new watchlist when there are already MAX_LISTS can't be saved
+  const savedLists = useTickerLists().lists;
+  const tooManyLists = !list && savedLists.length >= MAX_LISTS;
 
   const add = (e) => {
-    if (!added.has(e.ticker)) setCompanies((list) => [...list, { ticker: e.ticker, name: e.name }]);
+    if (!added.has(e.ticker) && !listFull) setCompanies((list) => [...list, { ticker: e.ticker, name: e.name }]);
     // The search stays, so several companies from the same results can be added in a row
     searchInput.current?.focus();
   };
@@ -64,7 +68,7 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
     if (search.state === "ready" && next) add(next);
   };
 
-  const ready = name.trim().length > 0 && companies.length > 0;
+  const ready = name.trim().length > 0 && companies.length > 0 && !tooManyLists;
   const submit = (event) => {
     event.preventDefault();
     if (!ready) return;
@@ -91,7 +95,7 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
                 <button
                   type="button"
                   onClick={() => add(e)}
-                  disabled={inList}
+                  disabled={inList || listFull}
                   className="grid w-full cursor-pointer grid-cols-[88px_minmax(0,1fr)_auto] items-center gap-3 px-4 py-2.5 text-left hover:bg-tag focus-visible:bg-tag focus-visible:outline-none disabled:cursor-default disabled:opacity-50 disabled:hover:bg-transparent"
                 >
                   <TickerLabel ticker={e.ticker} />
@@ -186,7 +190,7 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
 
           <div className="flex flex-col gap-2">
             <span className="eyebrow text-muted-foreground">
-              In this watchlist · {companies.length}
+              In this watchlist · {companies.length} / {MAX_TICKERS}
             </span>
             {companies.length ? (
               <ul className="m-0 list-none border p-0">
@@ -215,7 +219,17 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
             )}
           </div>
 
-          <div className="flex justify-end">
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            {tooManyLists && (
+              <p className="m-0 mr-auto text-[13px] text-muted-foreground">
+                You have {MAX_LISTS} watchlists, the most there can be. Delete one to start another.
+              </p>
+            )}
+            {listFull && !tooManyLists && (
+              <p className="m-0 mr-auto text-[13px] text-muted-foreground">
+                {MAX_TICKERS} companies is the most a watchlist can hold.
+              </p>
+            )}
             <Button type="submit" disabled={!ready} className={actionButton}>
               {list ? "Save watchlist" : "Create watchlist"}
             </Button>

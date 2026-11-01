@@ -6,7 +6,7 @@
 import { existsSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { COLLECTIONS, DAY, getDb } from "../src/lib/db.js";
+import { COLLECTIONS, DAY, getDb, getMongoClient } from "../src/lib/db.js";
 import { logoDevUrl, logoFileName } from "../src/lib/logos.js";
 
 const OUT = "public/logos";
@@ -51,8 +51,8 @@ const listed = await db
   .collection(COLLECTIONS.companies)
   .find({ _id: { $in: symbols }, listedAt: { $exists: true } }, { projection: { _id: 1 } })
   .toArray();
-// getDb keeps its client on globalThis; close it now that the database part is done
-await (await globalThis.mongoClient).close();
+// getDb keeps one client per process; close it now that the database part is done
+await getMongoClient().close();
 
 const todo = listed
   .map((doc) => doc._id)

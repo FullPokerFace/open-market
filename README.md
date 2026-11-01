@@ -22,6 +22,7 @@ It starts with an earnings calendar and market context. What comes next is up to
 - Filter by Most popular (the Fortune 100), NYSE or Nasdaq, or make your own watchlists
 - Search any company reporting this month or the next two
 - A Watchlists page to show, edit or delete your watchlists, kept in your browser
+- Earnings notifications: turn on Notify for a watchlist and get one email at 6 AM ET on days its companies report. Sign-in (a code sent by email, no password) is only needed for this; your watchlists are then saved to your account too
 
 **Market context**
 - The CNN Fear & Greed Index and its change since the last close
@@ -43,7 +44,7 @@ Works in light and dark, and on phones. See everything that's live and planned i
 Good market tools exist, but they're scattered, and the free ones are usually a funnel into a paid plan. Open Market aims to be the one free place for them:
 
 - **One place.** Earnings, sentiment, macro releases and company data side by side, with more tools added over time.
-- **Free.** Built on free data sources, with no account, paywall or ads.
+- **Free.** Built on free data sources, with no paywall or ads. An account is only needed for email notifications.
 - **Community-run.** There's no company deciding what comes next. Users suggest and vote on features, build them, and help keep them working.
 
 ## Contributing
@@ -65,7 +66,15 @@ OPEN_AI_KEY=your_openai_key
 # Optional: emails each suggestion to you through Gmail SMTP
 GMAIL_SENDER_ADDRESS=you@gmail.com
 GMAIL_APP_PASSWORD=your_app_password
+# Optional: sign-in and earnings notifications (Resend for email, Better Auth for sign-in)
+RESEND_API_KEY=your_resend_key
+EMAIL_FROM="Open Market <notifications@send.example.com>"
+BETTER_AUTH_SECRET=random_32_plus_characters
+BETTER_AUTH_URL=http://localhost:3000
+CRON_SECRET=random_string
 ```
+
+The morning email runs from Vercel Cron (`vercel.json`) at 10:00 and 11:00 UTC on weekdays; only the run that's 6 AM in New York sends. To send one by hand: `curl -H "Authorization: Bearer $CRON_SECRET" "http://localhost:3000/api/cron/earnings-digest?force=1"`.
 
 Then:
 

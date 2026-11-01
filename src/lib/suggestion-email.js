@@ -1,28 +1,7 @@
-// Feature suggestion email, styled like docs/features.html (light theme only: mail clients
-// ignore CSS variables and most dark-mode rules, so every style is inline with fixed colors).
+// Feature suggestion email; colors and fonts shared with the other emails in email-style.js
 import "server-only";
+import { C, escapeHtml, FONT_DISPLAY, FONT_TEXT, hud } from "./email-style";
 import { SITE_NAME } from "./site";
-
-const C = {
-  bg: "#f2f1ee",
-  tag: "#e9e8e4",
-  tile: "#ffffff",
-  ink: "#101014",
-  strong: "#000000",
-  body: "#4a4a4e",
-  muted: "#6b6b6f",
-  line: "#d9d8d4",
-  blue: "#1a5bc4",
-};
-
-const FONT_TEXT = "Inter, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-const FONT_MONO = "'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace";
-const FONT_DISPLAY = "'Bricolage Grotesque', -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif";
-
-const hud = `font-family:${FONT_MONO};font-size:11px;font-weight:500;letter-spacing:.15em;text-transform:uppercase;color:${C.muted};`;
-
-const escapeHtml = (value) =>
-  String(value).replace(/[&<>"']/g, (ch) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[ch]);
 
 function formatSent(date) {
   const label = new Intl.DateTimeFormat("en-US", {

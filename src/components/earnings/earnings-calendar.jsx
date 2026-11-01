@@ -81,8 +81,8 @@ export function EarningsCalendar({ view, sentiment, events, marketExpanded }) {
   };
   const createList = (name, tickers) => {
     const list = tickerLists.create(name, tickers);
-    // Made from the details sheet: the calendar stays where it is
-    if (!newListSeed) showList(list);
+    // Made from the details sheet: the calendar stays where it is. Null when there are already MAX_LISTS.
+    if (list && !newListSeed) showList(list);
   };
   // From the details sheet. The list on screen changed: reload it so the company shows up or goes.
   const toggleInList = (id) => {

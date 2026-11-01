@@ -9,23 +9,35 @@ export const MINUTE = 60 * 1000;
 export const HOUR = 60 * MINUTE;
 export const DAY = 24 * HOUR;
 
-function connect() {
-  const user = process.env.MONGO_DB_USER;
-  const password = process.env.MONGO_DB_PASSWORD;
-  if (!user || !password) throw new Error("MONGO_DB_USER and MONGO_DB_PASSWORD must be set in .env.local");
+// One client per server process; kept on globalThis so dev reloads don't open new connections
+export function getMongoClient() {
+  if (!globalThis.mongo) {
+    const user = process.env.MONGO_DB_USER;
+    const password = process.env.MONGO_DB_PASSWORD;
+    if (!user || !password) throw new Error("MONGO_DB_USER and MONGO_DB_PASSWORD must be set in .env.local");
 
-  const uri = `mongodb+srv://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${HOST}/`;
-  return new MongoClient(uri, { appName: "earnings-report" }).connect();
+    const uri = `mongodb+srv://${encodeURIComponent(user)}:${encodeURIComponent(password)}@${HOST}/`;
+    globalThis.mongo = new MongoClient(uri, { appName: "earnings-report" });
+  }
+  return globalThis.mongo;
 }
 
-// One client per server process; kept on globalThis so dev reloads don't open new connections
+// The database without waiting for the connection, for code that needs it up front (Better Auth in auth.js);
+// the driver connects on its first query
+export function getDbNow() {
+  return getMongoClient().db(DB_NAME);
+}
+
 export async function getDb() {
-  globalThis.mongoClient ??= connect().catch((error) => {
-    // Let the next request try again instead of keeping the failed attempt
-    globalThis.mongoClient = undefined;
-    throw error;
-  });
-  return (await globalThis.mongoClient).db(DB_NAME);
+  globalThis.mongoConnected ??= getMongoClient()
+    .connect()
+    .catch((error) => {
+      // Let the next request try again instead of keeping the failed attempt
+      globalThis.mongoConnected = undefined;
+      throw error;
+    });
+  await globalThis.mongoConnected;
+  return getDbNow();
 }
 
 // "42s", "17m", "3h", "2d"
@@ -52,6 +64,9 @@ export const COLLECTIONS = {
   fearGreed: "fearGreed",
   keyReleases: "keyReleases",
   suggestions: "suggestions", // feature suggestion board; see suggestions.js
+  watchlists: "watchlists", // _id: user id; a signed-in visitor's watchlists, see watchlists.js
+  notificationLog: "notificationLog", // _id: "<date>:<user id>"; one per morning email, see notifications.js
+  // Better Auth keeps its own collections: user, session, account, verification, rateLimit (see auth.js)
 };
 // Collections whose every fetch is also added to "<name>History", e.g. fearGreedHistory, to chart over time
 const KEEP_HISTORY = new Set([COLLECTIONS.fearGreed, COLLECTIONS.keyReleases]);

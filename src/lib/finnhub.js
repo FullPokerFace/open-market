@@ -51,6 +51,12 @@ export async function getEarningsCalendar(from, to) {
   return weeks.flat().filter((row) => row.date >= from && row.date <= to);
 }
 
+// Every earnings row on `date`, straight from Finnhub instead of the saved week, because report dates
+// move; for the morning notification email
+export function fetchEarningsDay(date) {
+  return fetchCalendarRange(date, date);
+}
+
 // Adjusted EPS surprise for recent quarters, oldest first (4 on the free plan)
 export function getEpsHistory(symbol) {
   return stored(COLLECTIONS.epsHistory, symbol, HOUR, async () => {
