@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Market Promotion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f1ee; --tag: #e9e8e4; --tile: #ffffff;
+    --ink: #101014; --strong: #000000;
+    --body: rgba(16,16,20,.72); --muted: rgba(16,16,20,.6);
+    --line: rgba(16,16,20,.16); --line-strong: rgba(16,16,20,.4);
+    --blue: #1a5bc4; --beat: #1d7a4c; --mixed: #8f5a00; --miss: #b83a24; --purple: #6a3fd0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0b0c; --tag: #18181b; --tile: #141417;
+      --ink: #f2f1ee; --strong: #ffffff;
+      --body: rgba(242,241,238,.75); --muted: rgba(242,241,238,.6);
+      --line: rgba(242,241,238,.16); --line-strong: rgba(242,241,238,.4);
+      --blue: #6aa0ff; --beat: #2fd39c; --mixed: #ffb347; --miss: #ff7a63; --purple: #b18cff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  main { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  .hud {
+    font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 24px; border-bottom: 1px solid var(--line); }
+  .bar b { color: var(--ink); font-weight: 500; }
+  header.title { padding: 36px 24px 28px; border-bottom: 1px solid var(--line); }
+  h1 {
+    margin: 0 0 16px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  h1 span { color: var(--blue); }
+  .lead { max-width: 780px; margin: 0; color: var(--body); font-size: 17px; }
+  .lead strong { color: var(--ink); }
+  section { border-bottom: 1px solid var(--line); }
+  code { font-family: 'Geist Mono', ui-monospace, monospace; font-size: 12px; background: var(--tag); border: 1px solid var(--line); padding: 0 4px; }
+  .scroll { overflow-x: auto; border-top: 1px solid var(--line); }
+  table { width: 100%; min-width: 860px; border-collapse: collapse; table-layout: fixed; }
+  th, td { text-align: left; vertical-align: top; padding: 12px 16px; border-bottom: 1px solid var(--line); border-right: 1px solid var(--line); }
+  th:last-child, td:last-child { border-right: 0; }
+  tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
+  thead th { background: var(--tag); }
+  tbody th { font-weight: 600; color: var(--strong); }
+  td { color: var(--body); }
+  q { font-style: italic; color: var(--ink); }
+  .section-title { padding: 28px 24px 4px; }
+  .section-title h2 {
+    margin: 0 0 6px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(30px, 4.5vw, 40px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  .section-title h2 span { color: var(--blue); }
+  .section-title p { margin: 0; color: var(--body); max-width: 820px; }
+  .sub { display: flex; align-items: baseline; gap: 10px; padding: 24px 24px 12px; border-top: 1px solid var(--line); }
+  .section-title + .sub { border-top: 0; }
+  .sub h3 { margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700; font-size: 22px; line-height: 1.1; letter-spacing: -.03em; color: var(--strong); }
+  .tag {
+    display: inline-block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; padding: 1px 6px; white-space: nowrap; color: var(--bg);
+  }
+  .ok { background: var(--beat); } .warn { background: var(--mixed); } .no { background: var(--miss); } .info { background: var(--blue); }
+  .prose { padding: 0 24px 20px; color: var(--body); max-width: 860px; }
+  .prose li { margin: 4px 0; }
+  .callout { margin: 0 24px 24px; padding: 14px 18px; border: 1px solid var(--line-strong); background: var(--tile); color: var(--body); }
+  .callout b { color: var(--ink); }
+  .sources { padding: 0 24px 20px; font-size: 13px; color: var(--muted); }
+  .sources li { margin: 3px 0; }
+  .note { font-size: 12px; color: var(--muted); margin: 0; padding: 12px 24px 18px; }
+  footer { padding: 14px 24px 18px; }
+  details > summary { list-style: none; cursor: pointer; align-items: center; justify-content: flex-start; gap: 16px; }
+  details > summary > span:last-of-type { margin-left: auto; }
+  details > summary::-webkit-details-marker { display: none; }
+  details > summary::after { content: "+"; font-size: 16px; line-height: 1; color: var(--ink); }
+  details[open] > summary::after { content: "\2212"; }
+  details > summary:hover b { text-decoration: underline; text-underline-offset: 3px; }
+  details > summary:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+  details:not([open]) > summary { border-bottom: 0; }
+  .toggle-all { padding: 10px 24px; border-bottom: 1px solid var(--line); display: flex; gap: 16px; }
+  .toggle-all button { font: inherit; letter-spacing: inherit; text-transform: inherit; color: var(--blue); background: none; border: 0; padding: 0; cursor: pointer; }
+  .toggle-all button:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar hud"><span><a href="index.html">Docs</a> / <b>Promotion</b></span><span>Researched Oct 31, 2026 · Hacker News · Reddit · SEO · GEO · Paid</span></div>
+
+  <header class="title">
+    <h1>Promoting Open <span>Market</span>.</h1>
+    <p class="lead"><strong>Where to tell people about Open Market, and the rules of each place, followed to the letter.</strong> Hacker News (a Show HN), the subreddits whose rules allow it, search (company pages Google can find), AI answer engines, and paid options. Every rule below is quoted from the community's own pages with a link; where a page couldn't be read, it says so instead of guessing. Rules change, so re-read each page right before posting.</p>
+  </header>
+  <div class="toggle-all hud"><button type="button" onclick="document.querySelectorAll('details').forEach((d) => (d.open = true))">Expand all</button><button type="button" onclick="document.querySelectorAll('details').forEach((d) => (d.open = false))">Collapse all</button></div>
+
+  <section>
+  <details>
+    <summary class="bar hud"><span>00 / <b>Before any post</b></span><span>Applies everywhere</span></summary>
+    <div class="section-title"><h2>Ready to <span>launch</span>?</h2><p>A public post is a launch. These items from <a href="features.html">Features › Before launch</a> should be settled first.</p></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 26%">Check</th><th scope="col">Why</th><th scope="col" style="width: 14%">Status</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Finnhub license</th><td>The free plan is for personal use. A Show HN or a Reddit post can bring thousands of visitors to a public site; confirm the terms or upgrade first.</td><td><span class="tag warn">Open</span></td></tr>
+          <tr><th scope="row">logo.dev terms</th><td>Logos are committed to a public repo and served by the site. Confirm that's allowed and whether an attribution link is needed.</td><td><span class="tag warn">Open</span></td></tr>
+          <tr><th scope="row">Handles a traffic spike</th><td>Atlas M0 is throughput-limited and cold starts read from MongoDB. A front-page post means many cold starts at once; check Atlas metrics during the first hour.</td><td><span class="tag warn">Open</span></td></tr>
+          <tr><th scope="row">Open-source license</th><td>Added Oct 31, 2026: the <a href="https://opensource.org/license/mit">MIT license</a> (OSI-approved) in <code>LICENSE</code>, <code>"license": "MIT"</code> in <code>package.json</code>, and a License section in the README. Before this, the public code was legally "all rights reserved", so "open source" wasn't accurate yet. It covers the code only: data and logos stay under their providers' terms.</td><td><span class="tag ok">Done</span></td></tr>
+          <tr><th scope="row">No sign-up to try it</th><td>Show HN asks for this, and Reddit readers expect it. The calendar, search, details and watchlists all work without an account.</td><td><span class="tag ok">Done</span></td></tr>
+          <tr><th scope="row">Post on a weekday in earnings season</th><td>The calendar is the product: on a weekday in late January, April, July or October it's full of companies reporting that day, with live Beat / Miss marks. On a weekend it opens on the next trading day, which works, but shows less.</td><td><span class="tag info">Plan</span></td></tr>
+          <tr><th scope="row">Write it yourself</th><td>Hacker News bans generated and AI-edited text in posts and comments (quoted below). Write the post, the first comment and every reply in your own words.</td><td><span class="tag info">Rule</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </details>
+  </section>
+
+  <section>
+  <details>
+    <summary class="bar hud"><span>01 / <b>Hacker News promotion</b></span><span>Show HN · rules read Oct 31, 2026</span></summary>
+    <div class="section-title"><h2>Show <span>HN</span>.</h2><p>Open Market fits Show HN: something you made that people can try right away, with no sign-up. Post it once, as the maker, and stay around to answer.</p></div>
+
+    <div class="sub"><h3>Does it qualify?</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 40%">Rule (quoted)</th><th scope="col">What it means for Open Market</th><th scope="col" style="width: 12%">Source</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><q>Show HN is for something you've made that other people can play with.</q></th><td>Yes: the live calendar at getopenmarket.app.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>The project should be non-trivial. Don't post quickly-generated one-offs</q></th><td>Fine: months of work, live data, open source.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>The project must be something you've worked on personally and which you're around to discuss.</q></th><td>Post it from your own account and block out the next several hours to reply.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>Please make it easy for users to try your thing out, ideally without barriers such as signups or emails.</q></th><td>Link straight to the calendar, not the About page or GitHub.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>Don't post landing pages or fundraisers.</q> Off topic: <q>blog posts, sign-up pages, newsletters, lists, and other reading material.</q></th><td>The link must be the working app.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>New features and upgrades ("Foo 1.3.1 is out") generally aren't substantive enough to be Show HNs. A major overhaul is probably ok.</q></th><td>One Show HN for the app. Later features (next trading day, gamma exposure) aren't new Show HNs; a big new tool might be.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Title and text</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 40%">Rule (quoted)</th><th scope="col">What it means for Open Market</th><th scope="col" style="width: 12%">Source</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><q>To post, submit a story whose title begins with "Show HN".</q></th><td>For example: <code>Show HN: Open Market – a free, open-source earnings calendar</code>. Plain and descriptive.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>Please don't do things to make titles stand out, like using uppercase or exclamation points, or saying how great an article is.</q></th><td>No "the best", no "!", no all caps.</td><td><a href="https://news.ycombinator.com/newsguidelines.html">guidelines</a></td></tr>
+          <tr><th scope="row"><q>Don't post generated text or AI-edited text.</q> Also: <q>Please don't put generated text in HN posts.</q></th><td>The title, the post text, the first comment and every reply are written by you, not drafted or polished by an AI tool.</td><td><a href="https://news.ycombinator.com/newsguidelines.html">guidelines</a></td></tr>
+          <tr><th scope="row"><q>Share something that is deeply personal and interesting to you. Explain how and why.</q></th><td>Say why you built it (a dozen tabs to check the market, paywalls), what's in it, the free data sources and their limits, and that the community picks what's next.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>If you want to submit a link with comments, just submit the link, then add a regular comment.</q></th><td>Submit the URL, then post your backstory as the first comment.</td><td><a href="https://news.ycombinator.com/newsfaq.html">FAQ</a></td></tr>
+          <tr><th scope="row"><q>Instead of "you're doing it wrong", suggest alternatives.</q> and <q>Be kind. Don't be snarky.</q></th><td>Take criticism calmly, thank people, and add good ideas to the roadmap board.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a>, <a href="https://news.ycombinator.com/newsguidelines.html">guidelines</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>What's not allowed</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 40%">Rule (quoted)</th><th scope="col">In practice</th><th scope="col" style="width: 12%">Source</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><q>Please don't ask friends to upvote or comment. That's not ok on HN.</q></th><td>Don't share the HN link in chats, on X, in Discord or by email asking for votes or comments, even casually.</td><td><a href="https://news.ycombinator.com/showhn.html">showhn</a></td></tr>
+          <tr><th scope="row"><q>Can I ask people to upvote my submission? No. … We penalize or ban submissions, accounts, and sites that break this rule</q></th><td>The penalty can reach the site itself, so getopenmarket.app could be banned from HN.</td><td><a href="https://news.ycombinator.com/newsfaq.html">FAQ</a></td></tr>
+          <tr><th scope="row"><q>Don't solicit upvotes, comments, or submissions.</q></th><td>Don't ask anyone else to submit it for you either.</td><td><a href="https://news.ycombinator.com/newsguidelines.html">guidelines</a></td></tr>
+          <tr><th scope="row"><q>Please don't use HN primarily for promotion. It's ok to post your own stuff part of the time</q></th><td>Use the account normally too: read, comment and submit other things you find interesting.</td><td><a href="https://news.ycombinator.com/newsguidelines.html">guidelines</a></td></tr>
+          <tr><th scope="row"><q>please don't create accounts routinely.</q></th><td>One account. No second account to vote or comment.</td><td><a href="https://news.ycombinator.com/newsguidelines.html">guidelines</a></td></tr>
+          <tr><th scope="row"><q>Please don't delete and repost the same story.</q></th><td>A slow start isn't a reason to delete it.</td><td><a href="https://news.ycombinator.com/newsfaq.html">FAQ</a></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>If it doesn't take off</h3></div>
+    <div class="prose">
+      <p>The FAQ: <q>If a story has not had significant attention in the last year or so, a small number of reposts is ok. Otherwise we bury reposts as duplicates.</q> (<a href="https://news.ycombinator.com/newsfaq.html">FAQ</a>). So if the first Show HN gets little attention, posting it again another day is allowed, a few times at most. Once it has had real attention, wait about a year, or until there's a major overhaul. Account age and karma don't matter: <q>Do posts by users with more karma rank higher? No.</q> A new account just shows in green.</p>
+    </div>
+
+    <div class="sub"><h3>When to post</h3></div>
+    <div class="callout"><b>There's no official rule.</b> None of Hacker News's pages (Show HN, guidelines, FAQ) says anything about time of day or day of week. The only timing fact is how ranking works: <q>The basic algorithm divides points by a power of the time since a story was submitted.</q> A post's first hour matters most.</div>
+    <div class="prose">
+      <p>Community analyses disagree and are mostly old:</p>
+      <ul>
+        <li>Studies of comment volume point to about <b>3 PM US Eastern</b>, but they measured Ask HN, not Show HN.</li>
+        <li>Most posts go up on <b>weekday mornings (Tuesday especially)</b>, so there's the most competition then. One analysis found weekend posts score higher because there's less of it.</li>
+        <li>Some guides recommend Tuesday to Thursday. Others find no time that wins more often.</li>
+      </ul>
+      <p><b>Recommendation (a judgment call, not a rule):</b> a Tuesday, Wednesday or Thursday during earnings season, around <b>8–10 AM US Eastern</b>. That's US morning with Europe still online, the market about to open, and the calendar full of companies reporting that day. Only post at a time when you can stay online and reply for the next 4–6 hours. If you'd rather avoid competition, a weekend morning is the data-backed alternative, but the calendar then shows the next trading day instead of live results.</p>
+    </div>
+
+    <div class="sub"><h3>Checklist</h3></div>
+    <div class="prose">
+      <ol>
+        <li>Settle the launch checks in section 00.</li>
+        <li>Pick a weekday morning in earnings season when you're free for the rest of the day.</li>
+        <li>Submit at <a href="https://news.ycombinator.com/submit">news.ycombinator.com/submit</a>: title <code>Show HN: …</code>, URL of the calendar itself.</li>
+        <li>Straight away, add a first comment in your own words: who you are, why you built it, what it does, the data sources and their limits, that it's open source (GitHub link), and that the roadmap is voted on by users.</li>
+        <li>Reply to comments yourself, in your own words. Don't ask anyone for votes or comments, anywhere.</li>
+        <li>Leave it up whatever happens. If it got little attention, a repost on another day is allowed, a few times at most.</li>
+      </ol>
+    </div>
+  </details>
+  </section>
+
+  <section>
+  <details>
+    <summary class="bar hud"><span>02 / <b>Reddit promotion</b></span><span>6 subreddits · rules read Oct 31, 2026</span></summary>
+    <div class="section-title"><h2>Where you <span>can</span> post.</h2><p>Only subreddits whose rules allow Open Market, outright or with the moderators' approval. Finance subreddits that ban promotion are left out.</p></div>
+    <div class="callout"><b>How these were checked.</b> Reddit blocks automated reading (HTTP 403, and blocked in Claude in Chrome), so each rule below was copied from the subreddit's rules page on reddit.com by hand on Oct 31, 2026. <b>Allowed</b> = post within the rules shown; <b>Ask mods first</b> / <b>Pre-approval</b> = message the moderators and post only with a written yes. Rules change: re-read the page on the day you post.</div>
+
+    <div class="sub"><h3>Candidates</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 20%">Subreddit</th><th scope="col">Why it might fit</th><th scope="col" style="width: 22%">Rules</th><th scope="col" style="width: 12%">Status</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">r/SideProject</th><td><b>Best fit so far.</b> The community exists for sharing things you built, and its rules page was empty on Oct 31, 2026: no posted rule against promotion. Before posting, still read the sidebar description and any pinned posts, which can carry rules the rules page doesn't. Post once, as the maker, in your own words, with the backstory (why, what, free data, open source) and a direct link, then stay to reply. Reddit's site-wide norms still apply (see below). Timing: see "When to post on Reddit".</td><td><a href="https://www.reddit.com/r/SideProject/about/rules">rules</a> · <a href="https://www.reddit.com/r/SideProject/">sidebar</a></td><td><span class="tag ok">No rules posted</span></td></tr>
+          <tr><th scope="row">r/opensource</th><td><b>Allowed with the Promotional flair.</b> Rules read Oct 31, 2026.<br><b>License:</b> <q>Code or repositories linked to MUST have a LICENSE file that MUST be an OSI listed Open Source license</q>. Met: MIT was added Oct 31 (push it to GitHub before posting).<br><b>Rules:</b> <q>Promotional is when you are sharing a project, yours or otherwise.</q> Self-promotion is accepted in moderation: <q>We encourage you to be proud of/promote your work to a degree</q>, <q>Reddit recommends that &lt;10% of your posts promote your content. We're a little more forgiving, but don't take advantage of it.</q> Stay in the thread: <q>Drive-by posts from accounts where there is obviously no intention of engaging in the following discussion may be removed.</q> And write it yourself: <q>All AI-generated content is low-effort and ban worthy.</q><br><b>Angle:</b> a community-run project. Users suggest and vote on features, contributors build them, and there's a roadmap and good first issues.</td><td><a href="https://www.reddit.com/r/opensource/about/rules">rules</a> · <a href="https://opensource.org/licenses">OSI licenses</a></td><td><span class="tag ok">Allowed</span></td></tr>
+          <tr><th scope="row">r/webdev</th><td><b>Allowed on Saturdays only, as a project post.</b> Rules read Oct 31, 2026: <q>Sharing your project, portfolio, or any other content that you want to either show off or request feedback on is limited to Showoff Saturday. If you post such content on any other day, it will be removed.</q> and <q>Posts must be tagged with the correct flair. Commercial promotion still falls under rule #4 and is not allowed. Think project, not product. Focus on the technical details of your project and how it's relevant to the audience of the subreddit.</q><br><b>So:</b> post on a Saturday with the Showoff Saturday flair, written as a build story for developers, not a pitch for traders: Next.js 16 and React 19, fitting a month to one screen, the cell-to-day view-transition morph, caching free APIs in MongoDB, logos as static files, open source. Being free and non-commercial helps with rule 4 (<q>We do not allow any commercial promotion or solicitation. Violations can result in a ban.</q>).<br><b>Also:</b> <q>no excessive self-promotion. Please refer to the Reddit 9:1 rule</q>, and <q>LLM generated posts or comments</q> are removed as low effort. Write it yourself.<br><b>Timing:</b> the rules don't say which time zone counts as Saturday. Post mid-morning US Eastern (about 9–11 AM), which is Saturday in both the US and Europe.</td><td><a href="https://www.reddit.com/r/webdev/about/rules">rules</a></td><td><span class="tag ok">Saturdays only</span></td></tr>
+          <tr><th scope="row">r/InternetIsBeautiful</th><td><b>Self-promotion is allowed with the 90/10 rule, but Open Market is borderline. Ask the mods first.</b> Rules read Oct 31, 2026.<br><b>Passes:</b> free with no paid tier (<q>No Stores or Demos</q>), no sign-up (<q>No sites that require personal information</q>), not a business tool, not a download, not a game.<br><b>Risks:</b> <q>Websites that are aggregates for other content are not allowed.</q> Open Market combines Finnhub, SEC, CNN and Kalshi data, which a moderator could read as aggregation. <q>Not Unique</q> covers <q>websites that do very similar things to previous submissions</q>, and earnings calendars exist elsewhere. <q>AI-Generated Content</q> bans sites <q>if AI is used to drive functionality</q>; only the suggestion board uses AI (OpenAI writes the cards), not the calendar, but say so up front. <q>Hug of Death</q> removes sites that slow down under the traffic, so the Atlas tier matters here.<br><b>Account rule:</b> <q>90% of your recent participation on Reddit should have nothing to do with a site you own or operate.</q> Use your account normally for a while before posting.</td><td><a href="https://www.reddit.com/r/InternetIsBeautiful/about/rules">rules</a></td><td><span class="tag warn">Ask mods first</span></td></tr>
+          <tr><th scope="row">r/options</th><td><b>Only with moderator pre-approval.</b> Rules read Oct 31, 2026: <q>Posts without pre-approval will be removed if they are mainly promotions of apps, websites … including requests for feedback</q>, <q>This rule applies even if the promoted item is offered for free.</q> and <q>Developers: Contact mods for pre-approval before posting.</q><br><b>If approved:</b> a text post only (<q>Link posts</q> and screenshot posts are blocked), with discussable options content, not just the link (<q>Your post and comment should have discussible options content. Images and links are not enough.</q>). Written for this sub only: <q>We consider cross-posting of all types and copy/paste of posts across subs as spam.</q> No URL shorteners.<br><b>No AI at all:</b> <q>Posts, comments, or images wholly or partly authored by AI or LLM are not allowed. This includes using an LLM to proofread or rephrase</q>. That's the strictest AI rule so far: don't even have AI polish the text.<br><b>Account:</b> accounts <q>less than 5 days</q> old, or with very low karma, are held for review.<br><b>Angle for the mods:</b> earnings dates and before-open / after-close timing for options around earnings (IV crush), and gamma exposure on the roadmap.</td><td><a href="https://www.reddit.com/r/options/about/rules">rules</a> · <a href="https://www.reddit.com/r/options/wiki/index">wiki</a></td><td><span class="tag warn">Pre-approval</span></td></tr>
+          <tr><th scope="row">r/thetagang</th><td><b>Unclear. Ask the mods first.</b> Rules read Oct 31, 2026. One rule's title is <q>No self-promotion, subvert advertisement and blog spam</q>, but its text only lists paid schemes: <q>Promoting your own website that sells stock tips or derivative tips subscriptions or paid memberships, newsletters, etc.</q> and Patreon-style links <q>even if you link to a "free" blog post</q>. A free tool with no paid tier isn't named, but the title bans self-promotion broadly, and the penalty is <q>a temp ban or permanent ban</q>. Other rules ban <q>No sales or referrals, advertisment</q> and Discord, YouTube and social links. Message the moderators with what Open Market is (free, no ads, no sign-up, open source) and post only with a written yes. The angle that would fit: earnings dates and report timing (before open / after close) matter to premium sellers.</td><td><a href="https://www.reddit.com/r/thetagang/about/rules">rules</a></td><td><span class="tag warn">Ask mods first</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>What to check in each</h3></div>
+    <div class="prose">
+      <ol>
+        <li>The rules page, the sidebar and the wiki: look for "self-promotion", "advertising", "links to your own", "spam" and "tools".</li>
+        <li>Whether there's a weekly or daily thread where tools and projects go instead of their own post, and which day it runs.</li>
+        <li>Required post flair, and whether a "tool" or "resource" flair exists.</li>
+        <li>Minimum account age or karma.</li>
+        <li>Any ratio rule (e.g. most of your activity must be other than your own links).</li>
+        <li>Reddit's site-wide guidance on self-promotion and spam in the <a href="https://support.reddithelp.com/hc/en-us/articles/360043504051">Reddit Help Center</a>.</li>
+        <li><b>If the rules are unclear or silent, message the moderators first</b> (Message the mods, in the sidebar) and post only with a yes. Keep their reply.</li>
+        <li>When posting: say you're the maker, give the direct link, and don't post the same text in many subreddits on the same day.</li>
+      </ol>
+    </div>
+
+    <div class="sub"><h3>Site-wide norms</h3></div>
+    <div class="prose">
+      <p>Reddit's own self-promotion page couldn't be read (HTTP 403), so this is from secondary sources, not the official text:</p>
+      <ul>
+        <li>In 2017 Reddit's admins said the self-promotion page had moved from policy to <q>general guidelines on what is considered good and upstanding user behavior</q>, and that enforcing ratios is up to each subreddit's moderators (<a href="https://lr.us.psf.lt/r/modnews/comments/6bj5de/state_of_spam/dhn0b45">r/modnews, via a mirror</a>). Subreddit rules are what get enforced.</li>
+        <li>The long-standing reddiquette line: it's fine to be a redditor with a website, not a website with a Reddit account. The often-quoted "10%" or "9:1" ratio is community convention, not a verified current rule.</li>
+        <li>In practice: use the account normally (comments, other posts) so it isn't only links to Open Market.</li>
+      </ul>
+    </div>
+
+    <div class="sub"><h3>When to post on Reddit</h3></div>
+    <div class="callout"><b>There's no official answer,</b> and the published analyses come from marketing blogs and tool vendors that don't show their methods. They disagree on the best day.</div>
+    <div class="prose">
+      <ul>
+        <li><b>Most common advice:</b> weekday mornings, about <b>6–9 AM US Eastern</b>, when US mornings overlap European afternoons, with Tuesday to Thursday often named (<a href="https://elementor.com/blog/when-to-post-on-reddit/">Elementor</a>, <a href="https://www.webtonic.io/blog/best-times-to-post-on-reddit-for-maximum-engagement">Webtonic</a>).</li>
+        <li><b>For r/SideProject specifically:</b> Notifier.so's page, built from the subreddit's last 30 days, recommends <b>6–8 AM Eastern on weekdays</b>, though its chart didn't load to confirm (<a href="https://notifier.so/reddit/subreddit_analysis/SideProject">Notifier.so</a>). An Indie Hackers post lists r/SideProject as active at any time (<a href="https://www.indiehackers.com/post/list-of-subreddits-and-their-self-promotion-days-weeks-72c1129428">Indie Hackers</a>).</li>
+        <li><b>Dissenting:</b> one guide names Saturday to Monday as best (<a href="https://techjury.net/blog/best-time-to-post-on-reddit/">Techjury</a>). Another argues early upvotes matter more than the clock (<a href="https://octolens.com/best-time-to-post-on-reddit">Octolens</a>).</li>
+      </ul>
+      <p><b>Recommendation (a judgment call):</b> post to r/SideProject on a <b>Tuesday–Thursday around 7–8 AM US Eastern</b>, at a time you can stay and reply for a few hours. Don't use the same day as the Show HN: each launch needs your full attention, and the same text in two places on one day looks like spam. Before posting, sort the subreddit by Top › This month and note when the top posts went up.</p>
+    </div>
+  </details>
+  </section>
+
+  <section>
+  <details>
+    <summary class="bar hud"><span>03 / <b>SEO promotion</b></span><span>Plan · not started</span></summary>
+    <div class="section-title"><h2>Found on <span>Google</span>.</h2><p>People search "NVDA earnings date", "when does Apple report", "earnings this week". Today Open Market has one indexable page for all of that: the calendar at <code>/</code>, with its contents loaded per month. A page per company, per day and per month gives Google something to match each of those searches to.</p></div>
+    <div class="callout"><b>Be realistic about the competition.</b> Yahoo Finance, Nasdaq.com, MarketBeat, Zacks and Earnings Whispers already rank for the big tickers, and a new domain won't outrank them on "AAPL earnings" soon. The openings are the <b>long tail</b>: thousands of mid and small companies, specific dates ("earnings Nov 4 2026") and questions those sites answer poorly. That's where thousands of pages add up.</div>
+
+    <div class="sub"><h3>1. A page for every company</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Part</th><th scope="col">What to do</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Address</th><td><code>/earnings/AAPL</code>: one form only, upper-case ticker (<code>/earnings/aapl</code> redirects to it; <code>BRK.B</code> keeps its dot). Each page sets its own canonical address. It also delivers the roadmap's "Shareable company link", better than <code>?t=NFLX</code>.</td></tr>
+          <tr><th scope="row">Title and description</th><td>Title: <q>Apple (AAPL) earnings date, EPS estimate &amp; history</q>, with the quarter once it's known (<q>Q4 2026</q>). Description in a sentence: <q>Apple reports Q4 2026 earnings Thu, Oct 29 after the close. EPS estimate $1.77, revenue $102B. Beat estimates 4 of the last 4 quarters.</q> Set both with <code>generateMetadata</code>.</td></tr>
+          <tr><th scope="row">Content, in the HTML</th><td>Server-rendered text, not filled in by the browser later: an H1 (<q>Apple (AAPL) earnings</q>), the next report date and time (before open / after close) and fiscal quarter, EPS and revenue estimates, the last results with surprise %, and a <b>table</b> of past quarters (the chart is a picture to Google; a table is text it can read). A short plain-English summary paragraph built from the numbers. Links to the SEC filings, TradingView and the exchange.</td></tr>
+          <tr><th scope="row">Links in</th><td>Google finds pages by following links. Link every company page from: its tile's details panel ("Open full page"), search results, the day page it reports on, and the "Reporting the same day" list on other company pages. Add a Breadcrumb (Earnings › November 2026 › Apple).</td></tr>
+          <tr><th scope="row">Structured data</th><td>JSON-LD <code>BreadcrumbList</code>, and <code>Corporation</code> with <code>tickerSymbol</code>. This helps Google understand the page; check Google's <a href="https://developers.google.com/search/docs/appearance/structured-data/search-gallery">rich results gallery</a> for what it can show, and don't expect a special earnings result. Don't mark it up as an <code>Event</code>: Google's event results are for events people attend.</td></tr>
+          <tr><th scope="row">Link preview</th><td>An Open Graph image per company from the existing renderer (<code>og-image.js</code>): logo, ticker, date, estimate. Helps when pages are shared, not ranking.</td></tr>
+          <tr><th scope="row">Which companies</th><td>Only pages with real content. Start with companies reporting in the saved months (this month and the next two) plus the Most popular list, and return 404 (<code>notFound()</code>) for unknown tickers. A company with nothing but a name is a thin page: leave it out of the sitemap and mark it <code>noindex</code> until it has data. Thousands of near-empty pages can hurt the whole site.</td></tr>
+          <tr><th scope="row">Data load</th><td>Googlebot can request thousands of pages in an hour. Pages must render from MongoDB, never call Finnhub per request: Finnhub's free plan allows about 60 calls a minute, and EPS history and profiles are currently fetched the first time a company is opened. Fill them ahead with a script (like <code>logos:sync</code>), and cache pages (<code>"use cache"</code> with <code>cacheLife</code> of a few hours).</td></tr>
+          <tr><th scope="row">Blocker: data license</th><td>Thousands of public pages republishing Finnhub's numbers is redistribution. The free plan is for personal use (see section 00). Settle the license, or the provider, before building this.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>2. Pages for dates</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Page</th><th scope="col">Why</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Day: <code>/earnings/date/2026-11-04</code></th><td><q>Earnings on Wednesday, Nov 4, 2026</q>: every company reporting, before the open and after the close, each linking to its page. Matches date searches, and links to many company pages at once.</td></tr>
+          <tr><th scope="row">Month: <code>/earnings/2026-11</code></th><td>The month view today lives at <code>/?month=2026-11</code>, and its canonical is <code>/</code>, so Google treats every month as the home page. A path per month, with its own title (<q>November 2026 earnings calendar</q>), makes each one indexable.</td></tr>
+          <tr><th scope="row">Today / this week</th><td><code>/earnings/today</code> and <code>/earnings/this-week</code> for "earnings today" and "earnings this week". They change daily; that's fine as long as the content is server-rendered.</td></tr>
+          <tr><th scope="row">Filters stay out</th><td><code>?exchange=</code>, <code>?view=</code> and watchlists make near-copies. Keep their canonical on the clean page so they don't compete with it.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>3. Technical basics</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 24%">Item</th><th scope="col">What to do</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Sitemap</th><td><code>src/app/sitemap.js</code> for the fixed pages, and <code>generateSitemaps</code> in <code>src/app/earnings/sitemap.js</code> to split company pages into files of up to 50,000 addresses each (<code>/earnings/sitemap/0.xml</code> …). In Next.js 16 the <code>id</code> arrives as a promise: <code>const id = await props.id</code>. Give each address a <code>lastModified</code> from when its data last changed.</td></tr>
+          <tr><th scope="row">robots.txt</th><td><code>src/app/robots.js</code>: allow everything except <code>/api/</code>, and list every sitemap file. There's none today.</td></tr>
+          <tr><th scope="row">Search Console</th><td>Verify the domain in <a href="https://search.google.com/search-console">Google Search Console</a> and <a href="https://www.bing.com/webmasters">Bing Webmaster Tools</a> (Bing also feeds DuckDuckGo and others), submit the sitemaps, and use URL Inspection on a few company pages to check Google sees the text. Watch Pages › "Crawled, not indexed" for thin-page trouble.</td></tr>
+          <tr><th scope="row">Speed</th><td>Already a strength: server-rendered, static logos, one font set. Keep the company pages light (no client-side fetch for the main content), and check Core Web Vitals in Search Console once there's traffic.</td></tr>
+          <tr><th scope="row">Planning docs</th><td><code>/plans/gamma-exposure</code> is already <code>noindex</code>; keep internal docs out of search the same way.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>4. Links from other sites</h3></div>
+    <div class="prose">
+      <p>Search engines rank partly by who links to you. Earn links; don't buy or trade them, which breaks Google's <a href="https://developers.google.com/search/docs/essentials/spam-policies">spam policies</a>.</p>
+      <ul>
+        <li>The Show HN and the Reddit posts above: each is a link, and people who like it write about it.</li>
+        <li>GitHub: set the repo's Website field to the site, and add topics (<code>earnings-calendar</code>, <code>stocks</code>, <code>nextjs</code>).</li>
+        <li>Listings: <a href="https://alternativeto.net">AlternativeTo</a> (as a free alternative to paid earnings calendars) and Product Hunt. Read each site's rules first, as with Reddit.</li>
+        <li>Curated "awesome" lists on GitHub for finance or open-source tools: each has contribution rules in its README.</li>
+        <li>A write-up of how it's built (free data on free tiers, fitting a month on one screen), on your own blog or dev.to, in your own words.</li>
+      </ul>
+    </div>
+
+    <div class="sub"><h3>Order of work</h3></div>
+    <div class="prose">
+      <ol>
+        <li>Settle the data license (section 00).</li>
+        <li>Add <code>robots.js</code> and <code>sitemap.js</code>, and verify the site in Search Console and Bing. Small, and useful even before company pages.</li>
+        <li>Build <code>/earnings/[ticker]</code> with the content above, with data pre-filled from MongoDB, linked from the details panel and search.</li>
+        <li>Add the company pages to the sitemap (only ones with data), and check a few with URL Inspection.</li>
+        <li>Add day and month pages.</li>
+        <li>Watch Search Console for a few weeks: which searches show the pages, and which pages aren't indexed.</li>
+      </ol>
+      <p>Expect weeks to months before a new site gets steady search traffic. The posts above bring people sooner.</p>
+    </div>
+  </details>
+  </section>
+
+  <section>
+  <details>
+    <summary class="bar hud"><span>04 / <b>GEO promotion</b></span><span>Answer engines · ideas</span></summary>
+    <div class="section-title"><h2>Cited by <span>AI</span>.</h2><p>Generative Engine Optimization: getting Open Market named and linked when someone asks ChatGPT, Perplexity, Claude, Copilot or Google's AI Overviews "when does NVIDIA report earnings?" or "free earnings calendar without sign-up". These answer engines search the web and cite pages, so most of this builds on the SEO section.</p></div>
+    <div class="callout"><b>The foundation is SEO.</b> Answer engines mostly cite pages that are already in a search index (Google's, or Bing's, which several assistants use), so the company pages, sitemap and Bing Webmaster Tools from section 03 come first. GEO is about making those pages easy to quote.</div>
+
+    <div class="sub"><h3>Let them in</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 26%">Crawler</th><th scope="col">What it's for (per third-party guides citing vendor docs)</th><th scope="col" style="width: 14%">Suggest</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>OAI-SearchBot</code></th><td>OpenAI: shows sites in ChatGPT search results.</td><td><span class="tag ok">Allow</span></td></tr>
+          <tr><th scope="row"><code>PerplexityBot</code></th><td>Perplexity: needed to appear and be linked in its answers; said not to be used for training.</td><td><span class="tag ok">Allow</span></td></tr>
+          <tr><th scope="row"><code>Claude-SearchBot</code></th><td>Anthropic: search quality for Claude's answers.</td><td><span class="tag ok">Allow</span></td></tr>
+          <tr><th scope="row"><code>Bingbot</code>, <code>Googlebot</code></th><td>Regular search, which also feeds Copilot and Google's AI Overviews.</td><td><span class="tag ok">Allow</span></td></tr>
+          <tr><th scope="row"><code>GPTBot</code>, <code>ClaudeBot</code>, <code>Google-Extended</code></th><td>Model training (Google-Extended is a token that controls Gemini training without affecting Search). Your choice: allowing them can make models know the site; it's open source anyway.</td><td><span class="tag info">Your call</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="note">The names come from third-party guides, not the vendors' pages directly. Check <a href="https://platform.openai.com/docs/bots">OpenAI's bot docs</a>, <a href="https://docs.perplexity.ai/guides/bots">Perplexity's</a>, Anthropic's and <a href="https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers">Google's</a> before writing <code>robots.js</code>, since names change. Not blocking anything is also fine: robots.txt only matters for crawlers you want to exclude.</p>
+
+    <div class="sub"><h3>Make pages easy to quote</h3></div>
+    <div class="prose">
+      <ul>
+        <li><b>Answer in the first sentence.</b> Under the H1: <q>NVIDIA (NVDA) reports Q3 fiscal 2027 earnings on Wednesday, Nov 18, 2026, after market close.</q> Engines lift sentences like that whole.</li>
+        <li><b>Facts as text and tables</b>, with units and dates: EPS estimate, revenue estimate, last quarter's actual and surprise. No numbers that only exist in a chart or after JavaScript runs.</li>
+        <li><b>Say when it was updated.</b> A visible "Updated Nov 2, 2026, 7:05 AM ET" and the date in the structured data. Earnings questions are about the future, so engines prefer fresh pages.</li>
+        <li><b>Name the sources</b> on the page (Finnhub, SEC EDGAR): cited data reads as more trustworthy.</li>
+        <li><b>Questions people ask</b>, answered in short sections: "When is the next earnings date?", "Is it before or after the bell?", "Did it beat last quarter?", "What do analysts expect?".</li>
+        <li><b>An About page that says what Open Market is</b> in one clear paragraph (free, open source, no sign-up, data sources), so engines can describe it when asked for tools.</li>
+      </ul>
+    </div>
+
+    <div class="sub"><h3>Be mentioned where they read</h3></div>
+    <div class="prose">
+      <ul>
+        <li><b>Hacker News, Reddit and GitHub</b> threads are heavily read and cited by answer engines; the posts in sections 01 and 02 do double duty here.</li>
+        <li><b>Comparison and "best free earnings calendar" pages</b> on other sites, and listings like AlternativeTo: assistants often answer "what's a good tool for X" from those.</li>
+        <li><b>A clear GitHub README</b> (already done) with the site's address in the first lines.</li>
+        <li><b>Wikipedia: don't.</b> Its conflict-of-interest rules discourage writing about your own project; let it happen on its own if it ever does.</li>
+      </ul>
+    </div>
+
+    <div class="sub"><h3>Bigger ideas</h3></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 26%">Idea</th><th scope="col">Notes</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>llms.txt</code></th><td>A proposed (not official, not widely confirmed as used) Markdown file at <code>/llms.txt</code> summarising the site and linking its key pages. Cheap to add; don't expect much.</td></tr>
+          <tr><th scope="row">MCP server</th><td>An open-source <a href="https://modelcontextprotocol.io">Model Context Protocol</a> server ("get earnings for a ticker / date") lets people plug Open Market into Claude, ChatGPT and other assistants, and gets listed in MCP directories. Strong fit for a developer audience; depends on the data license even more than web pages do, since it hands out data in bulk.</td></tr>
+          <tr><th scope="row">Public JSON / iCal</th><td>An "add earnings to your calendar" iCal feed per watchlist, or JSON per day. Useful to people, linkable, and quotable by agents. Same license question.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Measure it</h3></div>
+    <div class="prose">
+      <ul>
+        <li>Referrers in Vercel Analytics: <code>chatgpt.com</code>, <code>perplexity.ai</code>, <code>copilot.microsoft.com</code>, <code>claude.ai</code>, <code>gemini.google.com</code>.</li>
+        <li>Once a month, ask each assistant the same few questions ("free earnings calendar", "when does AMD report earnings") and note whether Open Market is named or linked.</li>
+      </ul>
+      <p><b>Don't:</b> hide text meant only for AI, or put instructions to AI models in pages. It's the AI version of keyword stuffing, it can count as spam in Google, and it would undermine trust in the site.</p>
+    </div>
+  </details>
+  </section>
+
+  <section>
+  <details>
+    <summary class="bar hud"><span>05 / <b>Paid promotion</b></span><span>Ideas · test small first</span></summary>
+    <div class="section-title"><h2>Paid <span>reach</span>.</h2><p>Several subreddits pointed to paid ads as the allowed way to promote there. Paid traffic is fastest, but for a free app with no revenue it's only worth it as a small test: does it bring people who come back?</p></div>
+    <div class="callout"><b>Before spending anything:</b> settle the data license (section 00), since paid ads are the most public launch of all, and make sure the database can take a spike. Each ad platform has its own policy for finance-related ads (some need advertiser verification): read it first, the same way as subreddit rules.</div>
+
+    <div class="scroll">
+      <table>
+        <thead class="hud"><tr><th scope="col" style="width: 22%">Channel</th><th scope="col">Idea</th><th scope="col" style="width: 16%">Fit</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Reddit Ads</th><td>Promoted posts targeted to r/stocks, r/options, r/Daytrading, r/investing and similar, where organic posts aren't allowed. The ad is the sanctioned route those rules name. Run it in earnings season, with a plain message: free earnings calendar, no sign-up, no ads.</td><td><span class="tag ok">Best fit</span></td></tr>
+          <tr><th scope="row">Newsletter sponsorships</th><td>A sponsored slot in small finance or investing newsletters, and developer newsletters for the open-source angle. Small newsletters are cheap and well targeted; ask for their audience numbers and past results.</td><td><span class="tag ok">Good</span></td></tr>
+          <tr><th scope="row">Google Search Ads</th><td>Bid on long-tail searches like "earnings calendar free" or "earnings this week" rather than big tickers, which are expensive. Needs a landing page that matches the search, so it's best after company and date pages exist.</td><td><span class="tag warn">Later</span></td></tr>
+          <tr><th scope="row">Creator sponsorships</th><td>Small finance YouTubers, TikTok or X accounts who show their earnings-week prep. Must be disclosed as paid (US FTC endorsement rules), and avoid anyone who pumps stocks.</td><td><span class="tag warn">Careful</span></td></tr>
+          <tr><th scope="row">X (Twitter) / Stocktwits ads</th><td>Promoted posts around big earnings days ("NVDA reports tonight: see every company reporting this week"). Stocktwits' audience is exactly traders.</td><td><span class="tag info">Test</span></td></tr>
+          <tr><th scope="row">Developer ad networks</th><td>Privacy-friendly networks on developer sites (e.g. EthicalAds, Carbon Ads), pitched as an open-source project looking for users and contributors.</td><td><span class="tag info">Test</span></td></tr>
+          <tr><th scope="row">Podcast reads</th><td>A host-read mention on a small investing podcast. Hard to measure; only with a memorable address or a dedicated link.</td><td><span class="tag low" style="background: var(--muted)">Low</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>How to run a test</h3></div>
+    <div class="prose">
+      <ol>
+        <li>Pick one channel and a small fixed budget, and run it for one earnings week.</li>
+        <li>Tag every link with UTM parameters (<code>?utm_source=reddit&amp;utm_campaign=earnings-nov</code>) so Vercel Analytics shows where visitors came from. Keep tagged links off the canonical pages.</li>
+        <li>Judge by people who come back (returning visitors, watchlists made), not clicks. A free app earns nothing per visit, so only lasting users justify spending more.</li>
+        <li>Say clearly in every ad that it's information, not investment advice, as the site already does.</li>
+      </ol>
+    </div>
+  </details>
+  </section>
+
+  <section>
+  <details>
+    <summary class="bar hud"><span>06 / <b>Sources</b></span><span>Read Oct 31, 2026</span></summary>
+    <ul class="sources">
+      <li><a href="https://news.ycombinator.com/showhn.html">Hacker News: Show HN guidelines</a></li>
+      <li><a href="https://news.ycombinator.com/newsguidelines.html">Hacker News: Guidelines</a></li>
+      <li><a href="https://news.ycombinator.com/newsfaq.html">Hacker News: FAQ</a></li>
+      <li>Posting time (community analyses, not official): <a href="https://nbviewer.org/urls/community.dataquest.io/uploads/short-url/i3gx9cXIMna8TP6NDZxhq8DFCd4.ipynb">Maximizing positive engagement on Hacker News</a>, <a href="https://medium.com/pycob/build-a-hacker-news-analytics-app-in-73-lines-of-python-21f1cd020e3d">Hacker News analytics app</a>, <a href="https://feedbagel.com/post/optimal-posting-time-on-show-hn-revealed-through-data-analysis">Optimal posting time on Show HN</a>, <a href="https://pithandpip.com/blog/hn-is-human">HN is human</a></li>
+      <li>Subreddit rules marked Not allowed or Allowed: copied from each community's rules page on reddit.com by hand on Oct 31, 2026</li>
+      <li>SEO: <a href="https://developers.google.com/search/docs/essentials/spam-policies">Google spam policies</a>, <a href="https://developers.google.com/search/docs/appearance/structured-data/search-gallery">Google structured data gallery</a>, Next.js 16 <code>generateSitemaps</code> docs in <code>node_modules/next/dist/docs</code></li>
+      <li>GEO: AI crawler names from third-party guides (<a href="https://help.otterly.ai/ai-crawlers">Otterly</a>, <a href="https://vydai.inweb.ua/en/blog/practice-and-methodology/control-ai-crawlers-with-robots-txt-gptbot-claudebot-perplexitybot-google-extended">Vydai</a>, <a href="https://superblog.ai/blog/ai-crawlers-guide.md">Superblog</a>) pointing to <a href="https://platform.openai.com/docs/bots">OpenAI</a>, <a href="https://docs.perplexity.ai/guides/bots">Perplexity</a> and <a href="https://developers.google.com/search/docs/crawling-indexing/overview-google-crawlers">Google</a> docs; verify on the vendor pages</li>
+      <li>Not readable automatically (HTTP 403, and blocked in Claude in Chrome): <code>reddit.com</code> and the <a href="https://support.reddithelp.com/hc/en-us/articles/360043504051">Reddit Help Center</a></li>
+    </ul>
+  </details>
+  </section>
+
+  <footer class="hud">Open Market · project notes</footer>
+</main>
+</body>
+</html>

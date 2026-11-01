@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Open Market Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&family=Geist+Mono:wght@500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f2f1ee; --tag: #e9e8e4; --tile: #ffffff;
+    --ink: #101014; --strong: #000000;
+    --body: rgba(16,16,20,.72); --muted: rgba(16,16,20,.6);
+    --line: rgba(16,16,20,.16); --line-strong: rgba(16,16,20,.4);
+    --blue: #1a5bc4; --beat: #1d7a4c; --mixed: #8f5a00; --purple: #6a3fd0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0b0b0c; --tag: #18181b; --tile: #141417;
+      --ink: #f2f1ee; --strong: #ffffff;
+      --body: rgba(242,241,238,.75); --muted: rgba(242,241,238,.6);
+      --line: rgba(242,241,238,.16); --line-strong: rgba(242,241,238,.4);
+      --blue: #6aa0ff; --beat: #2fd39c; --mixed: #ffb347; --purple: #b18cff;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 15px/1.5 Inter, system-ui, sans-serif; -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--blue); }
+  main { max-width: 1200px; margin: 0 auto; border-left: 1px solid var(--line); border-right: 1px solid var(--line); min-height: 100vh; }
+  .hud {
+    font-family: 'Geist Mono', ui-monospace, monospace; font-size: 11px; font-weight: 500;
+    letter-spacing: .15em; text-transform: uppercase; color: var(--muted);
+  }
+  .bar { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px; padding: 10px 24px; border-bottom: 1px solid var(--line); }
+  .bar b { color: var(--ink); font-weight: 500; }
+  header.title { padding: 36px 24px 28px; border-bottom: 1px solid var(--line); }
+  h1 {
+    margin: 0 0 16px; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: clamp(36px, 6vw, 56px); line-height: 1.02; letter-spacing: -.04em; color: var(--strong);
+  }
+  h1 span { color: var(--blue); }
+  .lead { max-width: 760px; margin: 0; color: var(--body); font-size: 17px; }
+  section { border-bottom: 1px solid var(--line); }
+  .grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .card {
+    display: flex; flex-direction: column; gap: 10px; padding: 20px 24px 22px; min-height: 200px;
+    border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); color: inherit; text-decoration: none;
+  }
+  .card:nth-child(3n) { border-right: 0; }
+  .card:hover { background: var(--tile); }
+  .card:hover h2 { text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
+  .card:focus-visible { outline: 2px solid var(--blue); outline-offset: -2px; }
+  .card h2 {
+    margin: 0; font-family: 'Bricolage Grotesque', system-ui, sans-serif; font-weight: 700;
+    font-size: 26px; line-height: 1.05; letter-spacing: -.03em; color: var(--strong);
+  }
+  .card p { margin: 0; color: var(--body); flex: 1; }
+  .card .meta { display: flex; justify-content: space-between; gap: 8px; }
+  .tag {
+    display: inline-block; font-family: 'Geist Mono', ui-monospace, monospace; font-size: 10px; font-weight: 700;
+    letter-spacing: .1em; text-transform: uppercase; padding: 1px 6px; white-space: nowrap; color: var(--bg); background: var(--c);
+  }
+  .live { --c: var(--beat); } .plan { --c: var(--mixed); } .ref { --c: var(--blue); } .grow { --c: var(--purple); }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: 1fr; }
+    .card { border-right: 0; min-height: 0; }
+  }
+  footer { padding: 14px 24px 18px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="bar hud"><span><b>Docs</b></span><span>Updated Oct 31, 2026</span></div>
+
+  <header class="title">
+    <h1>Open Market <span>docs</span>.</h1>
+    <p class="lead">Project notes for Open Market, the free, open-source earnings calendar: what's built, how it looks, what's planned and how to share it. Each card opens one document.</p>
+  </header>
+
+  <section>
+    <div class="bar hud"><span>01 / <b>Project</b></span><span>Status and design</span></div>
+    <div class="grid">
+      <a class="card" href="features.html">
+        <div class="meta"><span class="tag live">Live</span><span class="hud">Updated Oct 31</span></div>
+        <h2>Features</h2>
+        <p>Everything that's done, by area, and what's next by priority: 83 of 96 features done. The source for the in-app Roadmap page.</p>
+        <span class="hud">features.html</span>
+      </a>
+      <a class="card" href="DESIGN.md">
+        <div class="meta"><span class="tag ref">Reference</span><span class="hud">Markdown</span></div>
+        <h2>Design</h2>
+        <p>The UI's source of truth: principles, color tokens for light and dark, type, components and calendar behaviour.</p>
+        <span class="hud">DESIGN.md</span>
+      </a>
+      <a class="card" href="promotion.html">
+        <div class="meta"><span class="tag grow">Growth</span><span class="hud">Oct 31</span></div>
+        <h2>Promotion</h2>
+        <p>Where to share Open Market and each place's rules: a Show HN with the official rules quoted, the six subreddits whose rules allow it, SEO, AI answer engines (GEO) and paid options.</p>
+        <span class="hud">promotion.html</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="bar hud"><span>02 / <b>Plans &amp; research</b></span><span>Not started</span></div>
+    <div class="grid">
+      <a class="card" href="earnings-data-providers.html">
+        <div class="meta"><span class="tag ref">Research</span><span class="hud">Oct 23</span></div>
+        <h2>Earnings data providers</h2>
+        <p>Which earnings data source to use: Finnhub's free plan to start, Financial Modeling Prep if its limits or license don't fit.</p>
+        <span class="hud">earnings-data-providers.html</span>
+      </a>
+      <a class="card" href="earnings-notifications.html">
+        <div class="meta"><span class="tag plan">Planned</span><span class="hud">Oct 27</span></div>
+        <h2>Earnings notifications</h2>
+        <p>Morning and evening emails when the companies you follow report, with magic-link sign-in, sent through Resend.</p>
+        <span class="hud">earnings-notifications.html</span>
+      </a>
+      <a class="card" href="gamma-exposure.html">
+        <div class="meta"><span class="tag plan">Planned</span><span class="hud">Oct 27</span></div>
+        <h2>Gamma exposure</h2>
+        <p>Per-company GEX for optionable stocks plus SPX, SPY and QQQ, computed from Cboe's free delayed options chains. From a board suggestion.</p>
+        <span class="hud">gamma-exposure.html</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="bar hud"><span>03 / <b>Media</b></span><span>For the README and posts</span></div>
+    <div class="grid">
+      <a class="card" href="video/open-market-tour.webm">
+        <div class="meta"><span class="tag ref">Video</span><span class="hud">Older layout</span></div>
+        <h2>Tour video</h2>
+        <p>A 1-minute walkthrough: market panel, calendar, company details, search, views, watchlists and the roadmap. Re-record with <code>npm run video:tour</code>.</p>
+        <span class="hud">video/open-market-tour.webm</span>
+      </a>
+      <a class="card" href="images/calendar-light.png">
+        <div class="meta"><span class="tag ref">Image</span><span class="hud">Oct 31</span></div>
+        <h2>Screenshot, light</h2>
+        <p>The main page at 1600 × 1000: November calendar with the next trading day framed.</p>
+        <span class="hud">images/calendar-light.png</span>
+      </a>
+      <a class="card" href="images/calendar-dark.png">
+        <div class="meta"><span class="tag ref">Image</span><span class="hud">Oct 31</span></div>
+        <h2>Screenshot, dark</h2>
+        <p>The same page in dark mode, shown in the README to readers using GitHub's dark theme.</p>
+        <span class="hud">images/calendar-dark.png</span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="hud">Open Market · project notes</footer>
+</main>
+</body>
+</html>

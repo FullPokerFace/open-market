@@ -51,16 +51,17 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
 
   const add = (e) => {
     if (!added.has(e.ticker)) setCompanies((list) => [...list, { ticker: e.ticker, name: e.name }]);
-    setQuery("");
+    // The search stays, so several companies from the same results can be added in a row
     searchInput.current?.focus();
   };
   const remove = (ticker) => setCompanies((list) => list.filter((c) => c.ticker !== ticker));
 
   const onSearchKeyDown = (event) => {
     if (event.key !== "Enter") return;
-    // Enter adds the top result instead of submitting the form
+    // Enter adds the top result not added yet instead of submitting the form
     event.preventDefault();
-    if (search.state === "ready" && results.length) add(results[0]);
+    const next = results.find((e) => !added.has(e.ticker));
+    if (search.state === "ready" && next) add(next);
   };
 
   const ready = name.trim().length > 0 && companies.length > 0;
@@ -118,7 +119,9 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-xl bg-background">
+      {/* The whole dialog scrolls, not just the form: on phones the keyboard covers the bottom half, and a
+          pinned header + title left too little room to see the field being typed in */}
+      <DialogContent className="max-w-xl overflow-y-auto overscroll-contain bg-background">
         <div className="eyebrow flex shrink-0 items-center justify-between border-b pl-6 text-muted-foreground">
           <span>
             Watchlists / <span className="text-foreground">{list ? "Edit" : "New"}</span>
@@ -136,7 +139,7 @@ export function CreateListDialog({ open, onOpenChange, month, list = null, seed 
           </DialogDescription>
         </div>
 
-        <form onSubmit={submit} className="flex min-h-0 flex-col gap-5 overflow-y-auto px-6 py-6">
+        <form onSubmit={submit} className="flex shrink-0 flex-col gap-5 px-6 py-6">
           <div className="flex flex-col gap-2">
             <div className="flex items-baseline justify-between gap-3">
               <Label htmlFor="list-name" className="eyebrow text-muted-foreground">

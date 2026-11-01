@@ -116,7 +116,7 @@
 </head>
 <body>
 <main>
-  <div class="bar hud"><span>Docs / <b>Features</b></span><span>Updated Oct 31, 2026</span></div>
+  <div class="bar hud"><span><a href="index.html">Docs</a> / <b>Features</b></span><span>Updated Oct 31, 2026</span></div>
 
   <header class="title">
     <h1>Open Market <span>features</span>.</h1>
@@ -124,13 +124,13 @@
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>95 features tracked</span></div>
-    <div class="progress-head"><b>86%</b><span>82 of 95 features done · 13 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 82, high priority 1, medium 2, before launch 5, low 5">
-      <span class="c-done" style="flex: 82"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 2"></span><span class="c-launch" style="flex: 5"></span><span class="c-low" style="flex: 5"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>96 features tracked</span></div>
+    <div class="progress-head"><b>86%</b><span>83 of 96 features done · 13 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 83, high priority 1, medium 2, before launch 5, low 5">
+      <span class="c-done" style="flex: 83"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 2"></span><span class="c-launch" style="flex: 5"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>82</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>83</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>2</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>5</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -140,7 +140,7 @@
       <div class="c-done">
         <h4 class="hud">Done by area</h4>
         <ul>
-          <li>Foundation <b>15</b></li>
+          <li>Foundation <b>16</b></li>
           <li>Live data <b>11</b></li>
           <li>Calendar <b>22</b></li>
           <li>Search <b>2</b></li>
@@ -172,9 +172,9 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>82 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>83 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
-    <div class="sub"><h3>Foundation</h3><span class="hud">15</span></div>
+    <div class="sub"><h3>Foundation</h3><span class="hud">16</span></div>
     <div class="scroll">
       <table>
         <thead class="hud">
@@ -195,6 +195,7 @@
           <tr><th scope="row">Tour video</th><td>A 64-second, 1600 × 900 walkthrough with captions and a visible cursor: title card ("Every free market tool, in one place"), Fear &amp; Greed and key releases, the month calendar, a company's details, search with matches lighting up, day / week / month, creating a ticker list, voting on the roadmap board, posting a suggestion, and an end card with the site and GitHub addresses. Recorded by Playwright driving the real site, so it shows real data; posting and voting are answered in the browser, so recording never writes to the database. Re-record with <code>npm run video:tour</code> against a production build or the live site (<code>TOUR_URL</code>). WebM (VP8, about 13 MB): plays in browsers; convert to MP4 for places that need it.</td><td><code>scripts/record-tour.mjs</code>, <code>docs/video/open-market-tour.webm</code></td></tr>
           <tr><th scope="row">Environment template</th><td><code>example.env</code> lists every variable with a comment: required <code>FINNHUB_API_KEY</code>, <code>MONGO_DB_USER</code>, <code>MONGO_DB_PASSWORD</code>; optional <code>OPEN_AI_KEY</code>, <code>GMAIL_SENDER_ADDRESS</code>, <code>GMAIL_APP_PASSWORD</code>, <code>SEC_USER_AGENT</code> and <code>E2E_LIVE_URL</code>. Copy it to <code>.env.local</code>. <code>MONGO_CONNECTION_URL</code> is left out: nothing reads it (the cluster host is set in <code>db.js</code>).</td><td><code>example.env</code></td></tr>
           <tr><th scope="row">README</th><td>Rewritten around the idea: every free market tool in one place, built by the people who use it. What's in it today, the idea (one place, free, community-run), how to contribute, getting started, testing and credits, with screenshots of the main page that follow GitHub's light or dark setting. Screenshots retaken Oct 31 (1600 × 1000, November calendar with the next trading day framed, no dev badge); the tour video still shows the older layout.</td><td><code>README.md</code>, <code>docs/images/</code></td></tr>
+          <tr><th scope="row">MIT license</th><td>Open source in the legal sense since Oct 31, 2026: the MIT license (OSI-approved) in <code>LICENSE</code>, copyright Dan Yan, with <code>"license": "MIT"</code> in <code>package.json</code> and a License section in the README. Before it, the public repo was "all rights reserved". Covers the code only; Finnhub, SEC, Kalshi and CNN data and logo.dev logos stay under their own terms. Needed for r/opensource, which requires an OSI license (see <a href="promotion.html">Promotion</a>).</td><td><code>LICENSE</code>, <code>package.json</code>, <code>README.md</code></td></tr>
           <tr><th scope="row">npm only</th><td>The project had both <code>package-lock.json</code> and <code>yarn.lock</code>, so a host could install with Yarn and get other versions. <code>yarn.lock</code> was removed from git and is now in <code>.gitignore</code>; npm is the package manager.</td><td><code>.gitignore</code></td></tr>
         </tbody>
       </table>

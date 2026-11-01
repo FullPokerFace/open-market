@@ -36,7 +36,7 @@ It starts with an earnings calendar and market context. What comes next is up to
 - Suggest a feature from the menu: each idea becomes a short card on a public board, and repeats are merged into the idea they match
 - Everyone votes ideas up or down, and the most wanted rise to the top of the in-app Roadmap page (`/roadmap`)
 
-Works in light and dark, and on phones. See everything that's live and planned in `docs/features.html`.
+Works in light and dark, and on phones. See everything that's live and planned in `docs/features.html`, and every project doc (design, plans, promotion) from `docs/index.html`.
 
 ## The idea
 
@@ -103,3 +103,7 @@ Tests live in `e2e/`. They never write real data: suggestion posts and votes are
 Data from [Finnhub](https://finnhub.io), [SEC EDGAR](https://www.sec.gov/edgar), [Kalshi](https://kalshi.com) and [CNN Fear & Greed](https://www.cnn.com/markets/fear-and-greed). Suggestion cards written with [OpenAI](https://openai.com). Design inspired by [ArtCraft](https://getartcraft.com).
 
 Open Market is for information only and isn't investment advice.
+
+## License
+
+[MIT](LICENSE). The license covers this code only: data and company names come from the providers above, and logos from [logo.dev](https://logo.dev); they stay under their own terms.
