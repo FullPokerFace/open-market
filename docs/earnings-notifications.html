@@ -109,12 +109,35 @@
 </head>
 <body>
 <main>
-  <div class="bar hud"><span><a href="index.html">Docs</a> / <b>Earnings notifications</b></span><span>Planned Oct 27, 2026 · not started</span></div>
+  <div class="bar hud"><span><a href="index.html">Docs</a> / <b>Earnings notifications</b></span><span>Planned Oct 27, 2026 · shipped Nov 1, 2026</span></div>
 
   <header class="title">
     <h1>Earnings <span>notifications</span>.</h1>
     <p class="lead"><strong>Signed-in visitors pick the companies they follow and get an email from <code>notifications@&lt;domain&gt;</code> each morning and evening when one of them reports.</strong> Mail goes through Resend on a sending subdomain, so the Zoho inbox on the main domain keeps working. Sign-in is a magic link sent through the same Resend setup, so there are no passwords. Follows are stored in MongoDB next to the user, because watchlists today live only in the browser (<code>ticker-lists.js</code>, localStorage) and a cron job can't read them. Two daily Vercel Cron jobs build one digest email per user, never one email per ticker, and log each one so a retry never sends twice.</p>
   </header>
+
+  <section class="c-done">
+    <div class="section-title">
+      <h2>What was <span>built</span>.</h2>
+      <p>Shipped Nov 1, 2026. The plan below is kept as written; this is where the build differs from it. Details of each piece are in <a href="features.html">Features</a> › Notifications &amp; account.</p>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Planned</th><th scope="col">Built</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Magic-link sign-in (Auth.js)</th><td>A 6-digit code sent by email, entered in a dialog (Better Auth with its email-OTP plugin; Auth.js is now part of Better Auth). Entering the code proves the address. Sign-in is only needed for notifications, and the dialog and Watchlists page say so. Sign in from the header or the Notify button; the header's account menu has Sign out.</td></tr>
+          <tr><th scope="row">Morning and evening digests</th><td>One email at 6 AM ET on weekdays, since many companies report before 7 AM. Cron runs at 10:00 and 11:00 UTC and only the one that's 6 AM in New York sends (daylight saving).</td></tr>
+          <tr><th scope="row">Bell per ticker, follows on the server</th><td>"Notify" per watchlist. Watchlists are saved to the account once signed in (merged with the browser's on first sign-in, then every change sent to the server), so the cron job reads them directly.</td></tr>
+          <tr><th scope="row">Swap email.js to Resend</th><td>A separate <code>resend.js</code> for mail to visitors; suggestions to the owner still go through Gmail.</td></tr>
+          <tr><th scope="row">Send log, one-click unsubscribe</th><td>Both built: <code>notificationLog</code> entries are claimed before sending, plus Resend idempotency keys; signed unsubscribe links and List-Unsubscribe headers.</td></tr>
+          <tr><th scope="row">Not in the plan</th><td>Delete account &amp; data on the Watchlists page; limits of 20 watchlists and 50 companies each.</td></tr>
+          <tr><th scope="row">Not built yet</th><td>Bounce and complaint handling (Resend webhooks), and emails about changed earnings dates.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
   <section class="c-you">
     <div class="bar hud"><span>01 / <b>At a glance</b></span><span>6 phases · 22 steps</span></div>

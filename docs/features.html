@@ -116,7 +116,7 @@
 </head>
 <body>
 <main>
-  <div class="bar hud"><span><a href="index.html">Docs</a> / <b>Features</b></span><span>Updated Oct 31, 2026</span></div>
+  <div class="bar hud"><span><a href="index.html">Docs</a> / <b>Features</b></span><span>Updated Nov 1, 2026</span></div>
 
   <header class="title">
     <h1>Open Market <span>features</span>.</h1>
@@ -124,13 +124,13 @@
   </header>
 
   <section>
-    <div class="bar hud"><span>00 / <b>Summary</b></span><span>96 features tracked</span></div>
-    <div class="progress-head"><b>86%</b><span>83 of 96 features done · 13 to go</span></div>
-    <div class="progress" role="img" aria-label="Done 83, high priority 1, medium 2, before launch 5, low 5">
-      <span class="c-done" style="flex: 83"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 2"></span><span class="c-launch" style="flex: 5"></span><span class="c-low" style="flex: 5"></span>
+    <div class="bar hud"><span>00 / <b>Summary</b></span><span>104 features tracked</span></div>
+    <div class="progress-head"><b>88%</b><span>91 of 104 features done · 13 to go</span></div>
+    <div class="progress" role="img" aria-label="Done 91, high priority 1, medium 2, before launch 5, low 5">
+      <span class="c-done" style="flex: 91"></span><span class="c-high" style="flex: 1"></span><span class="c-med" style="flex: 2"></span><span class="c-launch" style="flex: 5"></span><span class="c-low" style="flex: 5"></span>
     </div>
     <div class="stats">
-      <div class="stat c-done"><b>83</b><span class="hud"><i class="sw"></i>Done</span></div>
+      <div class="stat c-done"><b>91</b><span class="hud"><i class="sw"></i>Done</span></div>
       <div class="stat c-high"><b>1</b><span class="hud"><i class="sw"></i>High priority</span></div>
       <div class="stat c-med"><b>2</b><span class="hud"><i class="sw"></i>Medium</span></div>
       <div class="stat c-launch"><b>5</b><span class="hud"><i class="sw"></i>Before launch</span></div>
@@ -149,6 +149,7 @@
           <li>Watchlists <b>5</b></li>
           <li>Phone layout <b>9</b></li>
           <li>Company logos <b>5</b></li>
+          <li>Notifications &amp; account <b>8</b></li>
         </ul>
       </div>
       <div>
@@ -172,7 +173,7 @@
   </section>
 
   <section class="c-done">
-    <div class="bar hud"><span>01 / <b>Done</b></span><span>83 features</span></div>
+    <div class="bar hud"><span>01 / <b>Done</b></span><span>91 features</span></div>
     <div class="section-title"><h2>What's <span>done</span>.</h2><p>Live in the app today, grouped by area.</p></div>
     <div class="sub"><h3>Foundation</h3><span class="hud">16</span></div>
     <div class="scroll">
@@ -311,11 +312,30 @@
           <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
         </thead>
         <tbody>
-          <tr><th scope="row">Create watchlist dialog</th><td>"+ Create watchlist" beside the company filter (or "+ New watchlist" on the Watchlists page and in the details panel) opens "New <span style="color: var(--blue)">watchlist</span>.": a name (20 characters max, with a counter), a search box (same search as the header: every exchange, this month and the next two), results with "Add" (Enter adds the top one; the box clears for the next search), and "In this watchlist · N" with an ✕ per company. "Create watchlist" stays off until there's a name and one company; an unsent draft is kept if the dialog is closed. The header's search logic moved into a shared hook for this.</td><td><code>create-list-dialog.jsx</code>, <code>use-company-search.js</code></td></tr>
+          <tr><th scope="row">Create watchlist dialog</th><td>"+ Create watchlist" beside the company filter (or "+ New watchlist" on the Watchlists page and in the details panel) opens "New <span style="color: var(--blue)">watchlist</span>.": a name (20 characters max, with a counter), a search box (same search as the header: every exchange, this month and the next two), results with "Add" (Enter adds the top result not added yet; the search stays, so several can be added in a row), and "In this watchlist · N / 50" with an ✕ per company. The whole dialog scrolls, not just the form, so on phones the field being typed in stays above the keyboard. "Create watchlist" stays off until there's a name and one company; an unsent draft is kept if the dialog is closed. The header's search logic moved into a shared hook for this.</td><td><code>create-list-dialog.jsx</code>, <code>use-company-search.js</code></td></tr>
           <tr><th scope="row">Watchlist filter</th><td>Watchlists (called ticker lists until Oct 27, when the separate single "watchlist" and its All / Watchlist switch were removed) sit under "My watchlists" in the company filter dropdown. Picking one shows only its companies, on every exchange (others are hidden, not faded): the server filters the month like Most popular, so counts and "+N" stay right. Lists are saved in <code>localStorage</code> (synced across tabs); the one picked travels in the <code>earnings_list</code> cookie, not the URL, and the "+N" request reads it too. A cookie list with no saved watchlist to match shows as "Watchlist".</td><td><code>src/lib/ticker-lists.js</code>, <code>src/lib/calendar-filter.js</code>, <code>parseFilter()</code> in <code>src/lib/earnings.js</code></td></tr>
           <tr><th scope="row">Remembered watchlist</th><td>The watchlist picked last stays on: coming back to <code>/</code> (or any calendar URL without a market) opens on it, built by the server so the default never flashes first. Picking a market, Most popular included, clears it; a market in the URL always wins. The cookie lasts a year.</td><td><code>src/lib/calendar-filter.js</code>, <code>src/app/page.js</code></td></tr>
-          <tr><th scope="row">Watchlists page</th><td>Page at <code>/watchlists</code>, linked in the header: "Your watchlists." with each one's name, company count and tickers (logos follow the toggle), "Show on calendar" (picks it and opens the calendar), Edit, Delete, and "+ New watchlist". An empty state says how to start one. Nothing shows until the page has read the browser's storage, so the empty state never flashes. The dialog's search month is read when it opens, not while rendering, since the page is prerendered at build time.</td><td><code>src/app/watchlists/page.js</code>, <code>watchlists-board.jsx</code></td></tr>
+          <tr><th scope="row">Watchlists page</th><td>Page at <code>/watchlists</code>, linked in the header: "Your watchlists." with each one's name, company count and tickers (logos follow the toggle), "Notify" (earnings emails, see Notifications &amp; account), "Show on calendar" (picks it and opens the calendar), Edit, Delete, and "+ New watchlist". A bar under the intro says sign-in is only needed for notifications, or shows the signed-in email with Sign out and Delete account &amp; data. An empty state says how to start one. Nothing shows until the page has read the browser's storage, so the empty state never flashes. The dialog's search month is read when it opens, not while rendering, since the page is prerendered at build time.</td><td><code>src/app/watchlists/page.js</code>, <code>watchlists-board.jsx</code></td></tr>
           <tr><th scope="row">Edit and delete watchlists</th><td>Edit opens the create dialog on the watchlist ("Edit watchlist.", "Save watchlist"): rename it, add companies by search, take them out. Delete asks first (the browser's confirm). Editing or deleting the watchlist the calendar opens on updates its cookie too (a deleted one falls back to Most popular). Companies already saved show only their ticker in the dialog (watchlists keep tickers, not names), and search only finds companies reporting this month or the next two.</td><td><code>create-list-dialog.jsx</code>, <code>update()</code> / <code>remove()</code> in <code>src/lib/ticker-lists.js</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="sub"><h3>Notifications &amp; account</h3><span class="hud">8</span></div>
+    <div class="scroll">
+      <table>
+        <thead class="hud">
+          <tr><th scope="col" style="width: 24%">Feature</th><th scope="col">What it does</th><th scope="col" style="width: 26%">Where</th></tr>
+        </thead>
+        <tbody>
+          <tr><th scope="row">Sign in with an email code</th><td>Sign-in is only needed for earnings notifications, and the dialog says so. The visitor enters an email, gets a 6-digit code (expires in 10 minutes, 3 tries, at most 5 codes per 10 minutes) and types it in; entering it proves the address, and a first sign-in creates the account. No passwords. Better Auth (self-hosted, no outside account) with its email-OTP plugin; codes are stored hashed and sent through Resend. Sessions last 30 days.</td><td><code>src/lib/auth.js</code>, <code>src/app/api/auth/[...all]/route.js</code>, <code>sign-in-dialog.jsx</code></td></tr>
+          <tr><th scope="row">Header sign-in and account menu</th><td>Desktop: "Sign in" right of the GitHub icon; signed in, a person icon opens a menu with "Signed in as …", Watchlists &amp; notifications, and Sign out. Phones: Sign in, or "Sign out · email", in the burger menu. Nothing shows until the session is known, so "Sign in" never flashes. Signing in from the header saves the browser's watchlists to the account and opens the Watchlists page.</td><td><code>site-header.jsx</code>, <code>account-menu.jsx</code></td></tr>
+          <tr><th scope="row">Watchlists saved to the account</th><td>Signed in, watchlists are kept in the browser and in MongoDB (<code>watchlists</code>, one document per user). The first time a browser meets the account the two are merged (same list: companies combined; others added). After that every change is sent to <code>/api/watchlists</code> about 400 ms later, and each visit starts from the saved copy, so other devices and unsubscribes show up. Changes that couldn't be sent are marked unsaved and sent on the next visit. Signing out keeps the lists in the browser.</td><td><code>src/lib/ticker-lists.js</code>, <code>src/lib/watchlists.js</code>, <code>src/app/api/watchlists/route.js</code></td></tr>
+          <tr><th scope="row">Notify per watchlist</th><td>A bell button on each watchlist card, "Notify" / "Notifying". Signed out, it opens the sign-in dialog and turns on once signed in. Saved as <code>notify</code> on the list, so companies added later are included.</td><td><code>watchlists-board.jsx</code></td></tr>
+          <tr><th scope="row">Morning earnings email</th><td>Weekdays at 6 AM ET: Vercel Cron calls <code>/api/cron/earnings-digest</code> at 10:00 and 11:00 UTC (protected by <code>CRON_SECRET</code>) and only the run that's 6 AM in New York sends. It reloads the day from Finnhub (dates move), finds every user with a Notify list holding a company reporting, and sends one email per person through Resend's batch API, each company once however many lists it's in: before the open, during market hours, after the close, or time not announced, with EPS and revenue estimates. A send log (<code>notificationLog</code>, claimed before sending) and Resend idempotency keys mean a rerun never sends twice. <code>?force=1</code> sends now for testing.</td><td><code>src/lib/notifications.js</code>, <code>src/lib/notification-email.js</code>, <code>vercel.json</code></td></tr>
+          <tr><th scope="row">One-click unsubscribe</th><td>Every email has an Unsubscribe link and the List-Unsubscribe / List-Unsubscribe-Post headers Gmail and Yahoo require. Links carry the user id and an HMAC signature, so no sign-in is needed. The link opens a page with a button (opening it changes nothing, since mail scanners open links); the mail app's own button POSTs directly. Unsubscribing turns Notify off on every list.</td><td><code>src/app/unsubscribe/page.js</code>, <code>src/app/api/unsubscribe/route.js</code></td></tr>
+          <tr><th scope="row">Delete account and data</th><td>On the Watchlists page (not the header menu, so it can't be clicked by accident), after a confirm: removes the user, sessions, saved watchlists, email and send log. The watchlists in the browser stay, with Notify off.</td><td><code>src/app/api/account/route.js</code></td></tr>
+          <tr><th scope="row">Watchlist limits</th><td>At most 20 watchlists and 50 companies each, checked in the browser (the dialog explains when one is reached) and again by the server, which cleans anything it saves.</td><td><code>src/lib/watchlist-rules.js</code></td></tr>
         </tbody>
       </table>
     </div>
@@ -396,7 +416,7 @@
         <tbody>
           <tr><th scope="row">Check Finnhub license</th><td>Free plan is for personal use; confirm the terms or upgrade before making the site public.</td><td><span class="tag c-launch">Before launch</span></td></tr>
           <tr><th scope="row">Check logo.dev terms</th><td>Logos are committed to <code>public/logos</code> in this public repo and served by the site (see Done › Logo files), which republishes them: confirm logo.dev allows that before committing the folder, and whether the free plan needs an attribution link (it would sit beside "Data · Finnhub" in the legend). <code>LOGO_DEV_TOKEN</code> reaches browsers in redirects, so it must be the publishable <code>pk_</code> key.</td><td><span class="tag c-launch">Before launch</span></td></tr>
-          <tr><th scope="row">Vercel + Atlas setup</th><td>Add <code>MONGO_DB_USER</code>, <code>MONGO_DB_PASSWORD</code>, <code>OPEN_AI_KEY</code> and <code>LOGO_DEV_TOKEN</code> (needed at build time too, or the logos toggle stays hidden) (plus <code>GMAIL_SENDER_ADDRESS</code> and <code>GMAIL_APP_PASSWORD</code> for suggestion emails) to the Vercel project (Production, Preview and Development: <code>next build</code> also loads Fear &amp; Greed, key releases and the company listing, for reasons not yet looked into), then redeploy. In Atlas, allow access from anywhere (<code>0.0.0.0/0</code>), since Vercel has no fixed IPs on the free plan, and give the database user only readWrite on <code>earnings-report</code> with a long random password. Turn on Web Analytics in the Vercel dashboard.</td><td><span class="tag c-launch">Before launch</span></td></tr>
+          <tr><th scope="row">Vercel + Atlas setup</th><td>Add <code>MONGO_DB_USER</code>, <code>MONGO_DB_PASSWORD</code>, <code>OPEN_AI_KEY</code> and <code>LOGO_DEV_TOKEN</code> (needed at build time too, or the logos toggle stays hidden) (plus <code>GMAIL_SENDER_ADDRESS</code> and <code>GMAIL_APP_PASSWORD</code> for suggestion emails, and <code>RESEND_API_KEY</code>, <code>EMAIL_FROM</code>, <code>BETTER_AUTH_SECRET</code>, <code>BETTER_AUTH_URL</code> and <code>CRON_SECRET</code> for sign-in and notifications, with the sending domain verified in Resend) to the Vercel project (Production, Preview and Development: <code>next build</code> also loads Fear &amp; Greed, key releases and the company listing, for reasons not yet looked into), then redeploy. In Atlas, allow access from anywhere (<code>0.0.0.0/0</code>), since Vercel has no fixed IPs on the free plan, and give the database user only readWrite on <code>earnings-report</code> with a long random password. Turn on Web Analytics in the Vercel dashboard.</td><td><span class="tag c-launch">Before launch</span></td></tr>
           <tr><th scope="row">Atlas free-tier limits</th><td>M0 is shared: throughput is capped and can be throttled after heavy data transfer (the old <code>companyLogos</code> images were one such load, now dropped), and storage is 512 MB. The memory cache hides most of this, but cold starts still read from MongoDB. Before launch, watch Network and data transfer in Atlas › Metrics under real traffic, and move to a paid tier if cold-start loads stay slow.</td><td><span class="tag c-launch">Before launch</span></td></tr>
           <tr><th scope="row">Scheduled Finnhub sync</th><td>Storage is done (see Done › MongoDB storage), but pages still fetch from the source when a saved copy is stale, so the visitor who hits it waits. Next: a scheduled job (Vercel Cron) refreshes the current week every 15–30 min in market hours and after the close and other weeks daily, so pages only read the database and Finnhub calls stay fixed whatever the traffic. Storing Finnhub data for a public site depends on the license check above.</td><td><span class="tag c-launch">Before launch</span></td></tr>
         </tbody>

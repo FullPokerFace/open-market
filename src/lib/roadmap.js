@@ -29,7 +29,9 @@ export const SHIPPED = [
     area: "Search & watchlists",
     items: [
       ["Search", "Find any company reporting this month or the next two by ticker or name."],
-      ["Watchlists page", "All your watchlists in one place: show one on the calendar, rename it, change its companies or delete it. Add a company from its details panel. Kept in your browser."],
+      ["Watchlists page", "All your watchlists in one place: show one on the calendar, rename it, change its companies or delete it. Add a company from its details panel. Kept in your browser, and saved to your account when you sign in."],
+      ["Earnings emails", "Turn on Notify for a watchlist and get one email at 6 AM ET on days its companies report, grouped by before the open, during the day or after the close. Unsubscribe from any email in one click."],
+      ["Sign in with a code", "Only needed for earnings emails: enter your email and the 6-digit code we send, no password. Sign out from the header, or delete your account and data from the Watchlists page."],
     ],
   },
   {
